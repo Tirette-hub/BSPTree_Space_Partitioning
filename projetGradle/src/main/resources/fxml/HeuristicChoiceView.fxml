@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.layout.VBox?>
+
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller.HeuristicChoiceController">
+   <children>
+      <Label text="Choix de l'heuristique" />
+      <RadioButton fx:id="fxH1" mnemonicParsing="false" selected="true" text="aléatoire" />
+      <RadioButton fx:id="fxH2" mnemonicParsing="false" text="segment le plus proche" />
+      <RadioButton fx:id="fxH3" mnemonicParsing="false" text="heuristique3" />
+   </children>
+</VBox>
