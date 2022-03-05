@@ -151,7 +151,7 @@ public class SceneController {
 
         //draw
         for (Segment s : scene){
-            int [] coords = s.get(); //x1,y1,x2,y2
+            double [] coords = s.get(); //x1,y1,x2,y2
             Color color = s.getEColor().getColor();
 
             //draw the segment on the canvas with its color as set up in the scene file

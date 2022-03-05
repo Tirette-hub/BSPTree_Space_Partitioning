@@ -15,7 +15,12 @@ public enum EColor {
     RED("Rouge"),
     GREEN("Vert"),
     BLUE("Bleu"),
-    BLACK("Noir");
+    BLACK("Noir"),
+    PURPLE("Violet"),
+    ORANGE("Orange"),
+    ROSE("Rose"),
+    GREY("Gris"),
+    YELLOW("Jaune");
 
     private final double r,g,b;
     private final String name;
@@ -36,6 +41,21 @@ public enum EColor {
                 break;
             case "Bleu":
                 r = 0; g = 0; b = 1;
+                break;
+            case "Violet":
+                r = 0.5; g = 0; b = 0.5;
+                break;
+            case "Orange":
+                r = 1; g = 0.65; b = 0;
+                break;
+            case "Rose":
+                r = 1; g = 0; b = 0.5;
+                break;
+            case "Gris":
+                r = 0.1; g = 0.1; b = 0.1;
+                break;
+            case "Jaune":
+                r = 1; g = 1; b = 0;
                 break;
             case "Noir":
             default:
@@ -78,6 +98,16 @@ public enum EColor {
                 return GREEN;
             case "Bleu":
                 return BLUE;
+            case "Violet":
+                return PURPLE;
+            case "Orange":
+                return ORANGE;
+            case "Rose":
+                return ROSE;
+            case "Gris":
+                return GREY;
+            case "Jaune":
+                return YELLOW;
             case "Noir":
             default:
                 return BLACK;

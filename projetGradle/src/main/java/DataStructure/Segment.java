@@ -10,7 +10,7 @@ package DataStructure;
  * @version 1.0.0
  */
 public class Segment {
-    private int x1, y1, x2, y2;
+    private double x1, y1, x2, y2;
     private EColor color;
 
     //constructors
@@ -35,7 +35,7 @@ public class Segment {
      * @param y2
      *      y coordinate of the end point.
      */
-    public Segment(int x1, int y1, int x2, int y2){
+    public Segment(double x1, double y1, double x2, double y2){
         this.x1 = x1;
         this.y1 = y1;
         this.x2 = x2;
@@ -56,7 +56,7 @@ public class Segment {
      * @param color
      *      Enum value representing the color of the segment.
      */
-    public Segment(int x1, int y1, int x2, int y2, EColor color){
+    public Segment(double x1, double y1, double x2, double y2, EColor color){
         this.x1 = x1;
         this.y1 = y1;
         this.x2 = x2;
@@ -65,6 +65,19 @@ public class Segment {
             this.color = color;
         else
             this.color = EColor.BLACK;
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if (o == this)
+            return true;
+
+        if (!(o instanceof Segment))
+            return false;
+
+        Segment seg = (Segment) o;
+
+        return (this.get() == seg.get() && this.getEColor() == seg.getEColor());
     }
 
     //setters
@@ -82,7 +95,7 @@ public class Segment {
      * @param color
      *      Enum value representing the color of the segment.
      */
-    public void set(int x1, int y1, int x2, int y2, EColor color){
+    public void set(double x1, double y1, double x2, double y2, EColor color){
         this.x1 = x1;
         this.y1 = y1;
         this.x2 = x2;
@@ -108,8 +121,8 @@ public class Segment {
      * @return
      *      List of coordinates.
      */
-    public int[] get(){
-        return new int[]{x1,y1,x2,y2};
+    public double[] get(){
+        return new double[]{x1,y1,x2,y2};
     }
 
     /**
@@ -117,8 +130,8 @@ public class Segment {
      * @return
      *      List of x and y coordinates.
      */
-    public int[] getFrom() {
-        return new int[]{x1,y1};
+    public double[] getFrom() {
+        return new double[]{x1,y1};
     }
 
     /**
@@ -126,8 +139,8 @@ public class Segment {
      * @return
      *      List of x and y coordinates.
      */
-    public int[] getTo() {
-        return new int[]{x2,y2};
+    public double[] getTo() {
+        return new double[]{x2,y2};
     }
 
     /**

@@ -68,7 +68,7 @@ public class APPController{
             //read first line
             String[] fl = scanner.nextLine().split(" ");
             //get principal data from the file
-            int a = Integer.parseInt(fl[3]); //max abs
+            int a = Integer.parseInt(fl[1]); //max abs
             int b = Integer.parseInt(fl[2]); //max ord
             int n = Integer.parseInt(fl[3]); //#segment in the scene
 
@@ -78,11 +78,11 @@ public class APPController{
             while(scanner.hasNextLine()){
                 //get data from the file
                 fl = scanner.nextLine().split(" ");
-                int x1, x2, y1, y2;
+                double x1, x2, y1, y2;
                 EColor color;
                 //convert data
-                x1 = Integer.parseInt(fl[0]); y1 = Integer.parseInt(fl[1]);
-                x2 = Integer.parseInt(fl[2]); y2 = Integer.parseInt(fl[3]);
+                x1 = Double.parseDouble(fl[0]); y1 = Double.parseDouble(fl[1]);
+                x2 = Double.parseDouble(fl[2]); y2 = Double.parseDouble(fl[3]);
                 color = EColor.getEColorByName(fl[4]);
 
                 //create the segment from a line of data and add it to the scene
