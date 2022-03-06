@@ -22,9 +22,9 @@ public class openSceneFileTest {
         supposedData[0] = new Segment(-300.000000, 100.000000, 0.000000, 100.000000, EColor.getEColorByName("Rouge"));
         supposedData[1] = new Segment(0.000000, 100.000000, 300.000000, 100.000000, EColor.getEColorByName("Bleu"));
         supposedData[2] = new Segment(300.000000, -100.000000, 300.000000, 100.000000, EColor.getEColorByName("Rose"));
-        supposedData[3] = new Segment(-300.000000, 100.000000, 0.000000, -100.000000, EColor.getEColorByName("Noir"));
+        supposedData[3] = new Segment(-300.000000, -100.000000, 0.000000, -100.000000, EColor.getEColorByName("Noir"));
         supposedData[4] = new Segment(0.000000, -100.000000, 300.000000, -100.000000, EColor.getEColorByName("Vert"));
-        supposedData[5] = new Segment(-300.000000, 100.000000, -300.000000, 100.000000, EColor.getEColorByName("Jaune"));
+        supposedData[5] = new Segment(-300.000000, -100.000000, -300.000000, 100.000000, EColor.getEColorByName("Jaune"));
         supposedData[6] = new Segment(200.000000, -350.000000, 141.421356, -208.578644, EColor.getEColorByName("Vert"));
         supposedData[7] = new Segment(141.421356, -208.578644, 0.000000, -150.000000, EColor.getEColorByName("Jaune"));
         supposedData[8] = new Segment(0.000000, -150.000000, -141.421356, -208.578644, EColor.getEColorByName("Gris"));
@@ -66,9 +66,30 @@ public class openSceneFileTest {
             i++;
         }
 
+        //Verify supposed segment equals actual segment
+        for (int j = 0; j < supposedData.length; j++){
+
+            double[] expected = supposedData[j].get();
+            double[] actual = data[j].get();
+
+            for (int k = 0; k < expected.length; k++){
+
+                assertEquals(expected[k], actual[k]);
+
+            }
+
+            EColor expectedColor = supposedData[j].getEColor();
+            EColor actualColor = data[j].getEColor();
+
+            assertEquals(expectedColor, actualColor);
+
+        }
+
+
+
         assertEquals(supposedA, a);
         assertEquals(supposedB, b);
-        assertEquals(supposedData, supposedData);
+        //assertEquals(supposedData, supposedData);
     }
 
     @AfterAll
