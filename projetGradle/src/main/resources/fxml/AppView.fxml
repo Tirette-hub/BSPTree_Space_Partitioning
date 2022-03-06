@@ -32,17 +32,15 @@
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller.APPController">
+<VBox xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller.APPController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -64,10 +62,10 @@
     <AnchorPane VBox.vgrow="ALWAYS">
       <children>
              <VBox>
-               <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="300.0" prefWidth="500.0">
+               <HBox>
                   <children>
                       <fx:include fx:id="fxScene" source="SceneView.fxml" />
-                      <fx:include fx:id="fxHeuristicChoice" source="HeuristicChoiceView.fxml"/>
+                      <fx:include fx:id="fxHeuristicChoice" source="HeuristicChoiceView.fxml" />
                   </children>
                </HBox>
                  <fx:include fx:id="fxPainting" source="PaintingView.fxml" />

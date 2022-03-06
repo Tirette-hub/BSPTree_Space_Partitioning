@@ -60,8 +60,18 @@ public class PaintingController {
         if (model.isPainted())
             onClear();
 
-        //get segments and eye position and heuristic
         dataCallback.handle(event);
+
+        //get segments and eye position and heuristic
+        System.out.println("get data:");
+        System.out.println(h);
+        System.out.println(segs);
+        /*for (Segment seg: segs) {
+            System.out.println(seg.toString());
+        }*/
+        for (double coord: POVPosition){
+            System.out.println(Double.toString(coord));
+        }
 
         //make the BSP Tree
         /*BSPTree t = makeTree(segs, h, POVPosition);

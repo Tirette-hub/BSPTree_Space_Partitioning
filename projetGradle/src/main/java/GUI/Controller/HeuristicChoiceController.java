@@ -4,6 +4,7 @@ import DataStructure.EHeuristic;
 import GUI.Model.HeuristicChoiceModel;
 import javafx.fxml.FXML;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.VBox;
 
 /**
@@ -29,9 +30,11 @@ public class HeuristicChoiceController {
         model = new HeuristicChoiceModel();
 
         //link Model with view
-        fxH1.selectedProperty().bindBidirectional(model.h1Property());
-        fxH2.selectedProperty().bindBidirectional(model.h2Property());
-        fxH3.selectedProperty().bindBidirectional(model.h3Property());
+        ToggleGroup toggleGroup = model.getToggleGroup();
+
+        fxH1.setToggleGroup(toggleGroup);
+        fxH2.setToggleGroup(toggleGroup);
+        fxH3.setToggleGroup(toggleGroup);
 
         //link controller to view - configurations
 

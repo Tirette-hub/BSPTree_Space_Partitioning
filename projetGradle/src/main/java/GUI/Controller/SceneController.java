@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 /**
@@ -55,6 +56,8 @@ public class SceneController {
      */
     @FXML
     public void onPOV(){
+        if (model.getPOVPosition() != null)
+            model.setPOVPosition(null, null);
         //allow the possibility to draw an eye
         POVenabled = !POVenabled;
 
@@ -80,7 +83,7 @@ public class SceneController {
             gc.clearRect(0,0, fxCanvas.getWidth(), fxCanvas.getHeight());
             drawScene(model.getData());
 
-            drawEye(eyeButtonImage.getImage(), event.getSceneX(), event.getSceneY());
+            drawEye(eyeButtonImage.getImage(), event.getSceneX()-4, event.getSceneY()-30);
             POVenabled = false;
         }
         event.consume();
@@ -100,12 +103,15 @@ public class SceneController {
             gc.clearRect(0,0, fxCanvas.getWidth(), fxCanvas.getHeight());
             drawScene(model.getData());
 
-            drawEye(eyeButtonImage.getImage(), event.getSceneX(), event.getSceneY());
+            drawEye(eyeButtonImage.getImage(), event.getSceneX()-4, event.getSceneY()-30);
         }
         event.consume();
     }
 
     //setters
+    public void setData(Segment[] data){
+        model.setData(data);
+    }
 
     //getters
     /**
@@ -132,6 +138,7 @@ public class SceneController {
      *      List of Segment objects representing the scene.
      */
     public Segment[] getData(){
+        System.out.println("get data");
         return model.getData();
     }
 
@@ -143,11 +150,11 @@ public class SceneController {
      *      Scene to draw.
      */
     public void drawScene(Segment[] scene){
-        if (model.isDrawn())
-            this.onClear();
-
         //get the drawable object from the canvas
         GraphicsContext gc = fxCanvas.getGraphicsContext2D();
+
+        if (model.isDrawn())
+            gc.clearRect(0,0, fxCanvas.getWidth(), fxCanvas.getHeight());
 
         //draw
         for (Segment s : scene){
@@ -178,7 +185,14 @@ public class SceneController {
         GraphicsContext gc = fxCanvas.getGraphicsContext2D();
 
         //draw
-        gc.drawImage(eye, x, y);
+        gc.drawImage(eye, x, y, 10, 10);
+    }
+
+    public void setSceneSize(int width, int height){
+        fxCanvas.setWidth(width);
+        fxCanvas.setHeight(height);
+        VBox vbox = (VBox) fxCanvas.getParent();
+        vbox.setPrefSize(width, height);
     }
 
     //constructor called by the fxml file

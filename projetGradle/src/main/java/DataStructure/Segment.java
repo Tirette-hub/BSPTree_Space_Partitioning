@@ -87,6 +87,15 @@ public class Segment {
         return (this.getEColor() == seg.getEColor());
     }
 
+    @Override
+    public String toString(){
+        return "Segment: (x1:" + Double.toString(x1)
+                + ", y1:" + Double.toString(y1)
+                + ", x2:" + Double.toString(x2)
+                + ", y2:" + Double.toString(y2)
+                + "), color: " + getEColor().toString();
+    }
+
     //setters
 
     /**

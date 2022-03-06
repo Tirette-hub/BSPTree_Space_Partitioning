@@ -86,12 +86,14 @@ public class APPController{
                 color = EColor.getEColorByName(fl[4]);
 
                 //create the segment from a line of data and add it to the scene
-                Segment segment = new Segment(x1,y1, x2, y2, color);
+                Segment segment = new Segment((x1+a)/2+5,(y1+b)/2+5, (x2+a)/2+5, (y2+b)/2+5, color);
                 scene[i] = segment;
                 i++;
             }
 
             //load scene into SceneController
+            fxSceneController.setSceneSize(a+10,b+10);
+            fxSceneController.setData(scene);
             fxSceneController.drawScene(scene);
         }
     }
@@ -149,7 +151,8 @@ public class APPController{
             @Override
             public void handle(ActionEvent event) {
                 //get all the segments
-                fxPaintingController.setData(fxHeuristicChoiceController.getChoice(), fxSceneController.getData(), fxSceneController.getPOVPosition());
+                if (fxSceneController.isDrawn() && fxSceneController.getPOVPosition() != null)
+                    fxPaintingController.setData(fxHeuristicChoiceController.getChoice(), fxSceneController.getData(), fxSceneController.getPOVPosition());
             }
         });
     }
