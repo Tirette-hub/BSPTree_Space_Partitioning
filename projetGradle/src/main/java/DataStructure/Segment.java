@@ -77,7 +77,14 @@ public class Segment {
 
         Segment seg = (Segment) o;
 
-        return (this.get() == seg.get() && this.getEColor() == seg.getEColor());
+        double[] thisArray = this.get();
+        double[] oArray = seg.get();
+        for(int i = 0; i < 4; i++){
+            if (thisArray[i] != oArray[i])
+                return false;
+        }
+
+        return (this.getEColor() == seg.getEColor());
     }
 
     //setters

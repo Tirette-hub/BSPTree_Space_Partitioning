@@ -1,3 +1,4 @@
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import DataStructure.EColor;
@@ -66,30 +67,12 @@ public class openSceneFileTest {
             i++;
         }
 
-        //Verify supposed segment equals actual segment
-        for (int j = 0; j < supposedData.length; j++){
-
-            double[] expected = supposedData[j].get();
-            double[] actual = data[j].get();
-
-            for (int k = 0; k < expected.length; k++){
-
-                assertEquals(expected[k], actual[k]);
-
-            }
-
-            EColor expectedColor = supposedData[j].getEColor();
-            EColor actualColor = data[j].getEColor();
-
-            assertEquals(expectedColor, actualColor);
-
-        }
-
-
-
         assertEquals(supposedA, a);
         assertEquals(supposedB, b);
-        //assertEquals(supposedData, supposedData);
+        assertEquals(n, 14);
+
+
+        assertArrayEquals(supposedData, data);
     }
 
     @AfterAll
