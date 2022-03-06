@@ -138,7 +138,6 @@ public class SceneController {
      *      List of Segment objects representing the scene.
      */
     public Segment[] getData(){
-        System.out.println("get data");
         return model.getData();
     }
 
