@@ -12,6 +12,11 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Canvas where is drawn the solution using the Painter's algorithm.
  *
@@ -115,13 +120,26 @@ public class PaintingController {
 
     /**
      * Create a BSP Tree from data.
-     * @param scene
+     * @param S
      *      Scene to load into the tree.
      * @return
      *      The BSP tree created.
      */
-    private BSPTree makeTree(Segment[] scene, EHeuristic h, double[] POVPosition){
-        return new BSPTree();
+    private BSPTree<Segment> createTree(Segment[] S, EHeuristic h, double[] POVPosition){
+        switch(h){
+            case H1:
+                return Segment.makeBasicTree(S);
+            case H2:
+                //shuffle S
+                List<Segment> newS = Arrays.asList(S);
+                Collections.shuffle(newS);
+                return Segment.makeBasicTree(newS.toArray(new Segment[0]));
+            case H3:
+                //change
+                return new BSPTree<Segment>();
+            default:
+                return null;
+        }
     }
 
     //setters
