@@ -4,54 +4,145 @@ import java.util.ArrayList;
 
 /**
  * Implementation of the BSP Tree.
+ * Based on Prof. V. Bruyère implementation of Tree in Java on Moodle UMons ("Implémentation" part of "Structure de Données 2" course, 2021-2022)
  *
  * @author
  *      Amorison Nathan
  *      Lemaire Emilien
  * @version 1.0.0
  */
-public class BSPTree<D> extends Tree<D>{
-    protected ArrayList<D> data;
-    protected BSPTree<D> left, right;
+public class BSPTree<D>{
+    private ArrayList<D> data;
+    private BSPTree<D> left, right;
 
     public BSPTree(){
-        super();
+        data = new ArrayList<>();
+        left = null;
+        right = null;
     }
-    public BSPTree(ArrayList<D> d, Tree<D> l, Tree<D> r){
-        super(null,l,r);
+    public BSPTree(ArrayList<D> d, BSPTree<D> l, BSPTree<D> r){
         data = d;
+        left = l;
+        right = r;
     }
 
-    public BSPTree(D d, Tree<D> l, Tree<D> r){
-        super(null, l, r);
+    public BSPTree(D d, BSPTree<D> l, BSPTree<D> r){
         data = new ArrayList<D>();
         data.add(d);
+        left = l;
+        right = r;
+    }
+
+    public ArrayList<D> getData(){
+        return data;
     }
 
     public BSPTree<D> getLeft(){
-        return (BSPTree<D>) super.getLeft();
+        return left;
     }
+
     public BSPTree<D> getRight(){
-        return (BSPTree<D>) super.getRight();
+        return right;
+    }
+
+    public void setLeft(BSPTree<D> l){
+        left = l;
+    }
+
+    public void setRight(BSPTree<D> r){
+        right = r;
+    }
+
+    public void setData(ArrayList<D> d){
+        data = d;
     }
 
     public void addData(D d){
         data.add(d);
     }
 
-    /*public boolean search(D d) {
-        /*
-         *
-         * TBC
-         *
-         *-/
+    @Override
+    public boolean equals(Object o){
+        if (o == this)
+            return true;
 
-        if (isEmpty())
+        //On vérifie qu'on compare bien 2 arbres
+        if (!(o instanceof BSPTree))
             return false;
-        else	if (getData() == d)
-            return getRight().search(d);
-        else 	if (getData() == d)
-            return getLeft().search(d);
-        else 	return true;
-    }*/
+
+        BSPTree<D> oTree = (BSPTree<D>) o;
+
+        //On vérifie que les 2 arbres ont les mêmes données
+        ArrayList<D> thisData = this.getData();
+        ArrayList<D> oData = oTree.getData();
+
+        if (thisData.size() != oData.size())
+            return false;
+
+        Segment thisSeg, oSeg;
+
+        for (int i = 0; i < thisData.size(); i++){
+             if (!(thisData.get(i).equals(oData.get(i)))) {
+                return false;
+            }
+        }
+
+        if (isLeaf() && oTree.isLeaf())
+            return true;
+        else{
+            //On vérifie que les sous-arbres gauche et droit sont équivalents pour les 2 arbres
+            if (left != null && oTree.getLeft() != null) {
+                if (!(this.getLeft().equals(oTree.getLeft())))
+                    return false;
+
+            }
+
+            if (right != null && oTree.getRight() != null) {
+                /*System.out.println("\n");
+                System.out.println(getRight().equals(oTree.getRight()));
+                System.out.println("\n");*/
+                if (!(this.getRight().equals(oTree.getRight())))
+                    return false;
+            }
+        }
+
+        return true;
+    }
+
+    public boolean isEmpty(){
+        return (data.size() == 0 && left == null && right == null);
+    }
+
+    public boolean isLeaf(){
+        return (!isEmpty() && left == null && right == null);
+    }
+
+    public void print() {
+        if(!isEmpty()){
+            if (!isLeaf() && left != null){
+                System.out.println("\non affiche le sous-arbre de gauche");
+                left.print();
+            }
+
+            System.out.println("on affiche nos données");
+            if (data.size() > 0)
+                for (D d : data){
+                    System.out.println(d);
+                }
+
+            if (!isLeaf() && right != null) {
+                System.out.println("\non affiche le sous-arbre de droite");
+                right.print();
+            }
+        }else{
+            System.out.println("je suis vide");
+        }
+    }
+
+    public int height() {
+        if (isEmpty())
+            return 0;
+        else
+            return 1 + Math.max(left.height(),right.height());
+    }
 }

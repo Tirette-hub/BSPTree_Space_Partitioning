@@ -11,8 +11,8 @@ package DataStructure;
 //mais par un "noeud vide", c'est-a-dire une feuille sans donnee
 
 public class Tree<D> {
-	protected D data;
-	private Tree<D> left, right;
+	private D data;
+	protected Tree<D> left, right;
 	
 //constructeurs
 	public Tree(D d, Tree<D> l, Tree<D> r) {

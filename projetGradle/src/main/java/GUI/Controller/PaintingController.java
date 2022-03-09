@@ -126,20 +126,25 @@ public class PaintingController {
      *      The BSP tree created.
      */
     private BSPTree<Segment> createTree(Segment[] S, EHeuristic h, double[] POVPosition){
+        BSPTree<Segment> tree;
         switch(h){
             case H1:
-                return Segment.makeBasicTree(S);
-            case H2:
                 //shuffle S
                 List<Segment> newS = Arrays.asList(S);
                 Collections.shuffle(newS);
-                return Segment.makeBasicTree(newS.toArray(new Segment[0]));
+                tree = Segment.makeBasicTree(newS.toArray(new Segment[0]));
+                break;
+            case H2:
+                tree = Segment.makeBasicTree(S);
+                break;
             case H3:
                 //change
-                return new BSPTree<Segment>();
+                tree = new BSPTree<>();
+                break;
             default:
-                return null;
+                tree = null;
         }
+        return tree;
     }
 
     //setters
