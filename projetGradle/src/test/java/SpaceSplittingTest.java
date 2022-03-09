@@ -41,24 +41,9 @@ public class SpaceSplittingTest {
         assertArrayEquals(Segment.cut(s1, s2), r3);
     }
 
-    /*@Test
-    void testRandom(){
-        System.out.println("Random Segment in set:");
-        Segment[] S = {new Segment(1,1,3,4),
-                        new Segment(4,2,4,6),
-                        new Segment(2,7,8,7)};
-
-        List<Segment> newS = Arrays.asList(S);
-        Collections.shuffle(newS);
-        BSPTree<Segment> tree = Segment.makeBasicTree(newS.toArray(new Segment[0]));
-
-        BSPTree<Segment> expectedTree = new BSPTree<>();
-
-        assertEquals(1, 1);
-    }*/
-
     @Test
     void testFirst(){
+        //No test for random set because it uses the same method as the following but with a shuffled data set S.
         System.out.println("First Segment in set:");
 
         Segment[] S = {new Segment(1,1,3,4),    //AB
