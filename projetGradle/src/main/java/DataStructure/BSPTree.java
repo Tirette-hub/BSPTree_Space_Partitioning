@@ -13,17 +13,19 @@ import java.util.ArrayList;
  */
 public class BSPTree<D>{
     private ArrayList<D> data;
-    private BSPTree<D> left, right;
+    private BSPTree<D> left, right, parent;
 
     public BSPTree(){
         data = new ArrayList<>();
         left = null;
         right = null;
+        parent = null;
     }
     public BSPTree(ArrayList<D> d, BSPTree<D> l, BSPTree<D> r){
         data = d;
         left = l;
         right = r;
+        parent = null;
     }
 
     public BSPTree(D d, BSPTree<D> l, BSPTree<D> r){
@@ -31,8 +33,25 @@ public class BSPTree<D>{
         data.add(d);
         left = l;
         right = r;
+        parent = null;
     }
 
+    public BSPTree(ArrayList<D> d, BSPTree<D> l, BSPTree<D> r, BSPTree<D> p){
+        data = d;
+        left = l;
+        right = r;
+        parent = p;
+    }
+
+    public BSPTree(D d, BSPTree<D> l, BSPTree<D> r, BSPTree<D> p){
+        data = new ArrayList<D>();
+        data.add(d);
+        left = l;
+        right = r;
+        parent = p;
+    }
+
+    //Getter
     public ArrayList<D> getData(){
         return data;
     }
@@ -45,6 +64,11 @@ public class BSPTree<D>{
         return right;
     }
 
+    public BSPTree<D> getParent() {
+        return parent;
+    }
+
+    //Setter
     public void setLeft(BSPTree<D> l){
         left = l;
     }
@@ -57,9 +81,14 @@ public class BSPTree<D>{
         data = d;
     }
 
+    public void setParent(BSPTree<D> parent) {
+        this.parent = parent;
+    }
+
     public void addData(D d){
         data.add(d);
     }
+
 
     @Override
     public boolean equals(Object o){
@@ -145,4 +174,6 @@ public class BSPTree<D>{
         else
             return 1 + Math.max(left.height(),right.height());
     }
+
+
 }
