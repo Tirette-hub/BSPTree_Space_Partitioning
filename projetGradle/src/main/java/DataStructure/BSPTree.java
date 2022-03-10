@@ -24,7 +24,9 @@ public class BSPTree<D>{
     public BSPTree(ArrayList<D> d, BSPTree<D> l, BSPTree<D> r){
         data = d;
         left = l;
+        l.setParent(this);
         right = r;
+        r.setParent(this);
         parent = null;
     }
 
@@ -32,14 +34,18 @@ public class BSPTree<D>{
         data = new ArrayList<D>();
         data.add(d);
         left = l;
+        l.setParent(this);
         right = r;
+        r.setParent(this);
         parent = null;
     }
 
     public BSPTree(BSPTree<D> p, ArrayList<D> d, BSPTree<D> l, BSPTree<D> r){
         data = d;
         left = l;
+        l.setParent(this);
         right = r;
+        r.setParent(this);
         parent = p;
     }
 
@@ -47,7 +53,9 @@ public class BSPTree<D>{
         data = new ArrayList<D>();
         data.add(d);
         left = l;
+        l.setParent(this);
         right = r;
+        r.setParent(this);
         parent = p;
     }
 
