@@ -180,25 +180,8 @@ public class Segment {
         double dx1 = x21-x11;
         double dy1 = y21-y11;
 
-        double a1, b1, c1; //h: a1*xi1 + b1*yi1 + c1 = 0
-        //case dx = 0 => vertical line
-        if (Math.abs(dx1) < 1e-4){
-            a1 = 1;
-            b1 = 0;
-            c1 = -x11;
-        }
-        //case dy = 0 => horizontal line
-        else if (Math.abs(dy1) < 1e-4){
-            a1 = 0;
-            b1 = 1;
-            c1 = -y11;
-        }
-        //general case
-        else{
-            b1 = 1;
-            a1 = -(y11-y21)/(x11-x21);
-            c1 = -a1*x11-y11;
-        }
+        double[] abc = getCutlineParameters(coord);
+        double a1 = abc[0], b1 = abc[1], c1 = abc[2]; //h: a1*xi1 + b1*yi1 + c1 = 0
 
         //get second line equation
         coord = lineToCut.get();
@@ -210,25 +193,8 @@ public class Segment {
         double dx2 = x22-x12;
         double dy2 = y22-y12;
 
-        double a2, b2, c2; //h: a*x + b*y + c = 0
-        //case dx = 0 => vertical line
-        if (Math.abs(dx2) < 1e-4){
-            a2 = 1;
-            b2 = 0;
-            c2 = -x12;
-        }
-        //case dy = 0 => horizontal line
-        else if (Math.abs(dy2) < 1e-4){
-            a2 = 0;
-            b2 = 1;
-            c2 = -y12;
-        }
-        //general case
-        else{
-            b2 = 1;
-            a2 = -(y12-y22)/(x12-x22);
-            c2 = -a2*x12-y12;
-        }
+        abc = getCutlineParameters(coord);
+        double a2 = abc[0], b2 = abc[1], c2 = abc[2]; //h: a*x + b*y + c = 0
 
         //get intersection coordinates
         double x, y;
@@ -266,7 +232,37 @@ public class Segment {
         return S;
     }
 
-    static public BSPTree<Segment> makeBasicTree(Segment[] S){
+    static public double[] getCutlineParameters(double[] coord){
+        double x1 = coord[0],
+                y1 = coord[1],
+                x2 = coord[2],
+                y2 = coord[3];
+        double dx = x2-x1;
+        double dy = y2-y1;
+        double a, b, c; //h: a*xi + b*yi + c = 0
+        //case dx = 0 => vertical line
+        if (Math.abs(dx) < 1e-4){
+            a = 1;
+            b = 0;
+            c = -x1;
+        }
+        //case dy = 0 => horizontal line
+        else if (Math.abs(dy) < 1e-4){
+            a = 0;
+            b = 1;
+            c = -y1;
+        }
+        //general case
+        else{
+            b = 1;
+            a = -(y1-y2)/(x1-x2);
+            c = -a*x1-y1;
+        }
+
+        return new double[]{a,b,c};
+    }
+
+    static public BSPTree<Segment> makeBasicTree(Segment[] S, BSPTree<Segment> parent, boolean switchToFreeSplit){
         /*System.out.println("");
         for (Segment s : S){
             System.out.println(s.toString());
@@ -276,7 +272,7 @@ public class Segment {
         if (S.length == 1){
             //le set S de segments est unique, donc il s'agit d'une feuille, on crée donc un arbe qui est en réalité une feuille avec la data.
             //System.out.println("feuille");
-            tree = new BSPTree<>(S[0], null, null);
+            tree = new BSPTree<>(parent, S[0], null, null);
         }else if (S.length == 0) {
             //System.out.println("vide");
             return null;
@@ -286,32 +282,10 @@ public class Segment {
             Segment l = S[0];
 
             //calcul des paramètres d'équation de la droite (équation de l'hyperplan)
-            double[] coord = l.get();
-            double x1 = coord[0],
-                    y1 = coord[1],
-                    x2 = coord[2],
-                    y2 = coord[3];
-            double dx = x2-x1;
-            double dy = y2-y1;
-            double a, b, c; //h: a*xi + b*yi + c = 0
-            //case dx = 0 => vertical line
-            if (Math.abs(dx) < 1e-4){
-                a = 1;
-                b = 0;
-                c = -x1;
-            }
-            //case dy = 0 => horizontal line
-            else if (Math.abs(dy) < 1e-4){
-                a = 0;
-                b = 1;
-                c = -y1;
-            }
-            //general case
-            else{
-                b = 1;
-                a = -(y1-y2)/(x1-x2);
-                c = -a*x1-y1;
-            }
+            double[] abc = getCutlineParameters(l.get());
+            double a = abc[0],
+                    b = abc[1],
+                    c = abc[2];
 
             //System.out.println(l.toString() + " a = " + Double.toString(a) + ", b = " + Double.toString(b) + ", c = " + Double.toString(c));
 
@@ -376,14 +350,106 @@ public class Segment {
             }
             //System.out.println("on crée les sous-arbres");
             // creates left and right subtree;
-            BSPTree<Segment> left = makeBasicTree(Sminus.toArray(new Segment[0]));
-            BSPTree<Segment> right = makeBasicTree(Splus.toArray(new Segment[0]));
+            BSPTree<Segment> left;
+            BSPTree<Segment> right;
+
+            if (switchToFreeSplit){
+                left = makeFreeSplitTree(Sminus.toArray(new Segment[0]), tree);
+                right = makeFreeSplitTree(Splus.toArray(new Segment[0]), tree);
+            }
+            left = makeBasicTree(Sminus.toArray(new Segment[0]), tree, false);
+            right = makeBasicTree(Splus.toArray(new Segment[0]), tree, false);
 
             //add left and right subtree to the tree
             tree.setLeft(left);
             tree.setRight(right);
         }
 
+        return tree;
+    }
+
+    public static BSPTree<Segment> makeFreeSplitTree(Segment[] S, BSPTree<Segment> parent) {
+        BSPTree<Segment> tree;
+
+        if (S.length == 1){
+            //le set S de segments est unique, donc il s'agit d'une feuille, on crée donc un arbe qui est en réalité une feuille avec la data.
+            //System.out.println("feuille");
+            tree = new BSPTree<>(S[0], null, null);
+        }else if (S.length == 0) {
+            //System.out.println("vide");
+            return null;
+        }else {
+            if (parent != null) {
+                //Il y a peut-être un freeSplit à faire
+                double[] coord;
+                double x1, y1, x2, y2;
+                BSPTree<Segment> borne;
+                boolean pt1 = false, pt2 = false; //flag pour savoir si pt1 et/ou pt2 est sur une borne de l'espace
+                double[] abc;
+                double a, b, c;
+                Segment freeSplitSeg = null;
+
+                for (Segment s : S){
+                    coord = s.get();
+                    x1 = coord[0]; y1 = coord[1]; //pt1
+                    x2 = coord[2]; y2 = coord[3]; //pt2
+                    pt1 = false;
+
+
+                    borne = parent;
+                    while(borne != null){
+                        abc = getCutlineParameters(borne.getData().get(0).get());
+                        a = abc[0]; b = abc[1]; c = abc[2];
+                        if (Math.abs(a*x1+b*y1+c) < 1e-4){
+                            pt1 = true;
+                            break;
+                        }
+
+                        borne = parent.getParent();
+                    }
+                    if (pt1){
+                        //check pt2
+                        borne = parent;
+                        while(borne != null){
+                            abc = getCutlineParameters(borne.getData().get(0).get());
+                            a = abc[0]; b = abc[1]; c = abc[2];
+                            if (Math.abs(a*x2+b*y2+c) < 1e-4){
+                                pt2 = true;
+                                break;
+                            }
+
+                            borne = parent.getParent();
+                        }
+                    }
+                    if (pt2) {
+                        freeSplitSeg = s;
+                        break;
+                    }
+                }
+
+                if(!pt1 || !pt2)
+                    tree = makeBasicTree(S, parent, false);
+                else{
+                    //make freesplit
+                    //rework S with l as first segment.
+                    Segment[] newS = new Segment[S.length];
+                    newS[0] = freeSplitSeg;
+                    int n = 1;
+                    for (int i = 0; i < S.length; i++){
+                        if (S[i] != newS[0])
+                            newS[i+n] = S[i];
+                        else
+                            n = 0;
+                    }
+
+                    tree = makeBasicTree(newS, parent, true);
+                }
+            }
+            else{
+                //on fait un arbre normal, mais on appelle freeSplit pour la suite
+                tree = makeBasicTree(S, parent, true);
+            }
+        }
         return tree;
     }
 }

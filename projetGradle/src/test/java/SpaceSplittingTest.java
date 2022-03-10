@@ -50,7 +50,7 @@ public class SpaceSplittingTest {
                 new Segment(4,2,4,6),           //CD
                 new Segment(2,7,8,7)};          //EF
 
-        BSPTree<Segment> tree = Segment.makeBasicTree(S);
+        BSPTree<Segment> tree = Segment.makeBasicTree(S,null, false);
 
         Segment[] expectedS = {new Segment(1,1,3,4),    //AB 0
                 new Segment(4,2,4,11.0/2.0),            //CG 1
