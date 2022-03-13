@@ -75,10 +75,47 @@ public class SpaceSplittingTest {
         assertEquals(tree, expectedTree);
     }
 
-    /*@Test
+    @Test
     void testFreeSplit(){
+        System.out.println("free split:");
+        Segment[] S = {
+                new Segment(3.5,0.5,2.5,2.5),   //AB
+                new Segment(-0.5,5,2.5,6),      //CD
+                new Segment(5.5,6.5,5,4.5),     //EF
+                new Segment(2.5,4,3.5,4.5),     //GH
+                new Segment(-0.5,4.5,7,1.5)     //IJ
+        };
 
-    }*/
+        BSPTree<Segment> tree = Segment.makeFreeSplitTree(S, null);
+
+        Segment[] expectedS = {
+                new Segment(3.5,0.5,2.5,2.5),                           //AB 0
+                new Segment(-0.5,5,1,5.5),                              //CL 1
+                new Segment(1,5.5,2.5,6),                               //LD 2
+                new Segment(5.5,6.5,5,4.5),                             //EF 3
+                new Segment(2.5,4,3.5,4.5),                             //GH 4
+                new Segment(-0.5,4.5,2,3.5),                            //IK 5
+                new Segment(2,3.5,4.5,2.5),                             //KM 6
+                new Segment(4.5,2.5,7,1.5)                              //MJ 7
+        };
+
+        BSPTree<Segment> leafGH = new BSPTree<>(expectedS[4], null, null);
+        BSPTree<Segment> leafIK = new BSPTree<>(expectedS[5], null, null);
+        BSPTree<Segment> leafMJ = new BSPTree<>(expectedS[7], null, null);
+        BSPTree<Segment> leftTree = new BSPTree<>(expectedS[1], leafIK, null);
+        BSPTree<Segment> nodeKM = new BSPTree<>(expectedS[6], null, leafGH);
+        BSPTree<Segment> nodeEF = new BSPTree<>(expectedS[3], leafMJ, nodeKM);
+        BSPTree<Segment> rightTree = new BSPTree<>(expectedS[2], nodeEF, null);
+        BSPTree<Segment> expectedTree = new BSPTree<>(expectedS[0], leftTree, rightTree);
+
+        /*System.out.println("tree:");
+        tree.print();
+
+        System.out.println("\nexpectedTree:");
+        expectedTree.print();*/
+
+        assertEquals(tree, expectedTree);
+    }
 
     @AfterEach
     void testAfterEach(){

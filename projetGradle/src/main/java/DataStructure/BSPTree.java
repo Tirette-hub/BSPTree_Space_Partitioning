@@ -22,49 +22,65 @@ public class BSPTree<D>{
         parent = null;
     }
     public BSPTree(ArrayList<D> d, BSPTree<D> l, BSPTree<D> r){
+        parent = null;
         data = d;
         left = l;
-        if (l != null)
-            l.setParent(this);
         right = r;
-        if (r != null)
+        //System.out.println("\n\tcreating tree\n");
+        if (l != null) {
+            l.setParent(this);
+        }
+        if (r != null) {
             r.setParent(this);
-        parent = null;
+        }
+        //System.out.println("left & right subtree done");
     }
 
     public BSPTree(D d, BSPTree<D> l, BSPTree<D> r){
+        parent = null;
         data = new ArrayList<D>();
         data.add(d);
         left = l;
-        if (l != null)
-            l.setParent(this);
         right = r;
-        if (r != null)
+        //System.out.println("\n\tcreating tree\n");
+        if (l != null) {
+            l.setParent(this);
+        }
+        if (r != null) {
             r.setParent(this);
-        parent = null;
+        }
+        //System.out.println("left & right subtree done");
     }
 
     public BSPTree(BSPTree<D> p, ArrayList<D> d, BSPTree<D> l, BSPTree<D> r){
+        parent = p;
         data = d;
         left = l;
-        if (l != null)
-            l.setParent(this);
         right = r;
-        if (r != null)
+        //System.out.println("\n\tcreating tree\n");
+        if (l != null) {
+            l.setParent(this);
+        }
+        if (r != null) {
             r.setParent(this);
-        parent = p;
+        }
+        //System.out.println("left & right subtree done");
     }
 
     public BSPTree(BSPTree<D> p, D d, BSPTree<D> l, BSPTree<D> r){
+        parent = p;
         data = new ArrayList<D>();
         data.add(d);
         left = l;
-        if (l != null)
-            l.setParent(this);
         right = r;
-        if (r != null)
+        //System.out.println("\n\tcreating tree\n");
+        if (l != null) {
+            l.setParent(this);
+        }
+        if (r != null) {
             r.setParent(this);
-        parent = p;
+        }
+        //System.out.println("left & right subtree done");
     }
 
     //Getter
@@ -86,13 +102,21 @@ public class BSPTree<D>{
 
     //Setter
     public void setLeft(BSPTree<D> l){
+        if (left != null)
+            left.setParent(null);
         left = l;
-        l.setParent(this);
+        if (left != null) {
+            l.setParent(this);
+        }
     }
 
     public void setRight(BSPTree<D> r){
+        if (right != null)
+            right.setParent(null);
         right = r;
-        r.setParent(this);
+        if (right != null) {
+            r.setParent(this);
+        }
     }
 
     public void setData(ArrayList<D> d){
@@ -107,6 +131,10 @@ public class BSPTree<D>{
         data.add(d);
     }
 
+    @Override
+    public String toString(){
+        return data.get(0).toString();
+    }
 
     @Override
     public boolean equals(Object o){

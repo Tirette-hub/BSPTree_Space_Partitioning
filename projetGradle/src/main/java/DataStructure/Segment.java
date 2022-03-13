@@ -82,7 +82,7 @@ public class Segment {
         double[] thisArray = this.get();
         double[] oArray = seg.get();
         for(int i = 0; i < 4; i++){
-            if (thisArray[i] != oArray[i])
+            if (Math.abs(thisArray[i]-oArray[i]) > 1e-4)
                 return false;
         }
 
@@ -262,22 +262,19 @@ public class Segment {
         return new double[]{a,b,c};
     }
 
+    static public BSPTree<Segment> makeBasicTree(Segment[] S, BSPTree<Segment> parent){
+        return makeBasicTree(S, parent, false);
+    }
+
     static public BSPTree<Segment> makeBasicTree(Segment[] S, BSPTree<Segment> parent, boolean switchToFreeSplit){
-        /*System.out.println("");
-        for (Segment s : S){
-            System.out.println(s.toString());
-        }*/
 
         BSPTree<Segment> tree;
         if (S.length == 1){
             //le set S de segments est unique, donc il s'agit d'une feuille, on crée donc un arbe qui est en réalité une feuille avec la data.
-            //System.out.println("feuille");
             tree = new BSPTree<>(parent, S[0], null, null);
         }else if (S.length == 0) {
-            //System.out.println("vide");
             return null;
         }else{
-            //System.out.println("on fait un arbre");
             // segment correspondant à la ligne de découpe
             Segment l = S[0];
 
@@ -287,9 +284,6 @@ public class Segment {
                     b = abc[1],
                     c = abc[2];
 
-            //System.out.println(l.toString() + " a = " + Double.toString(a) + ", b = " + Double.toString(b) + ", c = " + Double.toString(c));
-
-            //System.out.println("on check les positions");
             //on crée les listes des segments se trouvant à gauche et à droite de la ligne de découpe
             ArrayList<Segment> Sminus = new ArrayList<>();
             ArrayList<Segment> Splus = new ArrayList<>();
@@ -300,6 +294,7 @@ public class Segment {
             //vérification, pour chaque segment, de sa position par rapport à la ligne de découpe pour en créer le bsp
             tree = new BSPTree<>();
             tree.addData(l);
+            tree.setParent(parent);
             for (Segment seg : S){
                 if (seg != l){
                     segCoord = seg.get();
@@ -307,30 +302,24 @@ public class Segment {
                     r1 = a*segCoord[0] + b*segCoord[1] + c;
                     r2 = a*segCoord[2] + b*segCoord[3] + c;
 
-                    //System.out.println(seg.toString() + " result = {" + Double.toString(r1) + "; " + Double.toString(r2) + "}");
-
                     if (Math.abs(r1) < 1e-4 && Math.abs(r2) < 1e-4){
                         //segment sur la ligne de découpe
                         //ajouter ce segment à la liste de semgments que contient le noeud
                         tree.addData(seg);
-                        //System.out.println("sur la ligne de découpe");
                     }
                     else if(r1 <= 0 && r2 <= 0){
                         //segment à gauche de la ligne de découpe (possibilité qu'un des points se trouve sur la ligne de découpe)
                         //ajouter le segment à la liste des S-
                         Sminus.add(seg);
-                        //System.out.println("On ajoute à S-");
                     }
                     else if(r1 >= 0 && r2 >= 0){
                         //segment à droite de la ligne de découpe (possibilité qu'un des points se trouve sur la ligne de découpe)
                         //ajouter le segment à la liste des S+
                         Splus.add(seg);
-                        //System.out.println("On ajoute à S+");
                     }
                     else if((r1 <= 0 && r2 >= 0) || (r1 >= 0 && r2 <= 0)){
                         //segment seg coupé par la ligne de découpe (appel à cut)
                         Segment[] cutResult = Segment.cut(seg, l);
-                        //System.out.println("on coupe");
 
                         //on vérifie quel coté de la découpe se trouve à gauche et quel coté se trouve à droite, de la ligne de découpe
                         double[] cutLineCoord = cutResult[0].getFrom();
@@ -344,11 +333,9 @@ public class Segment {
                             Sminus.add(cutResult[1]);
                             Splus.add(cutResult[0]);
                         }
-                        //System.out.println("on ajoute la découpe");
                     }
                 }
             }
-            //System.out.println("on crée les sous-arbres");
             // creates left and right subtree;
             BSPTree<Segment> left;
             BSPTree<Segment> right;
@@ -357,8 +344,10 @@ public class Segment {
                 left = makeFreeSplitTree(Sminus.toArray(new Segment[0]), tree);
                 right = makeFreeSplitTree(Splus.toArray(new Segment[0]), tree);
             }
-            left = makeBasicTree(Sminus.toArray(new Segment[0]), tree, false);
-            right = makeBasicTree(Splus.toArray(new Segment[0]), tree, false);
+            else {
+                left = makeBasicTree(Sminus.toArray(new Segment[0]), tree);
+                right = makeBasicTree(Splus.toArray(new Segment[0]), tree);
+            }
 
             //add left and right subtree to the tree
             tree.setLeft(left);
@@ -373,10 +362,9 @@ public class Segment {
 
         if (S.length == 1){
             //le set S de segments est unique, donc il s'agit d'une feuille, on crée donc un arbe qui est en réalité une feuille avec la data.
-            //System.out.println("feuille");
             tree = new BSPTree<>(S[0], null, null);
+            tree.setParent(parent);
         }else if (S.length == 0) {
-            //System.out.println("vide");
             return null;
         }else {
             if (parent != null) {
@@ -393,8 +381,7 @@ public class Segment {
                     coord = s.get();
                     x1 = coord[0]; y1 = coord[1]; //pt1
                     x2 = coord[2]; y2 = coord[3]; //pt2
-                    pt1 = false;
-
+                    pt1 = false; pt2 = false;
 
                     borne = parent;
                     while(borne != null){
@@ -405,7 +392,7 @@ public class Segment {
                             break;
                         }
 
-                        borne = parent.getParent();
+                        borne = borne.getParent();
                     }
                     if (pt1){
                         //check pt2
@@ -418,7 +405,7 @@ public class Segment {
                                 break;
                             }
 
-                            borne = parent.getParent();
+                            borne = borne.getParent();
                         }
                     }
                     if (pt2) {
@@ -427,8 +414,9 @@ public class Segment {
                     }
                 }
 
-                if(!pt1 || !pt2)
-                    tree = makeBasicTree(S, parent, false);
+                if(!pt1 || !pt2) {
+                    tree = makeBasicTree(S, parent, true);
+                }
                 else{
                     //make freesplit
                     //rework S with l as first segment.
@@ -443,6 +431,7 @@ public class Segment {
                     }
 
                     tree = makeBasicTree(newS, parent, true);
+
                 }
             }
             else{
@@ -450,6 +439,7 @@ public class Segment {
                 tree = makeBasicTree(S, parent, true);
             }
         }
+
         return tree;
     }
 }

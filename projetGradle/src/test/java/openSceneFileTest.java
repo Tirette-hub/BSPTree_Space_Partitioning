@@ -36,7 +36,6 @@ public class openSceneFileTest {
         supposedData[13] = new Segment(141.421356, -491.421356, 200.000000, -350.000000, EColor.getEColorByName("Bleu"));
 
         //open test file
-        System.out.println(getClass().getResource("/octangle.txt").toURI());
         File file = new File(getClass().getResource("/octangle.txt").toURI());
 
         //init the scanner to parse the file
