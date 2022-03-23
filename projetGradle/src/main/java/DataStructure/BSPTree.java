@@ -15,12 +15,27 @@ public class BSPTree<D>{
     private ArrayList<D> data;
     private BSPTree<D> left, right, parent;
 
+    //constructors
+
+    /**
+     * Constructor.
+     */
     public BSPTree(){
         data = new ArrayList<>();
         left = null;
         right = null;
         parent = null;
     }
+
+    /**
+     * Constructor.
+     * @param d
+     *      ArrayList of data stocked in the node.
+     * @param l
+     *      Left sub-tree.
+     * @param r
+     *      Right sub-three.
+     */
     public BSPTree(ArrayList<D> d, BSPTree<D> l, BSPTree<D> r){
         parent = null;
         data = d;
@@ -36,6 +51,15 @@ public class BSPTree<D>{
         //System.out.println("left & right subtree done");
     }
 
+    /**
+     * Constructor.
+     * @param d
+     *      Segment data stocked in the node.
+     * @param l
+     *      Left sub-tree.
+     * @param r
+     *      Right sub-three.
+     */
     public BSPTree(D d, BSPTree<D> l, BSPTree<D> r){
         parent = null;
         data = new ArrayList<D>();
@@ -52,6 +76,17 @@ public class BSPTree<D>{
         //System.out.println("left & right subtree done");
     }
 
+    /**
+     * Constructor.
+     * @param p
+     *      Parent tree.
+     * @param d
+     *      ArrayList of data stocked in the node.
+     * @param l
+     *      Left sub-tree.
+     * @param r
+     *      Right sub-three.
+     */
     public BSPTree(BSPTree<D> p, ArrayList<D> d, BSPTree<D> l, BSPTree<D> r){
         parent = p;
         data = d;
@@ -67,6 +102,17 @@ public class BSPTree<D>{
         //System.out.println("left & right subtree done");
     }
 
+    /**
+     * Constructor
+     * @param p
+     *      Parent tree.
+     * @param d
+     *      Segment data stocked in the node.
+     * @param l
+     *      Left sub-tree.
+     * @param r
+     *      Right sub-three.
+     */
     public BSPTree(BSPTree<D> p, D d, BSPTree<D> l, BSPTree<D> r){
         parent = p;
         data = new ArrayList<D>();
@@ -84,23 +130,105 @@ public class BSPTree<D>{
     }
 
     //Getter
+
+    /**
+     * Get data stored in the root node.
+     * @return
+     *      ArrayList of data.
+     */
     public ArrayList<D> getData(){
         return data;
     }
 
+    /**
+     * Get left sub-tree.
+     * @return
+     *      Left BSPTree.
+     */
     public BSPTree<D> getLeft(){
         return left;
     }
 
+    /**
+     * Get right sub-tree
+     * @return
+     *      Right BSPTree.
+     */
     public BSPTree<D> getRight(){
         return right;
     }
 
+    /**
+     * Get parent node. (root)
+     * @return
+     *      Parent BSPTree.
+     */
     public BSPTree<D> getParent() {
         return parent;
     }
 
+    /**
+     * Check if the tree is empty.
+     * @return
+     *      If no data and no sub-tree.
+     */
+    public boolean isEmpty(){
+        return (data.size() == 0 && left == null && right == null);
+    }
+
+    /**
+     * check if the tree is actually a leaf.
+     * @return
+     *      If there are data but no sub-tree.
+     */
+    public boolean isLeaf(){
+        return (!isEmpty() && left == null && right == null);
+    }
+
+    /**
+     * Show all the tree structure.
+     */
+    public void print() {
+        if(!isEmpty()){
+            if (!isLeaf() && left != null){
+                System.out.println("\non affiche le sous-arbre de gauche");
+                left.print();
+            }
+
+            System.out.println("on affiche nos données");
+            if (data.size() > 0)
+                for (D d : data){
+                    System.out.println(d);
+                }
+
+            if (!isLeaf() && right != null) {
+                System.out.println("\non affiche le sous-arbre de droite");
+                right.print();
+            }
+        }else{
+            System.out.println("je suis vide");
+        }
+    }
+
+    /**
+     * Get the height of the tree from this node.
+     * @return
+     *      The height of the tree.
+     */
+    public int height() {
+        if (isEmpty())
+            return 0;
+        else
+            return 1 + Math.max(left.height(),right.height());
+    }
+
     //Setter
+
+    /**
+     * Set left sub-tree.
+     * @param l
+     *      Left BSPTree.
+     */
     public void setLeft(BSPTree<D> l){
         if (left != null)
             left.setParent(null);
@@ -110,6 +238,11 @@ public class BSPTree<D>{
         }
     }
 
+    /**
+     * Set Right sub-tree.
+     * @param r
+     *      Right BSPTree.
+     */
     public void setRight(BSPTree<D> r){
         if (right != null)
             right.setParent(null);
@@ -119,23 +252,52 @@ public class BSPTree<D>{
         }
     }
 
+    /**
+     * Set the list of data to store in the node.
+     * @param d
+     *      ArrayList of data.
+     */
     public void setData(ArrayList<D> d){
         data = d;
     }
 
+    /**
+     * Set the parent node.
+     * @param parent
+     *      Parent BSPTree.
+     */
     public void setParent(BSPTree<D> parent) {
         this.parent = parent;
     }
 
+    /**
+     * Add data to the node.
+     * @param d
+     *      Data to add.
+     */
     public void addData(D d){
         data.add(d);
     }
 
+    //Overrides
+
+    /**
+     * Representation of the tree.
+     * @return
+     *      First data in list of data.
+     */
     @Override
     public String toString(){
         return data.get(0).toString();
     }
 
+    /**
+     * Check if a BSPTree is equals to another object.
+     * @param o
+     *      The other object to compare with. (Has to be a BSPTree instance)
+     * @return
+     *      If the 2 objects are equals or not.
+     */
     @Override
     public boolean equals(Object o){
         if (o == this)
@@ -157,7 +319,7 @@ public class BSPTree<D>{
         Segment thisSeg, oSeg;
 
         for (int i = 0; i < thisData.size(); i++){
-             if (!(thisData.get(i).equals(oData.get(i)))) {
+            if (!(thisData.get(i).equals(oData.get(i)))) {
                 return false;
             }
         }
@@ -183,43 +345,5 @@ public class BSPTree<D>{
 
         return true;
     }
-
-    public boolean isEmpty(){
-        return (data.size() == 0 && left == null && right == null);
-    }
-
-    public boolean isLeaf(){
-        return (!isEmpty() && left == null && right == null);
-    }
-
-    public void print() {
-        if(!isEmpty()){
-            if (!isLeaf() && left != null){
-                System.out.println("\non affiche le sous-arbre de gauche");
-                left.print();
-            }
-
-            System.out.println("on affiche nos données");
-            if (data.size() > 0)
-                for (D d : data){
-                    System.out.println(d);
-                }
-
-            if (!isLeaf() && right != null) {
-                System.out.println("\non affiche le sous-arbre de droite");
-                right.print();
-            }
-        }else{
-            System.out.println("je suis vide");
-        }
-    }
-
-    public int height() {
-        if (isEmpty())
-            return 0;
-        else
-            return 1 + Math.max(left.height(),right.height());
-    }
-
 
 }

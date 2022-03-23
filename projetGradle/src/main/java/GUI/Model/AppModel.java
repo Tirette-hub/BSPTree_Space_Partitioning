@@ -14,12 +14,16 @@ import java.io.File;
 public class AppModel {
     private File loadedFile;
 
+    //constructors
+
     /**
      * Constructor.
      */
     public AppModel(){
 
     }
+
+    //setters
 
     /**
      * Set the file.
@@ -29,6 +33,8 @@ public class AppModel {
     public void setFile(File file){
         loadedFile = file;
     }
+
+    //getters
 
     /**
      * Get the file.

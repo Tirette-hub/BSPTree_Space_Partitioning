@@ -50,6 +50,11 @@ public class HeuristicChoiceModel {
             return EHeuristic.H3;
     }
 
+    /**
+     * Get the ToggleGroup associated to the group of check boxes.
+     * @return
+     *      ToggleGroup of the check boxes.
+     */
     public ToggleGroup getToggleGroup(){
         return toggleGroup;
     }

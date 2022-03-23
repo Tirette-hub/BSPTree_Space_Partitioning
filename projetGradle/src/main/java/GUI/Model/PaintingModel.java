@@ -15,12 +15,16 @@ public class PaintingModel {
     private boolean isPainted;
     private BSPTree tree;
 
+    //constructors
+
     /**
      * Constructor.
      */
     public PaintingModel(){
         isPainted = true;
     }
+
+    //getters
 
     /**
      * Check if the canvas has something painted on it.
@@ -32,9 +36,20 @@ public class PaintingModel {
     }
 
     /**
+     * Get the BSP tree.
+     * @return
+     *      BSPTree object stored.
+     */
+    public BSPTree getBSPTree(){
+        return tree;
+    }
+
+    //setters
+
+    /**
      * Set the flag that says if the canvas has something painted on it.
      * @param flag
-     *      Flag value.
+     *      New flag value.
      */
     public void setIsPainted(boolean flag){
         isPainted = flag;
@@ -43,18 +58,9 @@ public class PaintingModel {
     /**
      * Set the BSP tree.
      * @param tree
-     *      BSPTree object to store.
+     *      New BSPTree object to store.
      */
     public void setBSPTree(BSPTree tree){
         this.tree = tree;
-    }
-
-    /**
-     * Get the BSP tree.
-     * @return
-     *      BSPTree object stored.
-     */
-    public BSPTree getBSPTree(){
-        return tree;
     }
 }

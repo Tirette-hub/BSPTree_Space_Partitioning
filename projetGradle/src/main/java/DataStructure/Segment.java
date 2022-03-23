@@ -69,6 +69,15 @@ public class Segment {
             this.color = EColor.BLACK;
     }
 
+    //Overrides
+
+    /**
+     * Check if a Segment is equals to another object.
+     * @param o
+     *      The other object to compare with. (Has to be a Segment instance)
+     * @return
+     *      If the 2 objects are equals.
+     */
     @Override
     public boolean equals(Object o){
         if (o == this)
@@ -89,6 +98,11 @@ public class Segment {
         return (this.getEColor() == seg.getEColor());
     }
 
+    /**
+     * Representation of the segment.
+     * @return
+     *      Coordinates of first and last points and the color.
+     */
     @Override
     public String toString(){
         return "Segment: (x1:" + Double.toString(x1)
@@ -170,6 +184,17 @@ public class Segment {
         return color;
     }
 
+    //static methods
+
+    /**
+     * Allows to cut a segment with another.
+     * @param lineToCut
+     *      Segment that will be cut.
+     * @param cutLine
+     *      Segment that will be extended to a line to cut.
+     * @return
+     *      Array of Segments representing the 2 parts of the segment that has been cut.
+     */
     static public Segment[] cut(Segment lineToCut, Segment cutLine){
         //get the hyperplan equation (general 2D line equation) of cutline
         double[] coord = cutLine.get();
@@ -232,6 +257,13 @@ public class Segment {
         return S;
     }
 
+    /**
+     * Get the 2D hyperplan parameters.
+     * @param coord
+     *      2 points coordinates of the line.
+     * @return
+     *      Array of 3 doubles representing a, b and c parameters (respectively).respectivement
+     */
     static public double[] getCutlineParameters(double[] coord){
         double x1 = coord[0],
                 y1 = coord[1],
@@ -262,10 +294,32 @@ public class Segment {
         return new double[]{a,b,c};
     }
 
+    /**
+     * Create a BSPTree following the order of the given segment list.
+     * @param S
+     *      List of Segments representing the scene to partition.
+     * @param parent
+     *      Parent node to which will be added the sub-tree that will be created.
+     *      If null, the root is created.
+     * @return
+     *      The BSPTree of the scene.
+     */
     static public BSPTree<Segment> makeBasicTree(Segment[] S, BSPTree<Segment> parent){
         return makeBasicTree(S, parent, false);
     }
 
+    /**
+     * Create a BSPTree following the order of the given segment list but can also follow the "free split" rule
+     * @param S
+     *      List of Segments representing the scene to partition.
+     * @param parent
+     *      Parent node to which will be added the sub-tree that will be created.
+     *      If null, the root is created.
+     * @param switchToFreeSplit
+     *      Flag to know if the algorithm has to switch to "free split" rule or not.
+     * @return
+     *      The BSPTree of the scene.
+     */
     static public BSPTree<Segment> makeBasicTree(Segment[] S, BSPTree<Segment> parent, boolean switchToFreeSplit){
 
         BSPTree<Segment> tree;
@@ -357,6 +411,16 @@ public class Segment {
         return tree;
     }
 
+    /**
+     * Create a BSPTree following the "free split" rule
+     * @param S
+     *      List of Segments representing the scene to partition.
+     * @param parent
+     *      Parent node to which will be added the sub-tree that will be created.
+     *      If null, the root is created.
+     * @return
+     *      The BSPTree of the scene.
+     */
     static public BSPTree<Segment> makeFreeSplitTree(Segment[] S, BSPTree<Segment> parent) {
         BSPTree<Segment> tree;
 
@@ -443,11 +507,22 @@ public class Segment {
         return tree;
     }
 
+    /**
+     * Get the list of segments that have to be painted in order
+     * @param tree
+     *      BSPTree representing the scene.
+     * @param POVposition
+     *      Position of the Point Of View (Eye).
+     * @return
+     *      List of Segments in order.
+     */
     static public ArrayList<Segment> paintersAlgorithm(BSPTree<Segment> tree, double[] POVposition){
+        //if leaf: just return data
         if (tree.isLeaf()) {
             return tree.getData();
         }
 
+        //set all the data that will be needed
         Segment h = tree.getData().get(0);
         double[] abc = getCutlineParameters(h.get());
         double a = abc[0], b = abc[1], c = abc[2];
@@ -457,17 +532,18 @@ public class Segment {
         ArrayList<Segment> segList = new ArrayList<>();
         //recursion on left and right trees of the algorithm
         ArrayList<Segment> Tm = null , Tp = null; //T-, T+
-        if (tree.getLeft() != null)
+
+        if (tree.getLeft() != null) //pre-compute painter's algorithm on left sub-tree if exists
             Tm = paintersAlgorithm(tree.getLeft(), POVposition);
-        if (tree.getRight() != null)
+        if (tree.getRight() != null) //pre-compute painter's algorithm on right sub-tree if exists
             Tp = paintersAlgorithm(tree.getRight(), POVposition);
 
         if (result > 0){ //pov € h+
             if (Tm != null)
-                segList.addAll(Tm);             //adding left data first because will be painted first
+                segList.addAll(Tm); //adding left data first because will be painted first
             segList.addAll(tree.getData()); //then segments in this node
             if (Tp != null)
-                segList.addAll(Tp);             //finally adding the right tree data because will be painted last
+                segList.addAll(Tp); //finally adding the right tree data because will be painted last
         }
         else if (result < 0){ //pov € h-
             //same as above but inverted because the eye is in the other side of the cutline (so inverted)

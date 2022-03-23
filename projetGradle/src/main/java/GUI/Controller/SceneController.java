@@ -109,6 +109,12 @@ public class SceneController {
     }
 
     //setters
+
+    /**
+     * Set scene data.
+     * @param data
+     *      Array of Segments representing the scene.
+     */
     public void setData(Segment[] data){
         model.setData(data);
     }
@@ -135,7 +141,7 @@ public class SceneController {
     /**
      * Get the scene data.
      * @return
-     *      List of Segment objects representing the scene.
+     *      Array of Segment objects representing the scene.
      */
     public Segment[] getData(){
         return model.getData();
@@ -146,7 +152,7 @@ public class SceneController {
     /**
      * Draw the scene on the Canvas.
      * @param scene
-     *      Scene to draw.
+     *      Arry of Segments representing the scene to draw.
      */
     public void drawScene(Segment[] scene){
         //get the drawable object from the canvas
@@ -187,6 +193,13 @@ public class SceneController {
         gc.drawImage(eye, x, y, 10, 10);
     }
 
+    /**
+     * Resize the scene view size.
+     * @param width
+     *      New width.
+     * @param height
+     *      New height.
+     */
     public void setSceneSize(int width, int height){
         fxCanvas.setWidth(width);
         fxCanvas.setHeight(height);

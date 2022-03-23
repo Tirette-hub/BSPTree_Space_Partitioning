@@ -16,6 +16,8 @@ public class SceneModel {
     private Segment[] data;
     private double[] POVPosition;
 
+    //constructors
+
     /**
      * Constructor.
      */

@@ -57,7 +57,7 @@ public class PaintingController {
     /**
      * Callback called by the fxml view in order to paint the solution on the canvas.
      * @param event
-     *      None
+     *      Null
      */
     @FXML
     public void onPaint(ActionEvent event){
@@ -122,6 +122,10 @@ public class PaintingController {
      * Create a BSP Tree from data.
      * @param S
      *      Scene to load into the tree.
+     * @param h
+     *      EHeuristic enum of the chosen heuristic.
+     * @param POVPosition
+     *      Coordinates of the Point Of View
      * @return
      *      The BSP tree created.
      */
