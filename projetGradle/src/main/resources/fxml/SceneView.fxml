@@ -2,22 +2,40 @@
 
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.image.Image?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.Spinner?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller.SceneController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller.SceneController">
    <children>
       <Canvas fx:id="fxCanvas" height="200.0" onMouseClicked="#onClick" onMouseMoved="#onMove" width="200.0" />
-      <HBox prefHeight="100.0" prefWidth="200.0">
+      <HBox alignment="CENTER">
          <children>
             <Button fx:id="fxClearButton" mnemonicParsing="false" onAction="#onClear" text="clear" />
             <Button fx:id="fxPOVButton" mnemonicParsing="false" onAction="#onPOV">
                <graphic>
-                  <ImageView fx:id="eyeButtonImage" fitHeight="17.0" fitWidth="17.0" pickOnBounds="true" smooth="false"/>
+                  <ImageView fx:id="eyeButtonImage" fitHeight="17.0" fitWidth="17.0" pickOnBounds="true" smooth="false" />
                </graphic>
             </Button>
+            <VBox alignment="TOP_CENTER">
+               <children>
+                  <Label text="FOV" />
+                  <Slider blockIncrement="1.0" max="360.0" min="1.0" value="90.0" />
+                  <Spinner editable="true" minWidth="60.0" prefWidth="60.0" />
+               </children>
+            </VBox>
+            <VBox alignment="TOP_CENTER">
+               <children>
+                  <Label text="Angle" />
+                  <Slider blockIncrement="1.0" max="359.0" snapToTicks="true" />
+                  <Spinner minWidth="60.0" prefWidth="60.0" />
+               </children>
+            </VBox>
+            <CheckBox mnemonicParsing="false" text="show FOV" />
          </children>
       </HBox>
    </children>
