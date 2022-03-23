@@ -357,7 +357,7 @@ public class Segment {
         return tree;
     }
 
-    public static BSPTree<Segment> makeFreeSplitTree(Segment[] S, BSPTree<Segment> parent) {
+    static public BSPTree<Segment> makeFreeSplitTree(Segment[] S, BSPTree<Segment> parent) {
         BSPTree<Segment> tree;
 
         if (S.length == 1){
@@ -441,5 +441,50 @@ public class Segment {
         }
 
         return tree;
+    }
+
+    static public ArrayList<Segment> paintersAlgorithm(BSPTree<Segment> tree, double[] POVposition){
+        if (tree.isLeaf()) {
+            return tree.getData();
+        }
+
+        Segment h = tree.getData().get(0);
+        double[] abc = getCutlineParameters(h.get());
+        double a = abc[0], b = abc[1], c = abc[2];
+        double x = POVposition[0], y = POVposition[1];
+        double result = a*x+b*y+c;
+
+        ArrayList<Segment> segList = new ArrayList<>();
+        //recursion on left and right trees of the algorithm
+        ArrayList<Segment> Tm = null , Tp = null; //T-, T+
+        if (tree.getLeft() != null)
+            Tm = paintersAlgorithm(tree.getLeft(), POVposition);
+        if (tree.getRight() != null)
+            Tp = paintersAlgorithm(tree.getRight(), POVposition);
+
+        if (result > 0){ //pov € h+
+            if (Tm != null)
+                segList.addAll(Tm);             //adding left data first because will be painted first
+            segList.addAll(tree.getData()); //then segments in this node
+            if (Tp != null)
+                segList.addAll(Tp);             //finally adding the right tree data because will be painted last
+        }
+        else if (result < 0){ //pov € h-
+            //same as above but inverted because the eye is in the other side of the cutline (so inverted)
+            if (Tp != null)
+                segList.addAll(Tp);
+            segList.addAll(tree.getData());
+            if (Tm != null)
+                segList.addAll(Tm);
+        }
+        else{ //pov € h
+            //eye on the cutline so does not see segments contained in this node.
+            if (Tm != null)
+                segList.addAll(Tm);
+            if (Tp != null)
+                segList.addAll(Tp);
+        }
+
+        return segList;
     }
 }

@@ -5,6 +5,7 @@ import DataStructure.BSPTree;
 import DataStructure.Segment;
 import org.junit.jupiter.api.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -52,19 +53,19 @@ public class SpaceSplittingTest {
 
         BSPTree<Segment> tree = Segment.makeBasicTree(S,null, false);
 
-        Segment[] expectedS = {new Segment(1,1,3,4),    //AB 0
-                new Segment(4,2,4,11.0/2.0),            //CG 1
-                new Segment(5,7,8,7),                   //HF 2
-                new Segment(4, 11.0/2.0,4,6),           //GD 3
-                new Segment(2,7,4,7),                   //EI 4
-                new Segment(4,7,5,7)};                  //IH 5
+        Segment[] segs = {new Segment(1,1,3,4),     //AB 0
+                new Segment(4,2,4,11.0/2.0),        //CG 1
+                new Segment(5,7,8,7),               //HF 2
+                new Segment(4, 11.0/2.0,4,6),       //GD 3
+                new Segment(2,7,4,7),               //EI 4
+                new Segment(4,7,5,7)};              //IH 5
 
-        BSPTree<Segment> leafHF = new BSPTree<>(expectedS[2], null, null);
-        BSPTree<Segment> leafEI = new BSPTree<>(expectedS[4], null, null);
-        BSPTree<Segment> leafIH = new BSPTree<>(expectedS[5], null, null);
-        BSPTree<Segment> leftTree = new BSPTree<>(expectedS[1], null, leafHF);
-        BSPTree<Segment> rightTree = new BSPTree<>(expectedS[3], leafEI, leafIH);
-        BSPTree<Segment> expectedTree = new BSPTree<>(expectedS[0], leftTree, rightTree);
+        BSPTree<Segment> leafHF = new BSPTree<>(segs[2], null, null);
+        BSPTree<Segment> leafEI = new BSPTree<>(segs[4], null, null);
+        BSPTree<Segment> leafIH = new BSPTree<>(segs[5], null, null);
+        BSPTree<Segment> leftTree = new BSPTree<>(segs[1], null, leafHF);
+        BSPTree<Segment> rightTree = new BSPTree<>(segs[3], leafEI, leafIH);
+        BSPTree<Segment> expectedTree = new BSPTree<>(segs[0], leftTree, rightTree);
 
         /*System.out.println("tree:");
         tree.print();
@@ -88,25 +89,25 @@ public class SpaceSplittingTest {
 
         BSPTree<Segment> tree = Segment.makeFreeSplitTree(S, null);
 
-        Segment[] expectedS = {
-                new Segment(3.5,0.5,2.5,2.5),                           //AB 0
-                new Segment(-0.5,5,1,5.5),                              //CL 1
-                new Segment(1,5.5,2.5,6),                               //LD 2
-                new Segment(5.5,6.5,5,4.5),                             //EF 3
-                new Segment(2.5,4,3.5,4.5),                             //GH 4
-                new Segment(-0.5,4.5,2,3.5),                            //IK 5
-                new Segment(2,3.5,4.5,2.5),                             //KM 6
-                new Segment(4.5,2.5,7,1.5)                              //MJ 7
+        Segment[] segs = {
+                new Segment(3.5,0.5,2.5,2.5),   //AB 0
+                new Segment(-0.5,5,1,5.5),      //CL 1
+                new Segment(1,5.5,2.5,6),       //LD 2
+                new Segment(5.5,6.5,5,4.5),     //EF 3
+                new Segment(2.5,4,3.5,4.5),     //GH 4
+                new Segment(-0.5,4.5,2,3.5),    //IK 5
+                new Segment(2,3.5,4.5,2.5),     //KM 6
+                new Segment(4.5,2.5,7,1.5)      //MJ 7
         };
 
-        BSPTree<Segment> leafGH = new BSPTree<>(expectedS[4], null, null);
-        BSPTree<Segment> leafIK = new BSPTree<>(expectedS[5], null, null);
-        BSPTree<Segment> leafMJ = new BSPTree<>(expectedS[7], null, null);
-        BSPTree<Segment> leftTree = new BSPTree<>(expectedS[1], leafIK, null);
-        BSPTree<Segment> nodeKM = new BSPTree<>(expectedS[6], null, leafGH);
-        BSPTree<Segment> nodeEF = new BSPTree<>(expectedS[3], leafMJ, nodeKM);
-        BSPTree<Segment> rightTree = new BSPTree<>(expectedS[2], nodeEF, null);
-        BSPTree<Segment> expectedTree = new BSPTree<>(expectedS[0], leftTree, rightTree);
+        BSPTree<Segment> leafGH = new BSPTree<>(segs[4], null, null);
+        BSPTree<Segment> leafIK = new BSPTree<>(segs[5], null, null);
+        BSPTree<Segment> leafMJ = new BSPTree<>(segs[7], null, null);
+        BSPTree<Segment> leftTree = new BSPTree<>(segs[1], leafIK, null);
+        BSPTree<Segment> nodeKM = new BSPTree<>(segs[6], null, leafGH);
+        BSPTree<Segment> nodeEF = new BSPTree<>(segs[3], leafMJ, nodeKM);
+        BSPTree<Segment> rightTree = new BSPTree<>(segs[2], nodeEF, null);
+        BSPTree<Segment> expectedTree = new BSPTree<>(segs[0], leftTree, rightTree);
 
         /*System.out.println("tree:");
         tree.print();
@@ -116,6 +117,45 @@ public class SpaceSplittingTest {
 
         assertEquals(tree, expectedTree);
     }
+
+    @Test
+    void testPaintersAlgorithm(){
+        System.out.println("painter's algorithm:");
+        double[] POVposition = {0, 3}; //AB+, GD-, EI- (in the bsp tree)
+
+        Segment[] segs = {new Segment(1,1,3,4),     //AB 0
+                new Segment(4,2,4,11.0/2.0),        //CG 1
+                new Segment(5,7,8,7),               //HF 2
+                new Segment(4, 11.0/2.0,4,6),       //GD 3
+                new Segment(2,7,4,7),               //EI 4
+                new Segment(4,7,5,7)                //IH 5
+        };
+
+        BSPTree<Segment> leafHF = new BSPTree<>(segs[2], null, null);
+        BSPTree<Segment> leafEI = new BSPTree<>(segs[4], null, null);
+        BSPTree<Segment> leafIH = new BSPTree<>(segs[5], null, null);
+        BSPTree<Segment> leftTree = new BSPTree<>(segs[1], null, leafHF);
+        BSPTree<Segment> rightTree = new BSPTree<>(segs[3], leafEI, leafIH);
+        BSPTree<Segment> tree = new BSPTree<>(segs[0], leftTree, rightTree);
+
+        ArrayList<Segment> expectedS = new ArrayList<Segment>();
+        expectedS.add(new Segment(5,7,8,7));       //HF
+        expectedS.add(new Segment(4,2,4,5.5));     //CG
+        expectedS.add(new Segment(1,1,3,4));       //AB
+        expectedS.add(new Segment(4,7,5,7));       //IH
+        expectedS.add(new Segment(4, 5.5,4,6));    //GD
+        expectedS.add(new Segment(2,7,4,7));       //EI
+
+        ArrayList<Segment> s = Segment.paintersAlgorithm(tree, POVposition);
+
+        assertEquals(s, expectedS);
+    }
+
+    /*@Test
+    void testPaintersAlgorithmInLine(){
+        System.out.println("painter's algorithm (eye on a cut line):");
+        double[] POVposition = {};
+    }*/
 
     @AfterEach
     void testAfterEach(){
