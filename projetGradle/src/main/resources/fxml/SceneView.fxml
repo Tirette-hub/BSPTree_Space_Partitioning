@@ -24,18 +24,18 @@
             <VBox alignment="TOP_CENTER">
                <children>
                   <Label text="FOV" />
-                  <Slider blockIncrement="1.0" max="360.0" min="1.0" value="90.0" />
-                  <Spinner editable="true" minWidth="60.0" prefWidth="60.0" />
+                  <Slider fx:id="fxFOVSlider" blockIncrement="1.0" max="360.0" min="1.0" value="90.0" />
+                  <Spinner fx:id="fxFOVSpinner" editable="true" minWidth="60.0" prefWidth="60.0" />
                </children>
             </VBox>
             <VBox alignment="TOP_CENTER">
                <children>
-                  <Label text="Angle" />
-                  <Slider blockIncrement="1.0" max="359.0" snapToTicks="true" />
-                  <Spinner minWidth="60.0" prefWidth="60.0" />
+                  <Label text="Direction" />
+                  <Slider fx:id="fxFOVAngle" blockIncrement="1.0" max="359.0" snapToTicks="true" />
+                  <Spinner fx:id="fxAngleSpinner" minWidth="60.0" prefWidth="60.0" />
                </children>
             </VBox>
-            <CheckBox mnemonicParsing="false" text="show FOV" />
+            <CheckBox fx:id="fxChecker" onAction="#onCheck" mnemonicParsing="false" text="show FOV" />
          </children>
       </HBox>
    </children>
