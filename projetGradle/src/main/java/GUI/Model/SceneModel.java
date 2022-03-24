@@ -15,6 +15,9 @@ public class SceneModel {
     private boolean isDrawn;
     private Segment[] data;
     private double[] POVPosition;
+    private double FOV;
+    private double FOVDirection;
+    private boolean FOVVisible;
 
     //constructors
 
@@ -23,6 +26,7 @@ public class SceneModel {
      */
     public SceneModel(){
         isDrawn = false;
+        FOVVisible = false;
     }
 
     //setters
@@ -59,6 +63,18 @@ public class SceneModel {
         this.data = data;
     }
 
+    public void setFOV(double angle){
+        FOV = angle;
+    }
+
+    public void setFOVDirection(double angle){
+        FOVDirection = angle;
+    }
+
+    public void setFOVVisible(boolean flag){
+        FOVVisible = flag;
+    }
+
     //getters
 
     /**
@@ -86,5 +102,17 @@ public class SceneModel {
      */
     public Segment[] getData(){
         return data;
+    }
+
+    public double getFOV(){
+        return FOV;
+    }
+
+    public double getFOVDirection(){
+        return FOVDirection;
+    }
+
+    public boolean isFOVVisible(){
+        return FOVVisible;
     }
 }
