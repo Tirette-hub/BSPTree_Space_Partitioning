@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller.SceneController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller.SceneController">
    <children>
       <Canvas fx:id="fxCanvas" height="200.0" onMouseClicked="#onClick" onMouseMoved="#onMove" width="200.0" />
       <HBox alignment="CENTER">
@@ -24,18 +24,18 @@
             <VBox alignment="TOP_CENTER">
                <children>
                   <Label text="FOV" />
-                  <Slider fx:id="fxFOVSlider" blockIncrement="1.0" max="360.0" min="1.0" value="90.0" />
+                  <Slider fx:id="fxFOVSlider" blockIncrement="1.0" max="359.9" value="90.0" />
                   <Spinner fx:id="fxFOVSpinner" editable="true" minWidth="60.0" prefWidth="60.0" />
                </children>
             </VBox>
             <VBox alignment="TOP_CENTER">
                <children>
                   <Label text="Direction" />
-                  <Slider fx:id="fxFOVAngle" blockIncrement="1.0" max="359.0" snapToTicks="true" />
-                  <Spinner fx:id="fxAngleSpinner" minWidth="60.0" prefWidth="60.0" />
+                  <Slider fx:id="fxFOVAngle" blockIncrement="1.0" max="359.9" snapToTicks="true" value="1.0" />
+                  <Spinner fx:id="fxAngleSpinner" editable="true" minWidth="60.0" prefWidth="60.0" />
                </children>
             </VBox>
-            <CheckBox fx:id="fxChecker" onAction="#onCheck" mnemonicParsing="false" text="show FOV" />
+            <CheckBox fx:id="fxChecker" mnemonicParsing="false" onAction="#onCheck" text="show FOV" />
          </children>
       </HBox>
    </children>

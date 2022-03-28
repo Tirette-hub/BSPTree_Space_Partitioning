@@ -1,6 +1,9 @@
 package GUI.Model;
 
 import DataStructure.Segment;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.scene.control.SpinnerValueFactory;
 
 /**
  * Model of SceneController.
@@ -18,6 +21,7 @@ public class SceneModel {
     private double FOV;
     private double FOVDirection;
     private boolean FOVVisible;
+    private SpinnerValueFactory<Double> FOVSpinnerFactory, AngleSpinnerFactory;
 
     //constructors
 
@@ -27,6 +31,9 @@ public class SceneModel {
     public SceneModel(){
         isDrawn = false;
         FOVVisible = false;
+
+        FOVSpinnerFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.0, 359.9, 90.0, 1.0);
+        AngleSpinnerFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(1.0, 359.9, 1.0, 1.0);
     }
 
     //setters
@@ -104,15 +111,23 @@ public class SceneModel {
         return data;
     }
 
-    public double getFOV(){
+    public Double getFOV(){
         return FOV;
     }
 
-    public double getFOVDirection(){
+    public Double getFOVDirection(){
         return FOVDirection;
     }
 
     public boolean isFOVVisible(){
         return FOVVisible;
+    }
+
+    public SpinnerValueFactory<Double> getFOVSpinnerFactory() {
+        return FOVSpinnerFactory;
+    }
+
+    public SpinnerValueFactory<Double> getAngleSpinnerFactory(){
+        return AngleSpinnerFactory;
     }
 }

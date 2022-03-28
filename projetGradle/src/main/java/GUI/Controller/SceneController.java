@@ -3,19 +3,22 @@ package GUI.Controller;
 import DataStructure.Segment;
 import GUI.Model.SceneModel;
 import javafx.beans.Observable;
+import javafx.beans.property.Property;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableDoubleValue;
+import javafx.beans.value.ObservableValue;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Slider;
-import javafx.scene.control.Spinner;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+
+import java.text.NumberFormat;
 
 /**
  * Scene object that can be cleared and where it is possible to set the Point Of View (eye).
@@ -27,7 +30,7 @@ import javafx.scene.paint.Color;
  */
 public class SceneController {
     private SceneModel model;
-    private boolean POVenabled = false;
+    private boolean POVEnabled = false;
 
     //view data
     @FXML
@@ -43,7 +46,7 @@ public class SceneController {
     private Slider fxFOVSlider, fxFOVAngle;
 
     @FXML
-    private Spinner fxFOVSpinner, fxAngleSpinner;
+    private Spinner<Double> fxFOVSpinner, fxAngleSpinner;
 
     @FXML
     private CheckBox fxChecker;
@@ -74,11 +77,7 @@ public class SceneController {
             model.setPOVPosition(null, null);
 
         //allow the possibility to draw an eye or not if clicked again
-        POVenabled = !POVenabled;
-
-        GraphicsContext gc = fxCanvas.getGraphicsContext2D();
-        //clear everything and redraw all
-        gc.clearRect(0,0, fxCanvas.getWidth(), fxCanvas.getHeight());
+        POVEnabled = !POVEnabled;
 
         //redraw scene but not the eye and its parameters
         drawScene(model.getData());
@@ -91,11 +90,7 @@ public class SceneController {
      */
     @FXML
     public void onClick(MouseEvent event){
-        if (POVenabled){
-            GraphicsContext gc = fxCanvas.getGraphicsContext2D();
-
-            //clear everything and redraw all
-            gc.clearRect(0,0, fxCanvas.getWidth(), fxCanvas.getHeight());
+        if (POVEnabled){
             //set POVposition
             model.setPOVPosition(event.getSceneX()-4, event.getSceneY()-30);
 
@@ -103,7 +98,7 @@ public class SceneController {
             update();
 
             //disable the flag that allows the eye to track the mouse into the scene
-            POVenabled = false;
+            POVEnabled = false;
         }
         event.consume();
     }
@@ -115,11 +110,7 @@ public class SceneController {
      */
     @FXML
     public void onMove(MouseEvent event){
-        if (POVenabled){
-            GraphicsContext gc = fxCanvas.getGraphicsContext2D();
-
-            //clear everything and redraw all
-            gc.clearRect(0,0, fxCanvas.getWidth(), fxCanvas.getHeight());
+        if (POVEnabled){
             //set POVposition
             model.setPOVPosition(event.getSceneX()-4, event.getSceneY()-30);
             //update view
@@ -132,9 +123,6 @@ public class SceneController {
     public void onCheck(Event event){
         model.setFOVVisible(fxChecker.isSelected());
 
-        GraphicsContext gc = fxCanvas.getGraphicsContext2D();
-        //clear everything and redraw all
-        gc.clearRect(0,0, fxCanvas.getWidth(), fxCanvas.getHeight());
         update();
 
         event.consume();
@@ -179,7 +167,7 @@ public class SceneController {
         return model.getData();
     }
 
-    //drawing segments into the Canvas
+    //view methods
 
     /**
      * Draw the scene on the Canvas.
@@ -241,19 +229,76 @@ public class SceneController {
 
     private void drawEyeParameters(){
         if (model.isFOVVisible()){
+            double[] firstPoint;
+            double R = fxCanvas.getWidth()/10;
+            double dx, dy, x, y; //a,
+            double[] xy1, xy2;
+
             //create direction line with polar equation
+            firstPoint = model.getPOVPosition();
+            double directionAngle = model.getFOVDirection();
+            dx = R*Math.cos(Math.toRadians(directionAngle));
+            dy = R*Math.sin(Math.toRadians(directionAngle));
+            x = firstPoint[0] + dx;
+            y = firstPoint[1] + dy;
+            Segment directionLine = new Segment(firstPoint[0], firstPoint[1], x, y);
+
             //create 2 FOV lines with polar equation
+            firstPoint = model.getPOVPosition();
+            double FOVAngle = model.getFOV()/2.0;
+            //first line
+            dx = R*Math.cos(Math.toRadians(directionAngle-FOVAngle));
+            dy = R*Math.sin(Math.toRadians(directionAngle-FOVAngle));
+            x = firstPoint[0] + dx;
+            y = firstPoint[1] + dy;
+            Segment FOVLeftLine = new Segment(firstPoint[0], firstPoint[1], x, y);
+            //second line
+            dx = R*Math.cos(Math.toRadians(directionAngle+FOVAngle));
+            dy = R*Math.sin(Math.toRadians(directionAngle+FOVAngle));
+            x = firstPoint[0] + dx;
+            y = firstPoint[1] + dy;
+            Segment FOVRightLine = new Segment(firstPoint[0], firstPoint[1], x, y);
+
+
+            //get the drawable object from the canvas
+            GraphicsContext gc = fxCanvas.getGraphicsContext2D();
+            Color colorDirectionLine = new Color(.22, .14, 0, .75);
+
+            //create the 3lines with the color
+            gc.setStroke(colorDirectionLine);
+
+            xy1 = directionLine.getFrom();
+            xy2 = directionLine.getTo();
+            gc.strokeLine(xy1[0], xy1[1], xy2[0], xy2[1]);
+
+            xy1 = FOVLeftLine.getFrom();
+            xy2 = FOVLeftLine.getTo();
+            gc.strokeLine(xy1[0], xy1[1], xy2[0], xy2[1]);
+
+            xy1 = FOVRightLine.getFrom();
+            xy2 = FOVRightLine.getTo();
+            gc.strokeLine(xy1[0], xy1[1], xy2[0], xy2[1]);
         }
     }
 
     private void update(){
-        drawScene(model.getData());
-        double[] xy = model.getPOVPosition();
-        drawEye(eyeButtonImage.getImage(), xy[0], xy[1]);
-        drawEyeParameters();
+        if (model.isDrawn()) {
+            GraphicsContext gc = fxCanvas.getGraphicsContext2D();
+            //clear everything and redraw all
+            gc.clearRect(0, 0, fxCanvas.getWidth(), fxCanvas.getHeight());
+
+            drawScene(model.getData());
+            double[] xy = model.getPOVPosition();
+            //if the POV has been set
+            if (xy != null) {
+                drawEye(eyeButtonImage.getImage(), xy[0], xy[1]);
+                drawEyeParameters();
+            }
+        }
     }
 
-    //constructor called by the fxml file
+    //constructor
+
     /**
      * Method called by the fxml view to create the controller.
      */
@@ -262,50 +307,44 @@ public class SceneController {
         model = new SceneModel();
 
         //link Model with view
+        //setting value factory for the spinners
+        fxFOVSpinner.setValueFactory(model.getFOVSpinnerFactory());
+        fxAngleSpinner.setValueFactory(model.getAngleSpinnerFactory());
+
+        //handling changes on spinners' and slides' values
+        fxFOVSpinner.valueProperty().addListener(new ChangeListener<Double>() {
+            @Override
+            public void changed(ObservableValue<? extends Double> observable, Double oldValue, Double newValue) {
+                model.setFOV(newValue);
+                fxFOVSlider.setValue(newValue);
+                update();
+            }
+        });
+        fxFOVSlider.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                //no model modification and no view update because spinner's handler will be called automatically.
+                fxFOVSpinner.getValueFactory().setValue(newValue.doubleValue());
+            }
+        });
+
+        fxAngleSpinner.valueProperty().addListener(new ChangeListener<Double>() {
+            @Override
+            public void changed(ObservableValue<? extends Double> observable, Double oldValue, Double newValue) {
+                model.setFOVDirection(newValue);
+                fxFOVAngle.setValue(newValue);
+                update();
+            }
+        });
+        fxFOVAngle.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                //no model modification and no view update because spinner's handler will be called automatically.
+                fxAngleSpinner.getValueFactory().setValue(newValue.doubleValue());
+            }
+        });
 
         //link controller to view - configurations
-        GraphicsContext gc = fxCanvas.getGraphicsContext2D();
-        fxFOVSlider.valueProperty().addListener((Observable o) -> {
-            //bind slider with spinner
-            fxFOVSpinner.getValueFactory().setValue(fxFOVSlider.getValue());
-            //set value in the model
-            model.setFOV(fxFOVSlider.getValue());
-            //clear view
-            gc.clearRect(0,0, fxCanvas.getWidth(), fxCanvas.getHeight());
-            //redraw all
-            update();
-        });
-        fxFOVSpinner.valueProperty().addListener((Observable o) -> {
-            //bind spinner with slider
-            fxFOVSlider.setValue((double) fxFOVSpinner.getValue());
-            //set value in the model
-            model.setFOV((double) fxFOVSpinner.getValue());
-            //clear view
-            gc.clearRect(0,0, fxCanvas.getWidth(), fxCanvas.getHeight());
-            //redraw all
-            update();
-        });
-
-        fxFOVAngle.valueProperty().addListener((Observable o) -> {
-            //bind slider with spinner
-            fxAngleSpinner.getValueFactory().setValue(fxFOVAngle.getValue());
-            //set value in the model
-            model.setFOVDirection(fxFOVAngle.getValue());
-            //clear view
-            gc.clearRect(0,0, fxCanvas.getWidth(), fxCanvas.getHeight());
-            //redraw all
-            update();
-        });
-        fxAngleSpinner.valueProperty().addListener((Observable o) -> {
-            //bind spinner with slider
-            fxFOVAngle.setValue((double) fxAngleSpinner.getValue() % 360.0);
-            //set value in the model
-            model.setFOVDirection((double) fxAngleSpinner.getValue() % 360.0);
-            //clear view
-            gc.clearRect(0,0, fxCanvas.getWidth(), fxCanvas.getHeight());
-            //redraw all
-            update();
-        });
 
         //other controller initialisation
         eyeButtonImage.setImage(new Image(getClass().getResource("/img/eye.png").toString()));
