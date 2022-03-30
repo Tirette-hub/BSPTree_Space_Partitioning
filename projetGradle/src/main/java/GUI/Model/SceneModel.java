@@ -70,14 +70,29 @@ public class SceneModel {
         this.data = data;
     }
 
+    /**
+     * Set the FOV angle.
+     * @param angle
+     *      FOV angle.
+     */
     public void setFOV(double angle){
         FOV = angle;
     }
 
+    /**
+     * Set the POV (eye) direction.
+     * @param angle
+     *      Direction of the POV (eye).
+     */
     public void setFOVDirection(double angle){
         FOVDirection = angle;
     }
 
+    /**
+     * Set the possibility to see the FOV.
+     * @param flag
+     *      Flag that says if the FOV is visible or not.
+     */
     public void setFOVVisible(boolean flag){
         FOVVisible = flag;
     }
@@ -111,22 +126,47 @@ public class SceneModel {
         return data;
     }
 
+    /**
+     * Get the FOV angle.
+     * @return
+     *      FOV angle value.
+     */
     public Double getFOV(){
         return FOV;
     }
 
+    /**
+     * Get the POV (eye) direction angle.
+     * @return
+     *      POV (eye) direction angle value.
+     */
     public Double getFOVDirection(){
         return FOVDirection;
     }
 
+    /**
+     * Get the Flag that says if the FOV has to be shown.
+     * @return
+     *      If the FOV guide lines are visible.
+     */
     public boolean isFOVVisible(){
         return FOVVisible;
     }
 
+    /**
+     * Get the Value Factory of the FOV angle spinner object.
+     * @return
+     *      Value Factory of the FOV angle spinner object.
+     */
     public SpinnerValueFactory<Double> getFOVSpinnerFactory() {
         return FOVSpinnerFactory;
     }
 
+    /**
+     * Get the Value Factory of the POV (eye) direction angle spinner object.
+     * @return
+     *      Value Factory of the POV (eye) direction angle spinner object.
+     */
     public SpinnerValueFactory<Double> getAngleSpinnerFactory(){
         return AngleSpinnerFactory;
     }

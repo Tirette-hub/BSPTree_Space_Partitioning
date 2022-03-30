@@ -119,13 +119,14 @@ public class SceneController {
         event.consume();
     }
 
+    /**
+     * Callback calles by the fxml view in order to be able to see or hide the eye direction and FOV
+     */
     @FXML
-    public void onCheck(Event event){
+    public void onCheck(){
         model.setFOVVisible(fxChecker.isSelected());
 
         update();
-
-        event.consume();
     }
 
     //setters
@@ -227,6 +228,9 @@ public class SceneController {
         vbox.setPrefSize(width, height);
     }
 
+    /**
+     * Draw the eye direction and FOV guide lines on the canvas.
+     */
     private void drawEyeParameters(){
         if (model.isFOVVisible()){
             double[] firstPoint;
@@ -281,6 +285,9 @@ public class SceneController {
         }
     }
 
+    /**
+     * Update the view
+     */
     private void update(){
         if (model.isDrawn()) {
             GraphicsContext gc = fxCanvas.getGraphicsContext2D();
