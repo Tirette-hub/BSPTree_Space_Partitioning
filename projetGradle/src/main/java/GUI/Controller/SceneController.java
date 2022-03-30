@@ -240,7 +240,7 @@ public class SceneController {
 
             //create direction line with polar equation
             firstPoint = model.getPOVPosition();
-            double directionAngle = model.getFOVDirection();
+            double directionAngle = model.getFOVDirection()-90;
             dx = R*Math.cos(Math.toRadians(directionAngle));
             dy = R*Math.sin(Math.toRadians(directionAngle));
             x = firstPoint[0] + dx;
