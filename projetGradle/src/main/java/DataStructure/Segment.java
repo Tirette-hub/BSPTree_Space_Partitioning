@@ -184,6 +184,15 @@ public class Segment {
         return color;
     }
 
+    public double getDistance(){
+        double dx, dy;
+
+        dx = x2 - x1;
+        dy = y2 - y1;
+
+        return Math.sqrt(Math.pow(dx, 2)+Math.pow(dy, 2));
+    }
+
     //static methods
 
     /**
@@ -562,5 +571,54 @@ public class Segment {
         }
 
         return segList;
+    }
+
+    static public double getAngle(Segment dirLine, double[] pt){
+        double [] abc = Segment.getCutlineParameters(dirLine.get());
+        double a1 = abc[0], b1 = abc[1], c1 = abc[2];
+        double a2, b2, c2;
+
+        double[] x1y1 = dirLine.getFrom();
+
+        double x1 = x1y1[0], x2, dx, y1 = x1y1[1], y2, dy;
+
+        //perp line parameters
+        if (a1 < 1e-4){
+            a2 = 1;
+            b2 = 0;
+        }
+        else if (b1 < 1e-4){
+            a2 = 0;
+            b2 = 1;
+        }
+        else{
+            a2 = -1/a1;
+            b2 = b1;
+        }
+        c2 = -a2*pt[0] - b2*pt[1];
+
+        //calculate intersection point of perpendicular lines.
+        if (a2 == 0){
+            x2 = ((-c2/b2)+(c1/b1))/((-a1/b1)+(a2/b2));
+            y2 = pt[1];
+        }
+        else if (b2 == 0){
+            x2 = pt[0];
+            y2 = ((-c2/a2)+(c1/a1))/((-b1/a1)+(b2/a2));
+        }
+        else{
+            x2 = ((-c2/b2)+(c1/b1))/((-a1/b1)+(a2/b2));
+            y2 = ((-c2/a2)+(c1/a1))/((-b1/a1)+(b2/a2));
+        }
+
+        //calculate opposite and Adjascent segments (trigono)
+        Segment O, A;
+        O = new Segment(x1, y1, x2, y2);
+        A = new Segment(pt[0], pt[1], x2, y2);
+
+        //calculate the angle
+        System.out.println("distance O: " + O.getDistance());
+        System.out.println("distance A: " + A.getDistance());
+        return Math.toDegrees(Math.atan(O.getDistance()/ A.getDistance()));
     }
 }

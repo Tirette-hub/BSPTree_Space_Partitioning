@@ -151,8 +151,16 @@ public class APPController{
             @Override
             public void handle(ActionEvent event) {
                 //get all the segments
-                if (fxSceneController.isDrawn() && fxSceneController.getPOVPosition() != null)
-                    fxPaintingController.setData(fxHeuristicChoiceController.getChoice(), fxSceneController.getData(), fxSceneController.getPOVPosition());
+                if (fxSceneController.isDrawn() && fxSceneController.getPOVPosition() != null) {
+                    double[] position = fxSceneController.getPOVPosition();
+                    double[] POVData = {
+                            position[0],
+                            position[1],
+                            fxSceneController.getFOV(),
+                            fxSceneController.getFOVDirection()
+                    };
+                    fxPaintingController.setData(fxHeuristicChoiceController.getChoice(), fxSceneController.getData(), POVData);
+                }
             }
         });
     }

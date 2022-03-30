@@ -183,6 +183,14 @@ public class SceneController {
         return model.getData();
     }
 
+    public double getFOV(){
+        return model.getFOV();
+    }
+
+    public double getFOVDirection(){
+        return model.getFOVDirection();
+    }
+
     //view methods
 
     /**
