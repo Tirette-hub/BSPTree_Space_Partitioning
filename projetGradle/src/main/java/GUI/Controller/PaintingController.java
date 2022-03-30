@@ -29,7 +29,7 @@ public class PaintingController {
     private PaintingModel model;
     private EventHandler<ActionEvent> dataCallback;
 
-    //variable used to build the BP Tree
+    //variable used to build the BSP Tree
     private EHeuristic h;
     private Segment[] segs;
     private double[] POVPosition;
@@ -103,7 +103,8 @@ public class PaintingController {
         model.setIsPainted(false);
     }
 
-    //constructor called by the fxml file
+    //constructor
+
     /**
      * Method called by the fxml view to create the controller.
      */
@@ -116,39 +117,6 @@ public class PaintingController {
         //link controller to view - configurations
 
         //other controller initialisation
-    }
-
-    /**
-     * Create a BSP Tree from data.
-     * @param S
-     *      Scene to load into the tree.
-     * @param h
-     *      EHeuristic enum of the chosen heuristic.
-     * @param POVPosition
-     *      Coordinates of the Point Of View
-     * @return
-     *      The BSP tree created.
-     */
-    private BSPTree<Segment> createTree(Segment[] S, EHeuristic h, double[] POVPosition){
-        BSPTree<Segment> tree;
-        switch(h){
-            case H1:
-                //shuffle S
-                List<Segment> newS = Arrays.asList(S);
-                Collections.shuffle(newS);
-                tree = Segment.makeBasicTree(newS.toArray(new Segment[0]), null, false);
-                break;
-            case H2:
-                tree = Segment.makeBasicTree(S, null, false);
-                break;
-            case H3:
-                //change
-                tree = Segment.makeFreeSplitTree(S, null);
-                break;
-            default:
-                tree = null;
-        }
-        return tree;
     }
 
     //setters
@@ -177,4 +145,37 @@ public class PaintingController {
     }
 
     //getters
+
+    /**
+     * Create a BSP Tree from data.
+     * @param S
+     *      Scene to load into the tree.
+     * @param h
+     *      EHeuristic enum of the chosen heuristic.
+     * @param POVPosition
+     *      Coordinates of the Point Of View
+     * @return
+     *      The BSP tree created.
+     */
+    public BSPTree<Segment> createTree(Segment[] S, EHeuristic h, double[] POVPosition){
+        BSPTree<Segment> tree;
+        switch(h){
+            case H1:
+                //shuffle S
+                List<Segment> newS = Arrays.asList(S);
+                Collections.shuffle(newS);
+                tree = Segment.makeBasicTree(newS.toArray(new Segment[0]), null, false);
+                break;
+            case H2:
+                tree = Segment.makeBasicTree(S, null, false);
+                break;
+            case H3:
+                //change
+                tree = Segment.makeFreeSplitTree(S, null);
+                break;
+            default:
+                tree = null;
+        }
+        return tree;
+    }
 }

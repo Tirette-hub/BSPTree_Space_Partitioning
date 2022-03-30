@@ -131,7 +131,7 @@ public class SceneModel {
      * @return
      *      FOV angle value.
      */
-    public Double getFOV(){
+    public double getFOV(){
         return FOV;
     }
 
@@ -140,7 +140,7 @@ public class SceneModel {
      * @return
      *      POV (eye) direction angle value.
      */
-    public Double getFOVDirection(){
+    public double getFOVDirection(){
         return FOVDirection;
     }
 

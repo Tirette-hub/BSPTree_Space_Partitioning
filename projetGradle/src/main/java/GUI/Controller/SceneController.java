@@ -140,7 +140,22 @@ public class SceneController {
         model.setData(data);
     }
 
+    /**
+     * Resize the scene view size.
+     * @param width
+     *      New width.
+     * @param height
+     *      New height.
+     */
+    public void setSceneSize(int width, int height){
+        fxCanvas.setWidth(width);
+        fxCanvas.setHeight(height);
+        VBox vbox = (VBox) fxCanvas.getParent();
+        vbox.setPrefSize(width, height);
+    }
+
     //getters
+
     /**
      * Check if something has been drawn on the canvas.
      * @return
@@ -212,20 +227,6 @@ public class SceneController {
 
         //draw
         gc.drawImage(eye, x, y, 10, 10);
-    }
-
-    /**
-     * Resize the scene view size.
-     * @param width
-     *      New width.
-     * @param height
-     *      New height.
-     */
-    public void setSceneSize(int width, int height){
-        fxCanvas.setWidth(width);
-        fxCanvas.setHeight(height);
-        VBox vbox = (VBox) fxCanvas.getParent();
-        vbox.setPrefSize(width, height);
     }
 
     /**

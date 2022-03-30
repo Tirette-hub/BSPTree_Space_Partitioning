@@ -1,6 +1,7 @@
 package GUI.Model;
 
 import DataStructure.BSPTree;
+import DataStructure.Segment;
 
 /**
  * Model of PaintingController.
@@ -13,7 +14,7 @@ import DataStructure.BSPTree;
  */
 public class PaintingModel {
     private boolean isPainted;
-    private BSPTree tree;
+    private BSPTree<Segment> tree;
 
     //constructors
 
@@ -40,7 +41,7 @@ public class PaintingModel {
      * @return
      *      BSPTree object stored.
      */
-    public BSPTree getBSPTree(){
+    public BSPTree<Segment> getBSPTree(){
         return tree;
     }
 
@@ -60,7 +61,7 @@ public class PaintingModel {
      * @param tree
      *      New BSPTree object to store.
      */
-    public void setBSPTree(BSPTree tree){
+    public void setBSPTree(BSPTree<Segment> tree){
         this.tree = tree;
     }
 }
