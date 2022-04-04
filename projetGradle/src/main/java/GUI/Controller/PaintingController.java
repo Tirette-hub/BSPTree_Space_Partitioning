@@ -61,7 +61,7 @@ public class PaintingController {
      */
     @FXML
     public void onPaint(ActionEvent event){
-        System.out.println("painting size: (" + fxCanvas.getWidth() + ";" + fxCanvas.getHeight() + ")");
+        //System.out.println("painting size: (" + fxCanvas.getWidth() + ";" + fxCanvas.getHeight() + ")");
         //clear view if already painted
         if (model.isPainted())
             onClear();
@@ -69,7 +69,7 @@ public class PaintingController {
         //get segments and eye position and heuristic
 
         dataCallback.handle(event);
-        System.out.println("get data:");
+        /*System.out.println("get data:");
         System.out.println(h);
         /*for (Segment seg: segs) {
             System.out.println(seg.toString());
@@ -79,7 +79,7 @@ public class PaintingController {
         }*/
 
         //make the BSP Tree
-        System.out.println("create tree");
+        //System.out.println("create tree");
         BSPTree<Segment> t = createTree(segs, h);
         model.setBSPTree(t);
 
@@ -106,19 +106,19 @@ public class PaintingController {
         double a = abc[0], b = abc[1], c = abc[2];
         double angle;
 
-        System.out.println("painter's algorithm");
+        //System.out.println("painter's algorithm");
         Segment[] segsInOrder = Segment.paintersAlgorithm(t, POVPosition).toArray(new Segment[0]);
 
         GraphicsContext gc = fxCanvas.getGraphicsContext2D();
 
-        System.out.println("paint segs");
+        //System.out.println("paint segs");
         for (Segment s : segsInOrder){
             //scan convert segments
             double[] pt1 = s.getFrom();
             double[] pt2 = s.getTo();
 
             angle = Segment.getAngle(directionLine, pt1);
-            System.out.println("angle1: " + angle);
+            //System.out.println("angle1: " + angle);
 
             if (Math.abs(a*pt1[0]+b*pt1[0]+c) < 1e-4)
                 x1 = paintingCanvasWidth/2 + padding;
@@ -140,7 +140,7 @@ public class PaintingController {
             }
 
             angle = Segment.getAngle(directionLine, pt2);
-            System.out.println("angle2: " + angle);
+            //System.out.println("angle2: " + angle);
 
             if (Math.abs(a*pt2[0]+b*pt2[1]+c) < 1e-4)
                 x2 = paintingCanvasWidth/2 + padding;
@@ -161,16 +161,20 @@ public class PaintingController {
                     x2 = paintingCanvasWidth/2 - angle*paintingCanvasWidth/FOV;
             }
 
-            System.out.println(
+            /*System.out.println(
                     "painting line: (" +
                             x1 + "," + y + "," +
                             x2 + "," + y + ")"
-            );
+            );*/
             //check if line not visible
             if ((x1 > padding && x2 > padding) || (x1 < paintingCanvasWidth + padding && x2 < paintingCanvasWidth + padding)) {
                 //correct left and right padding
                 gc.setStroke(s.getEColor().getColor());
                 gc.setLineWidth(10);
+                if (x1 < padding)
+                    x1 = padding;
+                if (x2 < paintingCanvasWidth + padding)
+                    x2 = paintingCanvasWidth + padding;
                 gc.strokeLine(x1, y, x2, y);
             }
         }
