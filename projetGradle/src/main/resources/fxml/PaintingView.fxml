@@ -4,12 +4,16 @@
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
-
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller.PaintingController">
    <children>
-      <Canvas fx:id="fxCanvas" height="200.0" width="200.0" />
+      <Pane fx:id="fxPane" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #393737;">
+         <children>
+            <Canvas fx:id="fxCanvas" height="100.0" width="200.0" />
+         </children>
+      </Pane>
       <HBox prefHeight="100.0" prefWidth="200.0">
          <children>
             <Button fx:id="fxPaintButton" mnemonicParsing="false" onAction="#onPaint" text="Afficher" />

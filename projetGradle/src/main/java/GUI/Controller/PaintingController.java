@@ -4,12 +4,15 @@ import DataStructure.BSPTree;
 import DataStructure.EHeuristic;
 import DataStructure.Segment;
 import GUI.Model.PaintingModel;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
@@ -37,6 +40,9 @@ public class PaintingController {
     //view data
     @FXML
     private Canvas fxCanvas;
+
+    @FXML
+    private Pane fxPane;
 
     @FXML
     private Button fxPaintButton, fxClearButton;
@@ -212,6 +218,12 @@ public class PaintingController {
         //link controller to view - configurations
 
         //other controller initialisation
+        fxPane.widthProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                fxCanvas.setWidth(fxPane.getWidth());
+            }
+        });
     }
 
     //setters

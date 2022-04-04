@@ -583,6 +583,7 @@ public class Segment {
 
         double x, y;
 
+        //different cases by parameters values
         if (Math.abs(a1) < 1e-4){
             // line 1: horizontal
             if (Math.abs(a2) < 1e-4){
@@ -650,24 +651,30 @@ public class Segment {
 
         double x1 = x1y1[0], x2, dx, y1 = x1y1[1], y2, dy;
 
-        //perp line parameters
+        //perpendicular line parameters
         if (Math.abs(a1) < 1e-4){
+            //line 1: horizontal
             a2 = 1;
             b2 = 0;
+            //line 2: vertical
         }
         else if (Math.abs(b1) < 1e-4){
+            //line 1: vertical
             a2 = 0;
             b2 = 1;
+            //line 2: horizontal
         }
         else{
-            a2 = -1/a1;
+            //general case
+            a2 = -1.0/a1;
             b2 = b1;
         }
         c2 = -a2*pt[0] - b2*pt[1];
 
+        //callecting line 2 parameters
         abc2 = new double[]{a2, b2, c2};
 
-        //calculate intersection point
+        //calculate intersection point coordinates
         double[] x2y2 = Segment.getIntersection(abc1, abc2);
         if (x2y2 == null)
             return null;
