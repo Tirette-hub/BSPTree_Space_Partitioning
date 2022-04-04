@@ -9,7 +9,7 @@
    <children>
       <Label text="Choix de l'heuristique" />
       <RadioButton fx:id="fxH1" mnemonicParsing="false" selected="true" text="aléatoire" />
-      <RadioButton fx:id="fxH2" mnemonicParsing="false" text="segment le plus proche" />
-      <RadioButton fx:id="fxH3" mnemonicParsing="false" text="heuristique3" />
+      <RadioButton fx:id="fxH2" mnemonicParsing="false" text="premier segment dans le fichier" />
+      <RadioButton fx:id="fxH3" mnemonicParsing="false" text="free split" />
    </children>
 </VBox>
