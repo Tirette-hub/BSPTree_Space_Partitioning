@@ -184,6 +184,7 @@ public class Segment {
         return color;
     }
 
+
     public double getDistance(){
         double dx, dy;
 
@@ -573,9 +574,76 @@ public class Segment {
         return segList;
     }
 
-    static public double getAngle(Segment dirLine, double[] pt){
-        double [] abc = Segment.getCutlineParameters(dirLine.get());
-        double a1 = abc[0], b1 = abc[1], c1 = abc[2];
+
+    static public double[] getIntersection(double[] abc1, double[] abc2){
+        double a1 = abc1[0], b1 = abc1[1], c1 = abc1[2],
+                a2 = abc2[0], b2 = abc2[1], c2 = abc2[2];
+        System.out.println("a1: "+a1+", b1: "+b1+", c1: "+c1);
+        System.out.println("a2: "+a2+", b2: "+b2+", c2: "+c2);
+
+        double x, y;
+
+        if (Math.abs(a1) < 1e-4){
+            // line 1: horizontal
+            if (Math.abs(a2) < 1e-4){
+                //line 2: horizontal
+                x = 0;
+                if (Math.abs(c2-c1) > 1e-4)   //parallels
+                    return null;
+            }
+            else if (Math.abs(b2) < 1e-4)//line2: vertival
+                x = -c2/b2;
+            else
+                x = (b2*c1/b1 - c2)/a2;
+            y = -c1/b1;
+        }
+        else if (Math.abs(b1) < 1e-4){
+            //line 1: vertical
+            x = -c1/b1;
+            if (Math.abs(a2) < 1e-4)//line 2: horizontal
+                y = -c2/b2;
+            else if (Math.abs(b2) < 1e-4){
+                //line 2: vertical
+                y = 0;
+                if (Math.abs(c2-c1) > 1e-4)   //parallels
+                    return null;
+            }
+            else
+                y = (a2*c1/b1 - c2)/b2;
+        }
+        else{
+            if (Math.abs(a2) < 1e-4){
+                //line 2: horizontal
+                x = (b1*c2/b2 - c1)/a1;
+                y = -c2/b2;
+            }
+            else if (Math.abs(b2) < 1e-4){
+                System.out.println("here");
+                //line 2: vertical
+                x = -c2/a2;
+                y = (a1*c2/a2 - c1)/b1;
+            }
+            else{
+                if (Math.abs(b2-b1) < 1e-4) {
+                    x = -(c1 - c2) / (a1 - a2);
+                    y = -c2 + a2 * (c1 - c2) / (a1 - a2);
+                }
+                else if (Math.abs(a2-a1) < 1e-4) // parallels
+                    return null;
+                else{
+                    x = (-b2 * (c1 - c2) / (b2 - b1) - c2) / (a2 + b2 * (a1 - a2) / (b2 - b1));
+                    y = (a1 - a2) * (-b2 * (c1 - c2) / (b2 - b1) - c2) / (a2 * (b2 - b1) + b2 * (a1 - a2));
+                }
+            }
+        }
+
+        return new double[]{x, y};
+    }
+
+
+    static public Double getAngle(Segment dirLine, double[] pt){
+        double [] abc1 = Segment.getCutlineParameters(dirLine.get()), abc2;
+        double a1 = abc1[0], b1 = abc1[1], c1 = abc1[2];
         double a2, b2, c2;
 
         double[] x1y1 = dirLine.getFrom();
@@ -583,11 +651,11 @@ public class Segment {
         double x1 = x1y1[0], x2, dx, y1 = x1y1[1], y2, dy;
 
         //perp line parameters
-        if (a1 < 1e-4){
+        if (Math.abs(a1) < 1e-4){
             a2 = 1;
             b2 = 0;
         }
-        else if (b1 < 1e-4){
+        else if (Math.abs(b1) < 1e-4){
             a2 = 0;
             b2 = 1;
         }
@@ -597,28 +665,22 @@ public class Segment {
         }
         c2 = -a2*pt[0] - b2*pt[1];
 
-        //calculate intersection point of perpendicular lines.
-        if (a2 == 0){
-            x2 = ((-c2/b2)+(c1/b1))/((-a1/b1)+(a2/b2));
-            y2 = pt[1];
-        }
-        else if (b2 == 0){
-            x2 = pt[0];
-            y2 = ((-c2/a2)+(c1/a1))/((-b1/a1)+(b2/a2));
-        }
-        else{
-            x2 = ((-c2/b2)+(c1/b1))/((-a1/b1)+(a2/b2));
-            y2 = ((-c2/a2)+(c1/a1))/((-b1/a1)+(b2/a2));
-        }
+        abc2 = new double[]{a2, b2, c2};
+
+        //calculate intersection point
+        double[] x2y2 = Segment.getIntersection(abc1, abc2);
+        if (x2y2 == null)
+            return null;
+        x2 = x2y2[0]; y2 = x2y2[1];
 
         //calculate opposite and Adjascent segments (trigono)
         Segment O, A;
-        O = new Segment(x1, y1, x2, y2);
-        A = new Segment(pt[0], pt[1], x2, y2);
+        O = new Segment(pt[0], pt[1], x2, y2);
+        A = new Segment(x1, y1, x2, y2);
 
         //calculate the angle
-        System.out.println("distance O: " + O.getDistance());
-        System.out.println("distance A: " + A.getDistance());
+        //System.out.println("distance O: " + O.getDistance());
+        //System.out.println("distance A: " + A.getDistance());
         return Math.toDegrees(Math.atan(O.getDistance()/ A.getDistance()));
     }
 }

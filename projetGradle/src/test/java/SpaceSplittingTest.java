@@ -6,10 +6,6 @@ import DataStructure.Segment;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class SpaceSplittingTest {
     @BeforeAll
@@ -117,45 +113,6 @@ public class SpaceSplittingTest {
 
         assertEquals(tree, expectedTree);
     }
-
-    @Test
-    void testPaintersAlgorithm(){
-        System.out.println("painter's algorithm:");
-        double[] POVposition = {0, 3}; //AB+, GD-, EI- (in the bsp tree)
-
-        Segment[] segs = {new Segment(1,1,3,4),     //AB 0
-                new Segment(4,2,4,11.0/2.0),        //CG 1
-                new Segment(5,7,8,7),               //HF 2
-                new Segment(4, 11.0/2.0,4,6),       //GD 3
-                new Segment(2,7,4,7),               //EI 4
-                new Segment(4,7,5,7)                //IH 5
-        };
-
-        BSPTree<Segment> leafHF = new BSPTree<>(segs[2], null, null);
-        BSPTree<Segment> leafEI = new BSPTree<>(segs[4], null, null);
-        BSPTree<Segment> leafIH = new BSPTree<>(segs[5], null, null);
-        BSPTree<Segment> leftTree = new BSPTree<>(segs[1], null, leafHF);
-        BSPTree<Segment> rightTree = new BSPTree<>(segs[3], leafEI, leafIH);
-        BSPTree<Segment> tree = new BSPTree<>(segs[0], leftTree, rightTree);
-
-        ArrayList<Segment> expectedS = new ArrayList<Segment>();
-        expectedS.add(new Segment(5,7,8,7));       //HF
-        expectedS.add(new Segment(4,2,4,5.5));     //CG
-        expectedS.add(new Segment(1,1,3,4));       //AB
-        expectedS.add(new Segment(4,7,5,7));       //IH
-        expectedS.add(new Segment(4, 5.5,4,6));    //GD
-        expectedS.add(new Segment(2,7,4,7));       //EI
-
-        ArrayList<Segment> s = Segment.paintersAlgorithm(tree, POVposition);
-
-        assertEquals(s, expectedS);
-    }
-
-    /*@Test
-    void testPaintersAlgorithmInLine(){
-        System.out.println("painter's algorithm (eye on a cut line):");
-        double[] POVposition = {};
-    }*/
 
     @AfterEach
     void testAfterEach(){
