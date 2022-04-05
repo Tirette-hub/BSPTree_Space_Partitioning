@@ -2,12 +2,8 @@ package GUI.Controller;
 
 import DataStructure.Segment;
 import GUI.Model.SceneModel;
-import javafx.beans.Observable;
-import javafx.beans.property.Property;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableDoubleValue;
 import javafx.beans.value.ObservableValue;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -15,10 +11,9 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-
-import java.text.NumberFormat;
 
 /**
  * Scene object that can be cleared and where it is possible to set the Point Of View (eye).
@@ -33,6 +28,12 @@ public class SceneController {
     private boolean POVEnabled = false;
 
     //view data
+    @FXML
+    private VBox fxRoot;
+
+    @FXML
+    private Pane fxPane;
+
     @FXML
     private Canvas fxCanvas;
 
@@ -148,10 +149,10 @@ public class SceneController {
      *      New height.
      */
     public void setSceneSize(int width, int height){
+        System.out.println("width: " + width + ", height: " + height);
         fxCanvas.setWidth(width);
         fxCanvas.setHeight(height);
-        VBox vbox = (VBox) fxCanvas.getParent();
-        vbox.setPrefSize(width, height);
+        fxPane.setPrefSize(width, height);
     }
 
     //getters

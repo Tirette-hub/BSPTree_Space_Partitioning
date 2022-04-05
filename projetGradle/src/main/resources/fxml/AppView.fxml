@@ -36,8 +36,8 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
 <VBox xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller.APPController">
@@ -59,8 +59,8 @@
           </Menu>
       </menus>
     </MenuBar>
-    <AnchorPane VBox.vgrow="ALWAYS">
-      <children>
+      <Pane>
+         <children>
              <VBox>
                <HBox>
                   <children>
@@ -70,7 +70,7 @@
                </HBox>
                  <fx:include fx:id="fxPainting" source="PaintingView.fxml" />
              </VBox>
-      </children>
-    </AnchorPane>
+         </children>
+      </Pane>
   </children>
 </VBox>
