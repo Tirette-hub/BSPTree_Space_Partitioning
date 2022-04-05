@@ -69,11 +69,8 @@ public class PaintingController {
         double paintingCanvasWidth = fxCanvas.getWidth() - 2*padding; //100%
         System.out.println("painting canvas width: " + paintingCanvasWidth);
 
-        double[] POVPosition = {
-                20,
-                20
-        };
-        // alpha                    FOV Direction
+        double[] POVPosition = {20,20}; // x, y coordinates
+        //     alpha     FOV Direction
         double FOV = 90, FOVDirection = 45;
 
         //creating segment for direction line
@@ -87,7 +84,6 @@ public class PaintingController {
         double x1, x2, y = fxCanvas.getHeight()/2.0;
         double[] abc = Segment.getCutlineParameters(directionLine.get());
         double a = abc[0], b = abc[1], c = abc[2];
-        double angle;
 
         System.out.println("direction line parameters: a=" + a + ", b=" + b + ", c=" + c);
 
@@ -106,65 +102,35 @@ public class PaintingController {
             double[] pt1 = s.getFrom();
             double[] pt2 = s.getTo();
 
-            angle = Segment.getAngle(directionLine, pt1);
-            System.out.println("angle1: " + angle);
+            x1 = Segment.getProjection(pt1, a, b, c, directionLine, FOV, paintingCanvasWidth) + padding;
 
-            if (Math.abs(a*pt1[0]+b*pt1[0]+c) < 1e-4)
-                x1 = paintingCanvasWidth/2 + padding;
-            else if (a*pt1[0]+b*pt1[0]+c < -1e-4) {
-                //pt1 to the left
-                if ((FOVDirection > 0 && FOVDirection < 90) || (FOVDirection > 180 && FOVDirection < 270))
-                    x1 = paintingCanvasWidth/2 - angle*paintingCanvasWidth/FOV;
-                    //pt1 to the right
-                else
-                    x1 = paintingCanvasWidth/2 + angle*paintingCanvasWidth/FOV;
-            }
-            else { //if (a*pt1[0]+b*pt1[0]+c > 1e-4)
-                //pt1 to the right
-                if ((FOVDirection > 0 && FOVDirection < 90) || (FOVDirection > 180 && FOVDirection < 270))
-                    x1 = paintingCanvasWidth/2 + angle*paintingCanvasWidth/FOV;
-                    //pt1 to the right
-                else
-                    x1 = paintingCanvasWidth/2 - angle*paintingCanvasWidth/FOV;
-            }
-
-            angle = Segment.getAngle(directionLine, pt2);
-            System.out.println("angle2: " + angle);
-
-            if (Math.abs(a*pt2[0]+b*pt2[1]+c) < 1e-4)
-                x2 = paintingCanvasWidth/2 + padding;
-            else if (a*pt2[0]+b*pt2[1]+c < -1e-4){
-                //pt2 to the left
-                if ((FOVDirection > 0 && FOVDirection < 90) || (FOVDirection > 180 && FOVDirection < 270))
-                    x2 = paintingCanvasWidth/2 - angle*paintingCanvasWidth/FOV;
-                    //pt2 to the right
-                else
-                    x2 = paintingCanvasWidth/2 + angle*paintingCanvasWidth/FOV;
-            }
-            else { //if (a*pt2[0]+b*pt2[0]+c > 1e-4)
-                //pt2 to the right
-                if ((FOVDirection > 0 && FOVDirection < 90) || (FOVDirection > 180 && FOVDirection < 270))
-                    x2 = paintingCanvasWidth/2 + angle*paintingCanvasWidth/FOV;
-                    //pt2 to the right
-                else
-                    x2 = paintingCanvasWidth/2 - angle*paintingCanvasWidth/FOV;
-            }
+            x2 = Segment.getProjection(pt2, a, b, c, directionLine, FOV, paintingCanvasWidth) + padding;
 
             System.out.println(
                     "painting line: (" +
                             x1 + "," + y + "," +
-                            x2 + "," + y + ")"
+                            x2 + "," + y + "), Color = " +
+                            s.getEColor().toString()
             );
-            //check if line not visible
-            if ((x1 > padding && x2 > padding) || (x1 < paintingCanvasWidth + padding && x2 < paintingCanvasWidth + padding)) {
+
+            //check if line not visible because on the eye guideline
+            if (Math.abs(x2 - x1) < 1e-4)
+                continue;
+
+            //check if line not visible because outside of eye FOV
+            if ((x1 >= padding && x2 >= padding) || (x1 <= paintingCanvasWidth - padding && x2 <= paintingCanvasWidth - padding)) {
                 //correct left and right padding
                 gc.setStroke(s.getEColor().getColor());
                 gc.setLineWidth(10);
+                //get only the visible part of the segment
                 if (x1 < padding)
                     x1 = padding;
                 if (x2 < paintingCanvasWidth + padding)
                     x2 = paintingCanvasWidth + padding;
+                //paint the segment
                 gc.strokeLine(x1, y, x2, y);
+
+                System.out.println("line painted");
             }
         }
 
@@ -234,7 +200,6 @@ public class PaintingController {
         double x1, x2, y = fxCanvas.getHeight()/2.0;
         double[] abc = Segment.getCutlineParameters(directionLine.get());
         double a = abc[0], b = abc[1], c = abc[2];
-        double angle;
 
         //System.out.println("painter's algorithm");
         Segment[] segsInOrder = Segment.paintersAlgorithm(t, POVPosition).toArray(new Segment[0]);
@@ -247,65 +212,34 @@ public class PaintingController {
             double[] pt1 = s.getFrom();
             double[] pt2 = s.getTo();
 
-            angle = Segment.getAngle(directionLine, pt1);
-            //System.out.println("angle1: " + angle);
+            x1 = Segment.getProjection(pt1, a, b, c, directionLine, FOV, paintingCanvasWidth) + padding;
 
-            if (Math.abs(a*pt1[0]+b*pt1[0]+c) < 1e-4)
-                x1 = paintingCanvasWidth/2 + padding;
-            else if (a*pt1[0]+b*pt1[0]+c < -1e-4) {
-                //pt1 to the left
-                if ((FOVDirection > 0 && FOVDirection < 90) || (FOVDirection > 180 && FOVDirection < 270))
-                    x1 = paintingCanvasWidth/2 - angle*paintingCanvasWidth/FOV;
-                //pt1 to the right
-                else
-                    x1 = paintingCanvasWidth/2 + angle*paintingCanvasWidth/FOV;
-            }
-            else { //if (a*pt1[0]+b*pt1[0]+c > 1e-4)
-                //pt1 to the right
-                if ((FOVDirection > 0 && FOVDirection < 90) || (FOVDirection > 180 && FOVDirection < 270))
-                    x1 = paintingCanvasWidth/2 + angle*paintingCanvasWidth/FOV;
-                //pt1 to the right
-                else
-                    x1 = paintingCanvasWidth/2 - angle*paintingCanvasWidth/FOV;
-            }
+            x2 = Segment.getProjection(pt2, a, b, c, directionLine, FOV, paintingCanvasWidth) + padding;
 
-            angle = Segment.getAngle(directionLine, pt2);
-            //System.out.println("angle2: " + angle);
-
-            if (Math.abs(a*pt2[0]+b*pt2[1]+c) < 1e-4)
-                x2 = paintingCanvasWidth/2 + padding;
-            else if (a*pt2[0]+b*pt2[1]+c < -1e-4){
-                //pt2 to the left
-                if ((FOVDirection > 0 && FOVDirection < 90) || (FOVDirection > 180 && FOVDirection < 270))
-                    x2 = paintingCanvasWidth/2 - angle*paintingCanvasWidth/FOV;
-                    //pt2 to the right
-                else
-                    x2 = paintingCanvasWidth/2 + angle*paintingCanvasWidth/FOV;
-            }
-            else { //if (a*pt2[0]+b*pt2[0]+c > 1e-4)
-                //pt2 to the right
-                if ((FOVDirection > 0 && FOVDirection < 90) || (FOVDirection > 180 && FOVDirection < 270))
-                    x2 = paintingCanvasWidth/2 + angle*paintingCanvasWidth/FOV;
-                    //pt2 to the right
-                else
-                    x2 = paintingCanvasWidth/2 - angle*paintingCanvasWidth/FOV;
-            }
-
-            /*System.out.println(
+            System.out.println(
                     "painting line: (" +
                             x1 + "," + y + "," +
                             x2 + "," + y + ")"
-            );*/
-            //check if line not visible
-            if ((x1 > padding && x2 > padding) || (x1 < paintingCanvasWidth + padding && x2 < paintingCanvasWidth + padding)) {
+            );
+
+            //check if line not visible because on the eye guideline
+            if (Math.abs(x2 - x1) < 1e-4)
+                continue;
+
+            //check if line not visible because outside of eye FOV
+            if ((x1 >= padding && x2 >= padding) || (x1 <= paintingCanvasWidth - padding && x2 <= paintingCanvasWidth - padding)) {
                 //correct left and right padding
                 gc.setStroke(s.getEColor().getColor());
                 gc.setLineWidth(10);
+                //get only the visible part of the segment
                 if (x1 < padding)
                     x1 = padding;
                 if (x2 < paintingCanvasWidth + padding)
                     x2 = paintingCanvasWidth + padding;
+                //paint the segment
                 gc.strokeLine(x1, y, x2, y);
+
+                System.out.println("line painted");
             }
         }
 

@@ -690,4 +690,35 @@ public class Segment {
         //System.out.println("distance A: " + A.getDistance());
         return Math.toDegrees(Math.atan(O.getDistance()/ A.getDistance()));
     }
+
+    static public Double getProjection(double[] pt, double a, double b, double c, Segment directionLine, double FOV, double screenWidth){
+        double result;
+
+        Double angle = Segment.getAngle(directionLine, pt);
+
+        if (angle == null)
+            return null;
+
+        double left = screenWidth/2 - angle*screenWidth/FOV,
+                right = screenWidth/2 + angle*screenWidth/FOV;
+
+        boolean onH = Math.abs(a*pt[0]+b*pt[1]+c) < 1e-4;
+
+        if (angle <= 180 || Math.abs(angle-360) < 1e-4)     //direction to the top, bottom or right
+            if (onH)                                        //pt1 on the guide line
+                result = screenWidth/2;
+            else if (a*pt[0]+b*pt[1]+c > 0)                 // upper part of direction guideline is h+
+                result = left;                              // so to the left of the eye
+            else                                            // lower part of direction guideline is h-
+                result = right;                             // so to the right of the eye
+        else                                                //direction to the left
+            if (onH)                                        //pt1 on the guide line
+                result = screenWidth/2;
+            else if (a*pt[0]+b*pt[1]+c > 0)                 // upper part of direction guideline is h+
+                result = right;                             // so to the right of the eye
+            else                                            // lower part of direction guideline is h-
+                result = left;                              // so to the left of the eye
+
+        return result;
+    }
 }
