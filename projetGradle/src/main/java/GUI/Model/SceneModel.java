@@ -22,6 +22,7 @@ public class SceneModel {
     private double FOVDirection;
     private boolean FOVVisible;
     private SpinnerValueFactory<Double> FOVSpinnerFactory, AngleSpinnerFactory;
+    private double a, b;
 
     //constructors
 
@@ -37,6 +38,14 @@ public class SceneModel {
     }
 
     //setters
+
+    public void setA(double value){
+        a = value;
+    }
+
+    public void setB(double value){
+        b = value;
+    }
 
     /**
      * Set the "drawn" value.
@@ -98,6 +107,14 @@ public class SceneModel {
     }
 
     //getters
+
+    public double getA(){
+        return a;
+    }
+
+    public double getB() {
+        return b;
+    }
 
     /**
      * Get the "drawn" value.

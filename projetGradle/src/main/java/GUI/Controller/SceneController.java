@@ -94,6 +94,8 @@ public class SceneController {
         if (POVEnabled){
             //set POVposition
             model.setPOVPosition(event.getSceneX()-4, event.getSceneY()-30);
+            System.out.println(model.getPOVPosition()[0]);
+            System.out.println(model.getPOVPosition()[1]);
 
             //update view
             update();
@@ -149,10 +151,15 @@ public class SceneController {
      *      New height.
      */
     public void setSceneSize(int width, int height){
-        System.out.println("width: " + width + ", height: " + height);
-        fxCanvas.setWidth(width);
-        fxCanvas.setHeight(height);
-        fxPane.setPrefSize(width, height);
+        //System.out.println("resize " + (width+10) + ", " + (height+10));
+        model.setA(width);
+        model.setB(height);
+
+        fxCanvas.setWidth(width+10);
+        fxCanvas.setHeight(height+10);
+        fxPane.setPrefSize(width+10, height+10);
+        fxPane.setMinSize(width+10, height+10);
+        fxPane.resize(width+10, height+10);
     }
 
     //getters
@@ -213,7 +220,7 @@ public class SceneController {
 
             //draw the segment on the canvas with its color as set up in the scene file
             gc.setStroke(color);
-            gc.strokeLine(coords[0], coords[1], coords[2], coords[3]);
+            gc.strokeLine(coords[0], -((coords[1] - 5) - model.getB() - 5), coords[2], -((coords[3] - 5) - model.getB() - 5));
         }
 
         model.setIsDrawn(true);

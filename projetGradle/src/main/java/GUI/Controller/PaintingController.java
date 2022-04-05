@@ -267,9 +267,11 @@ public class PaintingController {
         switch(h){
             case H1:
                 //shuffle S
-                List<Segment> newS = Arrays.asList(S);
+                Segment[] shuffledS = S.clone();
+                List<Segment> newS = Arrays.asList(shuffledS);
                 Collections.shuffle(newS);
-                tree = Segment.makeBasicTree(newS.toArray(new Segment[0]), null, false);
+
+                tree = Segment.makeBasicTree(shuffledS, null, false);
                 break;
             case H2:
                 tree = Segment.makeBasicTree(S, null, false);

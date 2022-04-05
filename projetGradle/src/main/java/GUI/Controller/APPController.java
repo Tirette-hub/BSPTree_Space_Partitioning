@@ -8,6 +8,8 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SplitPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -92,7 +94,7 @@ public class APPController{
             }
 
             //load scene into SceneController
-            fxSceneController.setSceneSize(a+10,b+10);
+            fxSceneController.setSceneSize(a,b);
             fxSceneController.setData(scene);
             fxSceneController.drawScene(scene);
         }

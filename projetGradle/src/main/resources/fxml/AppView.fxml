@@ -36,11 +36,12 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller.APPController">
+<VBox prefHeight="633.0" prefWidth="972.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller.APPController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -59,18 +60,20 @@
           </Menu>
       </menus>
     </MenuBar>
-      <Pane>
+      <GridPane VBox.vgrow="ALWAYS">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="610.0" prefWidth="610.0" />
+          <ColumnConstraints hgrow="NEVER" maxWidth="200.0" minWidth="200.0" prefWidth="200.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints maxHeight="1.7976931348623157E308" minHeight="270.0" prefHeight="270.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="200.0" minHeight="130.0" prefHeight="130.0" vgrow="NEVER" />
+        </rowConstraints>
          <children>
-             <VBox>
-               <HBox>
-                  <children>
-                      <fx:include fx:id="fxScene" source="SceneView.fxml" />
-                      <fx:include fx:id="fxHeuristicChoice" source="HeuristicChoiceView.fxml" />
-                  </children>
-               </HBox>
-                 <fx:include fx:id="fxPainting" source="PaintingView.fxml" />
-             </VBox>
+             <fx:include fx:id="fxScene" source="SceneView.fxml" GridPane.halignment="LEFT" GridPane.valignment="TOP" />
+             <fx:include fx:id="fxHeuristicChoice" source="HeuristicChoiceView.fxml" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="BASELINE" />
+              <fx:include fx:id="fxPainting" source="PaintingView.fxml" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BASELINE" />
          </children>
-      </Pane>
+      </GridPane>
   </children>
 </VBox>
