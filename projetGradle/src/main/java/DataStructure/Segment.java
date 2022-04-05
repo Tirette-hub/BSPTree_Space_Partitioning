@@ -578,8 +578,6 @@ public class Segment {
     static public double[] getIntersection(double[] abc1, double[] abc2){
         double a1 = abc1[0], b1 = abc1[1], c1 = abc1[2],
                 a2 = abc2[0], b2 = abc2[1], c2 = abc2[2];
-        //System.out.println("a1: "+a1+", b1: "+b1+", c1: "+c1);
-        //System.out.println("a2: "+a2+", b2: "+b2+", c2: "+c2);
 
         double x, y;
 
@@ -600,7 +598,7 @@ public class Segment {
         }
         else if (Math.abs(b1) < 1e-4){
             //line 1: vertical
-            x = -c1/b1;
+            x = -c1/a1;
             if (Math.abs(a2) < 1e-4)//line 2: horizontal
                 y = -c2/b2;
             else if (Math.abs(b2) < 1e-4){
@@ -671,7 +669,7 @@ public class Segment {
         }
         c2 = -a2*pt[0] - b2*pt[1];
 
-        //callecting line 2 parameters
+        //collecting line 2 parameters
         abc2 = new double[]{a2, b2, c2};
 
         //calculate intersection point coordinates

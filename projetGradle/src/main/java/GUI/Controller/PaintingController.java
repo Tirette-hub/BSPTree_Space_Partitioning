@@ -1,6 +1,7 @@
 package GUI.Controller;
 
 import DataStructure.BSPTree;
+import DataStructure.EColor;
 import DataStructure.EHeuristic;
 import DataStructure.Segment;
 import GUI.Model.PaintingModel;
@@ -106,13 +107,6 @@ public class PaintingController {
 
             x2 = Segment.getProjection(pt2, a, b, c, directionLine, FOV, paintingCanvasWidth) + padding;
 
-            System.out.println(
-                    "painting line: (" +
-                            x1 + "," + y + "," +
-                            x2 + "," + y + "), Color = " +
-                            s.getEColor().toString()
-            );
-
             //check if line not visible because on the eye guideline
             if (Math.abs(x2 - x1) < 1e-4)
                 continue;
@@ -125,14 +119,25 @@ public class PaintingController {
                 //get only the visible part of the segment
                 if (x1 < padding)
                     x1 = padding;
-                if (x2 < paintingCanvasWidth + padding)
+                if (x2 > paintingCanvasWidth + padding)
                     x2 = paintingCanvasWidth + padding;
+
+                /*System.out.println(
+                        "painting line: (" +
+                                x1 + "," + y + "," +
+                                x2 + "," + y + "), Color = " +
+                                s.getEColor().toString()
+                );*/
+
                 //paint the segment
                 gc.strokeLine(x1, y, x2, y);
 
                 System.out.println("line painted");
             }
         }
+
+        gc.setStroke(EColor.ROSE.getColor());
+        gc.strokeLine(400, 0, 400, 100);
 
         //set model
         model.setIsPainted(true);
@@ -180,16 +185,20 @@ public class PaintingController {
         model.setBSPTree(t);
 
         //Paint the solution
-
-        double padding = 20;
-        double paintingCanvasWidth = fxCanvas.getWidth() - 2*padding; //100%
+        double paintingCanvasWidth = fxCanvas.getWidth(); //100%
 
         double[] POVPosition = {
                 POVData[0],
                 POVData[1]
         };
         // alpha                    FOV Direction
-        double FOV = POVData[2], FOVDirection = POVData[3]-90;
+        double FOV = POVData[2], FOVDirection = -(POVData[3]-90);
+
+        System.out.println("parameters:\n" +
+                "screen width: " + paintingCanvasWidth +
+                "\nPOV: (" + POVPosition[0] + "; " + POVPosition[1] + ")" +
+                "\ndirection: " + FOVDirection +
+                "\nFOV: " + FOV);
 
         //creating segment for direction line
         double dx = Math.cos(Math.toRadians(FOVDirection));
@@ -212,14 +221,15 @@ public class PaintingController {
             double[] pt1 = s.getFrom();
             double[] pt2 = s.getTo();
 
-            x1 = Segment.getProjection(pt1, a, b, c, directionLine, FOV, paintingCanvasWidth) + padding;
+            x1 = Segment.getProjection(pt1, a, b, c, directionLine, FOV, paintingCanvasWidth);
 
-            x2 = Segment.getProjection(pt2, a, b, c, directionLine, FOV, paintingCanvasWidth) + padding;
+            x2 = Segment.getProjection(pt2, a, b, c, directionLine, FOV, paintingCanvasWidth);
 
             System.out.println(
                     "painting line: (" +
                             x1 + "," + y + "," +
-                            x2 + "," + y + ")"
+                            x2 + "," + y + "), Color = " +
+                            s.getEColor().toString()
             );
 
             //check if line not visible because on the eye guideline
@@ -227,20 +237,24 @@ public class PaintingController {
                 continue;
 
             //check if line not visible because outside of eye FOV
-            if ((x1 >= padding && x2 >= padding) || (x1 <= paintingCanvasWidth - padding && x2 <= paintingCanvasWidth - padding)) {
-                //correct left and right padding
-                gc.setStroke(s.getEColor().getColor());
-                gc.setLineWidth(10);
-                //get only the visible part of the segment
-                if (x1 < padding)
-                    x1 = padding;
-                if (x2 < paintingCanvasWidth + padding)
-                    x2 = paintingCanvasWidth + padding;
-                //paint the segment
-                gc.strokeLine(x1, y, x2, y);
 
-                System.out.println("line painted");
-            }
+            if ((x1 < 0 && x2 < 0) || (x1 > paintingCanvasWidth && x2 > paintingCanvasWidth))
+                continue;
+
+            //correct left and right padding
+            gc.setStroke(s.getEColor().getColor());
+            gc.setLineWidth(10);
+            //get only the visible part of the segment
+            /*if (x1 < 0)
+                x1 = 0;
+            if (x2 > paintingCanvasWidth)
+                x2 = paintingCanvasWidth;*/
+
+            //paint the segment
+            gc.strokeLine(x1, y, x2, y);
+
+            System.out.println("line painted");
+
         }
 
         //set model

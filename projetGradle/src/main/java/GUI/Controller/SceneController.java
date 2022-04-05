@@ -179,7 +179,9 @@ public class SceneController {
      *      Point Of View (eye) position.
      */
     public double[] getPOVPosition(){
-        return model.getPOVPosition();
+        double width = model.getPOVPosition()[0];
+        double height = model.getB() - model.getPOVPosition()[1];
+        return new double[] {width, height};
     }
 
     /**
