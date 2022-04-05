@@ -220,7 +220,7 @@ public class SceneController {
 
             //draw the segment on the canvas with its color as set up in the scene file
             gc.setStroke(color);
-            gc.strokeLine(coords[0], -((coords[1] - 5) - model.getB() - 5), coords[2], -((coords[3] - 5) - model.getB() - 5));
+            gc.strokeLine(coords[0] + 5, -(coords[1] - model.getB() - 5), coords[2] + 5, -(coords[3] - model.getB() - 5));
         }
 
         model.setIsDrawn(true);

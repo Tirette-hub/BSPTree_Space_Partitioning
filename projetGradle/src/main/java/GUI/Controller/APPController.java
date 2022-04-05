@@ -88,7 +88,7 @@ public class APPController{
                 color = EColor.getEColorByName(fl[4]);
 
                 //create the segment from a line of data and add it to the scene
-                Segment segment = new Segment((x1+a)/2+5,(y1+b)/2+5, (x2+a)/2+5, (y2+b)/2+5, color);
+                Segment segment = new Segment((x1+a)/2,(y1+b)/2, (x2+a)/2, (y2+b)/2, color);
                 scene[i] = segment;
                 i++;
             }
