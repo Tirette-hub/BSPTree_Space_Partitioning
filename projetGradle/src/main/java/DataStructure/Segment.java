@@ -12,7 +12,7 @@ import java.util.ArrayList;
  * @version 1.0.0
  */
 public class Segment {
-    private double x1, y1, x2, y2;
+    protected double x1, y1, x2, y2;
     private EColor color;
 
     //constructors
@@ -689,13 +689,8 @@ public class Segment {
         return Math.toDegrees(Math.atan(O.getDistance()/ A.getDistance()));
     }
 
-    static public Double getProjection(double[] pt, double a, double b, double c, Segment directionLine, double FOV, double screenWidth){
+    static public Double getProjection(double[] pt, double a, double b, double c, double angle, double FOV, double screenWidth){
         double result;
-
-        Double angle = Segment.getAngle(directionLine, pt);
-
-        if (angle == null)
-            return null;
 
         double left = screenWidth/2 - angle*screenWidth/FOV,
                 right = screenWidth/2 + angle*screenWidth/FOV;

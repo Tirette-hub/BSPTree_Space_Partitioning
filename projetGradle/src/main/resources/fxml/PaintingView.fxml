@@ -22,7 +22,6 @@
                   <Insets />
                </HBox.margin>
             </Button>
-            <Button fx:id="fxTest" mnemonicParsing="false" onAction="#onTest" text="Test" />
          </children>
       </HBox>
    </children>
