@@ -11,9 +11,116 @@ import java.util.ArrayList;
  *      Lemaire Emilien
  * @version 1.0.0
  */
-public class Segment {
+public class Segment implements IVector {
     protected double x1, y1, x2, y2;
     private EColor color;
+
+    // interface implementation
+
+    /**
+     * Get the cartesian distance between the 2 points.
+     * @return
+     *      Distance between the 2 points.
+     */
+    public double getDistance(){
+        double dx, dy;
+
+        dx = x2 - x1;
+        dy = y2 - y1;
+
+        return Math.sqrt(Math.pow(dx, 2)+Math.pow(dy, 2));
+    }
+
+    /**
+     * Get segment x component.
+     * @return
+     *      x component.
+     */
+    public double getX(){
+        return x2 - x1;
+    }
+
+    /**
+     * Get segment y component.
+     * @return
+     *      y component.
+     */
+    public double getY(){
+        return y2 - y1;
+    }
+
+    /**
+     * Check if this vector is a multiple of another one.
+     * @param o
+     *      Another Segment to compare with.
+     * @return
+     *      If the 2 segments are multiples of each other.
+     */
+    public boolean isMultipleOf(Segment o){
+        double x = getX(), y = getY();
+        double[] xy1 = o.getFrom();
+        double[] xy2 = o.getTo();
+        double deltaX, deltaY;
+        deltaX = xy2[0] - xy1[0];
+        deltaY = xy2[1] - xy1[1];
+
+        if (Math.abs(deltaX) < 1e-4 && Math.abs(deltaY) < 1e-4)
+            return false;
+        else if (Math.abs(deltaX) < 1e-4)
+            //o is a vertical line
+            return (Math.abs(x) < 1e-4); //this also is a vertical line
+        else if (Math.abs(deltaY) < 1e-4)
+            //o is a horizontal line
+            return (Math.abs(y) < 1e-4); //this also is a horizontal line;
+        else
+            return (Math.abs(x/deltaX - y/deltaY) < 1e-4);
+    }
+
+    /**
+     * Get the factor between 2 segments if they are multiple of each other.
+     * @param o
+     *      The other segment to campare with.
+     * @return
+     *      The factor between the 2 vectors.
+     */
+    public Double getFactor(Segment o){
+        double x = getX(), y = getY();
+        double[] xy1 = o.getFrom();
+        double[] xy2 = o.getTo();
+        double deltaX, deltaY;
+        deltaX = xy2[0] - xy1[0];
+        deltaY = xy2[1] - xy1[1];
+
+        if (isMultipleOf(o)){
+            if (Math.abs(deltaX) < 1e-4 && Math.abs(deltaY) < 1e-4)
+                return 0.0;
+            else if (Math.abs(deltaX) < 1e-4)
+                //o is a vertical line
+                if (Math.abs(x) < 1e-4)
+                    //this also is a vertical line
+                    return y/deltaY;
+                else if (Math.abs(deltaY) < 1e-4)
+                    //o is a horizontal line
+                    if (Math.abs(y) < 1e-4)
+                        //this also is a horizontal line;
+                        return x/deltaX;
+                    else
+                    if (Math.abs(x/deltaX - y/deltaY) < 1e-4)
+                        //the factor is the same for x and y component
+                        return x/deltaX;
+        }
+
+        return null;
+    }
+
+    /**
+     * Get a perpendicular vector (90 degrees to the right) from the beginning of this vector.
+     * @return
+     *      A new vector representing the perpendicular.
+     */
+    public Segment getPerp(){
+        return new Segment(x1, y1, x1 + y2 -y1, y1 - x2 + x1);
+    }
 
     //constructors
 
@@ -182,16 +289,6 @@ public class Segment {
      */
     public EColor getEColor(){
         return color;
-    }
-
-
-    public double getDistance(){
-        double dx, dy;
-
-        dx = x2 - x1;
-        dy = y2 - y1;
-
-        return Math.sqrt(Math.pow(dx, 2)+Math.pow(dy, 2));
     }
 
     //static methods

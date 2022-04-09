@@ -90,16 +90,16 @@ public class PaintingController {
         // alpha                    FOV Direction
         double FOV = POVData[2], FOVDirection = -(POVData[3]-90);
 
-        System.out.println("parameters:\n" +
+        /*System.out.println("parameters:\n" +
                 "screen width: " + paintingCanvasWidth +
                 "\nPOV: (" + POVPosition[0] + "; " + POVPosition[1] + ")" +
                 "\ndirection: " + FOVDirection +
-                "\nFOV: " + FOV);
+                "\nFOV: " + FOV);*/
 
         //creating segment for direction line
         double dx = Math.cos(Math.toRadians(FOVDirection));
         double dy = Math.sin(Math.toRadians(FOVDirection));
-        Vector directionLine = new Vector(new Segment(POVPosition[0], POVPosition[1], POVPosition[0] + dx, POVPosition[1] + dy));
+        Segment directionLine = new Segment(POVPosition[0], POVPosition[1], POVPosition[0] + dx, POVPosition[1] + dy);
 
         //get parameters
         double x1, x2, y = fxCanvas.getHeight()/2.0;
@@ -118,21 +118,21 @@ public class PaintingController {
             double[] pt1 = s.getFrom();
             double[] pt2 = s.getTo();
 
-            Vector v1, v2;
-            v1 = new Vector(new Segment(POVPosition[0], POVPosition[1], pt1[0], pt1[1]));
-            v2 = new Vector(new Segment(POVPosition[0], POVPosition[1], pt2[0], pt2[1]));
+            Segment v1, v2;
+            v1 = new Segment(POVPosition[0], POVPosition[1], pt1[0], pt1[1]);
+            v2 = new Segment(POVPosition[0], POVPosition[1], pt2[0], pt2[1]);
 
             angle1 = Segment.getAngle(directionLine, pt1);
             angle2 = Segment.getAngle(directionLine, pt2);
 
-            System.out.println("angle1:" + angle1);
-            System.out.println("angle2:" + angle2);
+            //System.out.println("angle1:" + angle1);
+            //System.out.println("angle2:" + angle2);
 
             //recalculate the angle because previous method does not take care of front or back
-            System.out.println("a: " + a + ", b: " + b + ", c: " + c);
+            //System.out.println("a: " + a + ", b: " + b + ", c: " + c);
             abc = Segment.getCutlineParameters(directionLine.getPerp().get());
-            System.out.println("ap: " + abc[0] + ", bp: " + abc[1] + ", cp: " + abc[2]);
-            System.out.println("pt2: (" + pt2[0] + ", " + pt2[1] + ")");
+            //System.out.println("ap: " + abc[0] + ", bp: " + abc[1] + ", cp: " + abc[2]);
+            //System.out.println("pt2: (" + pt2[0] + ", " + pt2[1] + ")");
 
             if (Math.abs(angle1) < 1e-4) {
                 //v1 on the direction line
@@ -157,31 +157,31 @@ public class PaintingController {
             //same for angle2
             if (Math.abs(angle2) < 1e-4) {
                 //v1 on the direction line
-                if (directionLine.getFactor(v1) < 0) {
+                if (directionLine.getFactor(v2) < 0) {
                     //v1 in the back
                     angle2 = 180;
                 }
             }else{
-                System.out.println("direction line dy " + directionLine.getY());
+                //System.out.println("direction line dy " + directionLine.getY());
                 if (directionLine.getY() < 0 || (Math.abs(directionLine.getY()) < 1e-4 && directionLine.getX() < 0)) {
                     if (abc[0] * pt2[0] + abc[1] * pt2[1] + abc[2] > 0) {
                         //back is part of h+ and pt1 is in it
                         angle2 = 180 - angle2;
-                        System.out.println("angle2 in h+");
+                        //System.out.println("angle2 in h+");
                     }
                 }
                 else {
                     if (abc[0] * pt2[0] + abc[1] * pt2[1] + abc[2] < 0) {
                         //back is then part of h- and pt1 is in it
                         angle2 = 180 - angle2;
-                        System.out.println("angle2 in h-");
+                        //System.out.println("angle2 in h-");
                     }
                 }
                 //otherwise nothing changed
             }
 
-            System.out.println("angle1:" + angle1);
-            System.out.println("angle2:" + angle2);
+            //System.out.println("angle1:" + angle1);
+            //System.out.println("angle2:" + angle2);
 
             //do not pay attention to segments out of view
             if (FOV <= 180){
@@ -197,12 +197,12 @@ public class PaintingController {
 
             x2 = Segment.getProjection(pt2, a, b, c, angle2, FOV, paintingCanvasWidth);
 
-            System.out.println(
+            /*System.out.println(
                     "painting line: (" +
                             x1 + "," + y + "," +
                             x2 + "," + y + "), Color = " +
                             s.getEColor().toString()
-            );
+            );*/
 
             //check if line not visible because on the eye guideline
             if (Math.abs(x2 - x1) < 1e-4)
@@ -225,7 +225,7 @@ public class PaintingController {
             //paint the segment
             gc.strokeLine(x1, y, x2, y);
 
-            System.out.println("line painted");
+            //System.out.println("line painted");
 
         }
 

@@ -87,8 +87,8 @@ public class SceneController {
         if (POVEnabled){
             //set POVposition
             model.setPOVPosition(event.getSceneX()-4, event.getSceneY()-30);
-            System.out.println(model.getPOVPosition()[0]);
-            System.out.println(model.getPOVPosition()[1]);
+            //System.out.println(model.getPOVPosition()[0]);
+            //System.out.println(model.getPOVPosition()[1]);
 
             //update view
             update();
