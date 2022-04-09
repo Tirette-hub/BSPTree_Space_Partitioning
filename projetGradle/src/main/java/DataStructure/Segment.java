@@ -574,7 +574,15 @@ public class Segment {
         return segList;
     }
 
-
+    /**
+     * Get the intersection point coordinates between two lines.
+     * @param abc1
+     *      Hyperplane 1 equation parameters.
+     * @param abc2
+     *      Hyperplane 2 equation parameters.
+     * @return
+     *      Coordinates of the intersection.
+     */
     static public double[] getIntersection(double[] abc1, double[] abc2){
         double a1 = abc1[0], b1 = abc1[1], c1 = abc1[2],
                 a2 = abc2[0], b2 = abc2[1], c2 = abc2[2];
@@ -639,7 +647,15 @@ public class Segment {
         return new double[]{x, y};
     }
 
-
+    /**
+     * Get the angle in degrees between a reference line and a point.
+     * @param dirLine
+     *      Segment representing the reference line
+     * @param pt
+     *      Point to get the angle.
+     * @return
+     *      Angle in degrees.
+     */
     static public Double getAngle(Segment dirLine, double[] pt){
         double [] abc1 = Segment.getCutlineParameters(dirLine.get()), abc2;
         double a1 = abc1[0], b1 = abc1[1], c1 = abc1[2];
@@ -689,6 +705,25 @@ public class Segment {
         return Math.toDegrees(Math.atan(O.getDistance()/ A.getDistance()));
     }
 
+    /**
+     * Get the x coordinate for the projection.
+     * @param pt
+     *      Point to project.
+     * @param a
+     *      a parameter of the hyperplane equation of the eye direction line.
+     * @param
+     *      b parameter of the hyperplane equation of the eye direction line.
+     * @param c
+     *      c parameter of the hyperplane equation of the eye direction line.
+     * @param angle
+     *      Angle between the eye direction line and the point to project.
+     * @param FOV
+     *      FOV of the eye.
+     * @param screenWidth
+     *      Width of the screen where the point will be projected.
+     * @return
+     *      X position in the screen where the point is projected.
+     */
     static public Double getProjection(double[] pt, double a, double b, double c, double angle, double FOV, double screenWidth){
         double result;
 
