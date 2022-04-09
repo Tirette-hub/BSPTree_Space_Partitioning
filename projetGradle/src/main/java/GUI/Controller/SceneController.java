@@ -12,7 +12,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 /**
@@ -29,16 +28,10 @@ public class SceneController {
 
     //view data
     @FXML
-    private VBox fxRoot;
-
-    @FXML
     private Pane fxPane;
 
     @FXML
     private Canvas fxCanvas;
-
-    @FXML
-    private Button fxClearButton, fxPOVButton;
 
     @FXML
     private ImageView eyeButtonImage;

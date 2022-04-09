@@ -16,8 +16,8 @@
       </Pane>
       <HBox prefHeight="100.0" prefWidth="200.0">
          <children>
-            <Button fx:id="fxPaintButton" mnemonicParsing="false" onAction="#onPaint" text="Afficher" />
-            <Button fx:id="fxClearButton" mnemonicParsing="false" onAction="#onClear" text="Clear">
+            <Button mnemonicParsing="false" onAction="#onPaint" text="Afficher" />
+            <Button mnemonicParsing="false" onAction="#onClear" text="Clear">
                <HBox.margin>
                   <Insets />
                </HBox.margin>

@@ -9,11 +9,8 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -41,9 +38,6 @@ public class PaintingController {
 
     @FXML
     private Pane fxPane;
-
-    @FXML
-    private Button fxPaintButton, fxClearButton;
 
     //view callbacks
 

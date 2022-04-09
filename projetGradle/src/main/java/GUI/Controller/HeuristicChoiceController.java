@@ -5,7 +5,6 @@ import GUI.Model.HeuristicChoiceModel;
 import javafx.fxml.FXML;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.layout.VBox;
 
 /**
  * Panel where it is possible to choose the heuristic to create the BSP Tree.

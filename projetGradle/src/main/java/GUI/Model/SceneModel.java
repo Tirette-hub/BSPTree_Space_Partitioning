@@ -1,8 +1,6 @@
 package GUI.Model;
 
 import DataStructure.Segment;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.control.SpinnerValueFactory;
 
 /**
@@ -39,10 +37,20 @@ public class SceneModel {
 
     //setters
 
+    /**
+     * Set scene width value.
+     * @param value
+     *      Scene width.
+     */
     public void setA(double value){
         a = value;
     }
 
+    /**
+     * Set scene height value
+     * @param value
+     *      Scene height.
+     */
     public void setB(double value){
         b = value;
     }
@@ -108,10 +116,20 @@ public class SceneModel {
 
     //getters
 
+    /**
+     * Get scene width value.
+     * @return
+     *      Scene width value.
+     */
     public double getA(){
         return a;
     }
 
+    /**
+     * Get scene height value.
+     * @return
+     *      Scene height value.
+     */
     public double getB() {
         return b;
     }

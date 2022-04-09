@@ -7,10 +7,6 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SplitPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -31,9 +27,6 @@ public class APPController{
     private Stage parent;
 
     //view data
-    @FXML
-    private MenuItem fxMenuOpen, fxMenuQuit, fxMenuInfo;
-
     @FXML
     private SceneController fxSceneController;
     @FXML
