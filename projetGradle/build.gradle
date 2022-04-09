@@ -4,8 +4,15 @@ plugins {
     id 'org.openjfx.javafxplugin' version '0.0.7'
 }
 
+run {
+
+    standardInput = System.in
+
+}
+
 application{
-    mainClassName = 'GUI.JavaFxMain'
+    //mainClassName = 'GUI.TestGUIMain'
+    mainClassName = 'Console.TestMain'
 }
 
 group 'org.example'
