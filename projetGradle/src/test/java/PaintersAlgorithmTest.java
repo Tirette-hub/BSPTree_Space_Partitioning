@@ -77,6 +77,21 @@ public class PaintersAlgorithmTest {
         assertEquals(expectedAngle, alpha);
     }
 
+    @Test
+    void testProjection(){
+        System.out.println("Projection of a point on the solution canvas (get the correct coordinates):");
+        double [] pt = {0, 1};
+        Segment direction = new Segment(0, 0, 2, 3.464);
+        double[] abc = Segment.getCutlineParameters(direction.get());
+        double angle = 30, FOV = 90, screenWidth = 600;
+
+        double expectedX = 100;
+
+        double x = Segment.getProjection(pt, abc[0], abc[1], abc[2], angle, FOV, screenWidth);
+
+        assertEquals(x, expectedX);
+    }
+
     @AfterEach
     void AfterEach(){
         System.out.println("Test ended up successfully.");
