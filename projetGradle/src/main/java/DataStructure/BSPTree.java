@@ -222,6 +222,19 @@ public class BSPTree<D>{
             return 1 + Math.max(left.height(),right.height());
     }
 
+    /**
+     * Get the length of the tree.
+     *
+     * @return
+     *      The length of the tree.
+     */
+    public int length(){
+        if (isEmpty())
+            return 0;
+        else
+            return left.length() + data.size() + right.length();
+    }
+
     //Setter
 
     /**
