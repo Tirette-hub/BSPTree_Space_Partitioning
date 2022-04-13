@@ -7,6 +7,14 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+/**
+ * Main class that runs the GUI program.
+ *
+ * @author
+ *      Amorison Nathan
+ *      Lemaire Emilien
+ * @version 1.0.0
+ */
 public class TestGUIMain extends Application {
 
     public static void main(String[] args) {
