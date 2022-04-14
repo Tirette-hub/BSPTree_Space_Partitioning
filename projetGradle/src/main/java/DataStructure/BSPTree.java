@@ -219,7 +219,7 @@ public class BSPTree<D>{
         if (isEmpty())
             return 0;
         else
-            return 1 + Math.max(left.height(),right.height());
+            return 1 + Math.max(left != null ? left.height() : 0, right != null ? right.height() : 0);
     }
 
     /**
@@ -232,7 +232,7 @@ public class BSPTree<D>{
         if (isEmpty())
             return 0;
         else
-            return left.length() + data.size() + right.length();
+            return (left != null ? left.length() : 0) + data.size() + (right != null ? right.length() : 0);
     }
 
     //Setter

@@ -129,7 +129,7 @@ public class TestMain {
 
             if (result != null)
                 System.out.println("Results:\n\tFirst: " + result[0] + "\n\tSecond: " + result[1] +
-                        ".\nAll the results given for a timing comparison are given in nanoseconds.");
+                        ".\nAll the results given for a timing comparison are given in nanoseconds.\n\n");
         }
 
         //if no option or arguments
@@ -264,8 +264,9 @@ public class TestMain {
         System.out.println("3. Free split.");
 
         do {
-            System.out.print("Enter the indexes corresponding to your choice.\nConcatenate your choices for the two heuristics." +
-                    "\nExample: 12 means that the first tree will be built by the random heuristic and the second by taking the first segment in the set.");
+            System.out.print("Concatenate your choices for the two heuristics." +
+                    "\nExample: 12 means that the first tree will be built by the random heuristic and the second by taking the first segment in the set." +
+                    "\nEnter the indexes corresponding to your choice: ");
             choice = getChoice();
             switch(choice){
                 case 12:
