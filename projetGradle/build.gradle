@@ -4,6 +4,7 @@ plugins {
     id 'org.openjfx.javafxplugin' version '0.0.7'
 }
 
+
 run {
 
     standardInput = System.in
@@ -34,4 +35,11 @@ test {
 javafx{
     version = "11.0.2"
     modules = ['javafx.controls', 'javafx.fxml']
+}
+
+tasks.withType(GroovyCompile) {
+    configure(groovyOptions.forkOptions) {
+        memoryMaximumSize = '3m'
+        jvmArgs = ['-XX:MaxPermSize=3m', '-Xms3m', '-Xmx3m']
+    }
 }
