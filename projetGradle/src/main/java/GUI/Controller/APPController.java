@@ -7,10 +7,15 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 
@@ -25,8 +30,11 @@ import java.util.Scanner;
 public class APPController{
     private AppModel model;
     private Stage parent;
+    private File recentFile;
 
     //view data
+    @FXML
+    private Menu fxRecentMenu;
     @FXML
     private SceneController fxSceneController;
     @FXML
@@ -54,6 +62,42 @@ public class APPController{
 
         //get the file
         File file = fc.showOpenDialog(parent);
+        openFile(file);
+    }
+
+    /**
+     * Callback called by the fxml view in order to quit the application when the quit menu item is pushed.
+     */
+    @FXML
+    public void onQuit(){
+        parent.close();
+    }
+
+    /**
+     * Callback called by the fxml view in order to show the information of the application.
+     * @param event
+     *      None
+     */
+    @FXML
+    public void onInfo(Event event){
+        event.consume();
+        /*
+        //idée de fonctionnement d'info
+        String pathpdf = "/path/to/mode/d/emploi.pdf";
+        String[] params = {"cmd", "/c", pathpdf};
+        try {
+            Runtime.getRuntime().exec(params);
+        } catch (Exception e) {}
+        */
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Information Dialog");
+        alert.setHeaderText(null);
+        alert.setContentText("Veuillez regarder dans le rapport du projet, section \"Mode d'emploi de l'application\"");
+
+        alert.showAndWait();
+    }
+
+    private void openFile(File file) throws Exception{
         //send the file to the model to store it
         if (file != null){
             model.setFile(file);
@@ -86,6 +130,10 @@ public class APPController{
                 i++;
             }
 
+            FileWriter recentFilesWriter = new FileWriter(recentFile);
+            recentFilesWriter.write(file.getAbsolutePath());
+            addRecentFile(file);
+
             //load scene into SceneController
             fxSceneController.setSceneSize(a,b);
             fxSceneController.setData(scene);
@@ -94,46 +142,10 @@ public class APPController{
     }
 
     /**
-     * Callback called by the fxml view in order to quit the application when the quit menu item is pushed.
-     */
-    @FXML
-    public void onQuit(){
-        parent.close();
-    }
-
-    /*
-     *
-     *
-     *
-     * TBC
-     *
-     *
-     *
-     * */
-
-    /**
-     * Callback called by the fxml view in order to show the information of the application.
-     * @param event
-     *      None
-     */
-    @FXML
-    public void onInfo(Event event){
-        event.consume();
-        /*
-        //idée de fonctionnement d'info
-        String pathpdf = "/path/to/file.pdf";
-        String[] params = {"cmd", "/c", pathpdf};
-        try {
-            Runtime.getRuntime().exec(params);
-        } catch (Exception e) {}
-        */
-    }
-
-    /**
      * Method called by the fxml view to create the controller.
      */
     //Constructor called by the fxml file
-    public void initialize(){
+    public void initialize() throws Exception{
         //create model
         model = new AppModel();
 
@@ -158,6 +170,23 @@ public class APPController{
                 }
             }
         });
+
+        String filePath = getClass().getResource("/").getPath() + "recent_files.txt";
+        recentFile = new File(filePath);
+        if (!recentFile.exists()) {
+            recentFile.createNewFile();
+            System.out.println("file created");
+        }
+
+        ArrayList<File> fileList = new ArrayList<>();
+
+        Scanner scanner = new Scanner(recentFile);
+        while(scanner.hasNext())
+            fileList.add(new File(scanner.nextLine()));
+
+        for (File f : fileList){
+            addRecentFile(f);
+        }
     }
 
     //setters
@@ -170,5 +199,21 @@ public class APPController{
      */
     public void setStage(Stage stage){
         parent = stage;
+    }
+
+    private void addRecentFile(File f){
+        MenuItem newRecentFile;
+        newRecentFile = new MenuItem(f.getAbsolutePath());
+        newRecentFile.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event){
+                try {
+                    openFile(f);
+                }catch(Exception e){
+
+                }
+            }
+        });
+        fxRecentMenu.getItems().add(newRecentFile);
     }
 }
