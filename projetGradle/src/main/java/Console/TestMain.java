@@ -5,8 +5,13 @@ import DataStructure.EColor;
 import DataStructure.Segment;
 import GUI.TestGUIMain;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.*;
 import java.io.File;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 /**
  * Main class that runs the program.
@@ -17,9 +22,10 @@ import java.io.File;
  * @version 1.0.0
  */
 public class TestMain {
-    static private ArrayList<File> fileList;
+    static private ArrayList<String> fileList;
     static final private BSPTree<Segment>[] trees = new BSPTree[2];
     static final private Timer t1 = new Timer(), t2 = new Timer();
+    static final private File jarFile = new File(TestMain.class.getProtectionDomain().getCodeSource().getLocation().getPath());
 
     public static void main(String[] args) throws Exception{
         // initializing useful variables
@@ -71,8 +77,14 @@ public class TestMain {
 
             //check the scene given otherwise ask the user for a scene
             if (parameters.containsKey("s")){
-                fileList.add(new File(parameters.get("s")));
-                fileIndex = fileList.size()-1;
+                File file = new File(parameters.get("s"));
+                if (file.exists()) {
+                    fileList.add(file.getName());
+                }else {
+                    System.out.println("Invalid File");
+                    System.exit(0);
+                }
+                fileIndex = fileList.size() - 1;
             }else{
                 System.out.println("Choose the first scene file:");
                 fileIndex = chooseFile();
@@ -81,6 +93,11 @@ public class TestMain {
             //check the 1st heuristic otherwise ask the user for a heuristic.
             if (parameters.containsKey("h1")){
                 h1 = Integer.parseInt(parameters.get("h1"));
+                if (h1 < 0 || h1 > 3){
+                    System.out.println("Invalid id for the first heuristic");
+                    System.exit(0);
+                }
+
             }else{
                 System.out.println("Choose the heuristic for the first scene:");
                 h1 = chooseUniqueHeuristic();
@@ -89,6 +106,10 @@ public class TestMain {
             //check the 2nd heuristic otherwise ask the user for a heuristic.
             if (parameters.containsKey("h2")){
                 h2 = Integer.parseInt(parameters.get("h2"));
+                if (h1 < 0 || h1 > 3){
+                    System.out.println("Invalid id for the second heuristic");
+                    System.exit(0);
+                }
             }else{
                 System.out.println("Choose the heuristic for the second scene:");
                 h2 = chooseUniqueHeuristic();
@@ -97,6 +118,10 @@ public class TestMain {
             //check the comparison method id otherwise ask the user for the method to use.
             if (parameters.containsKey("compare")){
                 compare = Integer.parseInt(parameters.get("compare"));
+                if (compare < 0 || compare > 6){
+                    System.out.println("Invalid id for the comparison");
+                    System.exit(0);
+                }
             }else{
                 do{
                     System.out.println("Choose the operation to compare the 2 scenes partitions:");
@@ -220,12 +245,17 @@ public class TestMain {
      *      List of all files contained in the given directory.
      */
     private static ArrayList<File> getFileRecursive(File f){
+        System.out.println("\nhere: "+f.getPath());
         ArrayList<File> returnList = new ArrayList<>();
-        if (f.isFile())
+        if (f.isFile()) {
+            System.out.println("file!\n");
             returnList.add(f);
-        else if (f.isDirectory())
+        }
+        else if (f.isDirectory()) {
+            System.out.println("directory!\n");
             for (File file : f.listFiles())
                 returnList.addAll(getFileRecursive(file));
+        }
 
         return returnList;
     }
@@ -239,14 +269,34 @@ public class TestMain {
         //get resources dir
         File resourcesSceneFiles = new File(TestMain.class.getResource("/scenes/").getFile());
 
-        //list all files
-        fileList = getFileRecursive(resourcesSceneFiles);
-
         int id = 1;
 
-        for (File f : fileList){
-            System.out.println(id + ". " + f.getName());
-            id++;
+        //solution found here: https://stackoverflow.com/questions/11012819/how-can-i-access-a-folder-inside-of-a-resource-folder-from-inside-my-jar-file/20073154#20073154
+
+        if (jarFile.isFile()){
+            //run from jar path
+            fileList = new ArrayList<>();
+            JarFile jar = new JarFile(jarFile);
+            Enumeration<JarEntry> entries = jar.entries();
+            while(entries.hasMoreElements()){
+                String name = entries.nextElement().getName();
+                if (name.startsWith("scenes/") && name.endsWith(".txt")){
+                    //filters scene files
+                    fileList.add("./" + name);
+                    String[] parts = name.split("/");
+                    System.out.println(id + ". " + parts[parts.length-1]);
+                    id++;
+                }
+            }
+        }else {
+            //run from gradle root path
+            //list all files
+            ArrayList<File> listing = getFileRecursive(resourcesSceneFiles);
+
+            for (File f : listing) {
+                System.out.println(id + ". " + f.getName());
+                id++;
+            }
         }
         System.out.println(id + ". Choose the path to your scene file.");
     }
@@ -341,7 +391,7 @@ public class TestMain {
                     filePath = input.next();
                     file = new File(filePath);
                     if (file.exists()) {
-                        fileList.add(file);
+                        fileList.add(filePath);
                         return fileList.size();
                     }
                 } catch (Exception e) {
@@ -355,47 +405,92 @@ public class TestMain {
 
     /**
      * Parse a file to get all the segments.
-     * @param file
-     *      File to parse.
+     * @param fileIndex
+     *      Index of the file to parse.
      * @return
      *      Set of segments constituting the file.
      * @throws Exception
      *      If the file has not been found.
      */
-    private static Segment[] parseFile(File file) throws Exception{
-        if (file != null){
+    private static Segment[] parseFile(int fileIndex) throws Exception{
+        String fl[];
+        Segment[] scene;
+        int a, b, n, i;
+        double x1, x2, y1, y2;
+        EColor color;
+        Segment segment;
 
+        String filePath = fileList.get(fileIndex);
+
+        if (filePath.startsWith("./")){
+            //file from jar resource path
             //parse data from file
-            Scanner scanner = new Scanner(file);
+            JarFile jar = new JarFile(TestMain.class.getProtectionDomain().getCodeSource().getLocation().getFile());
+            InputStream in = jar.getInputStream(jar.getJarEntry(filePath.substring(2)));//TestMain.class.getResourceAsStream(filePath.substring(1));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
             //read first line
-            String[] fl = scanner.nextLine().split(" ");
+            fl = reader.readLine().split(" ");
             //get principal data from the file
-            int a = Integer.parseInt(fl[1]); //max abs
-            int b = Integer.parseInt(fl[2]); //max ord
-            int n = Integer.parseInt(fl[3]); //#segment in the scene
+            a = Integer.parseInt(fl[1]); //max abs
+            b = Integer.parseInt(fl[2]); //max ord
+            n = Integer.parseInt(fl[3]); //#segment in the scene
 
-            Segment[] scene = new Segment[n];
-            int i = 0;
+            scene = new Segment[n];
+            i = 0;
 
-            while(scanner.hasNextLine()){
-                //get data from the file
-                fl = scanner.nextLine().split(" ");
-                double x1, x2, y1, y2;
-                EColor color;
+            String line;
+            while(( line = reader.readLine() ) != null){
+                fl = line.split(" ");
                 //convert data
-                x1 = Double.parseDouble(fl[0]); y1 = Double.parseDouble(fl[1]);
-                x2 = Double.parseDouble(fl[2]); y2 = Double.parseDouble(fl[3]);
+                x1 = Double.parseDouble(fl[0]);
+                y1 = Double.parseDouble(fl[1]);
+                x2 = Double.parseDouble(fl[2]);
+                y2 = Double.parseDouble(fl[3]);
                 color = EColor.getEColorByName(fl[4]);
 
                 //create the segment from a line of data and add it to the scene
-                Segment segment = new Segment((x1+a)/2,(y1+b)/2, (x2+a)/2, (y2+b)/2, color);
+                segment = new Segment((x1 + a) / 2, (y1 + b) / 2, (x2 + a) / 2, (y2 + b) / 2, color);
                 scene[i] = segment;
                 i++;
             }
 
-            return scene;
+
+        }else {
+            File file = new File(fileList.get(fileIndex));
+            if (file != null) {
+
+                //parse data from file
+                Scanner scanner = new Scanner(file);
+                //read first line
+                fl = scanner.nextLine().split(" ");
+                //get principal data from the file
+                a = Integer.parseInt(fl[1]); //max abs
+                b = Integer.parseInt(fl[2]); //max ord
+                n = Integer.parseInt(fl[3]); //#segment in the scene
+
+                scene = new Segment[n];
+                i = 0;
+
+                while (scanner.hasNextLine()) {
+                    //get data from the file
+                    fl = scanner.nextLine().split(" ");
+                    //convert data
+                    x1 = Double.parseDouble(fl[0]);
+                    y1 = Double.parseDouble(fl[1]);
+                    x2 = Double.parseDouble(fl[2]);
+                    y2 = Double.parseDouble(fl[3]);
+                    color = EColor.getEColorByName(fl[4]);
+
+                    //create the segment from a line of data and add it to the scene
+                    segment = new Segment((x1 + a) / 2, (y1 + b) / 2, (x2 + a) / 2, (y2 + b) / 2, color);
+                    scene[i] = segment;
+                    i++;
+                }
+            }else
+                scene = null;
         }
-        return null;
+
+        return scene;
     }
 
     /**
@@ -410,7 +505,7 @@ public class TestMain {
      *      If any exception is raised opening files.
      */
     private static double[] compareHeight(int heuristicIndex, int fileIndex) throws Exception{
-        Segment[] S = parseFile(fileList.get(fileIndex)), randS;
+        Segment[] S = parseFile(fileIndex), randS;
         randS = S.clone();
         Collections.shuffle(Arrays.asList(randS));
 
@@ -457,7 +552,7 @@ public class TestMain {
      *      If any exception is raised opening files.
      */
     private static double[] compareLength(int heuristicIndex, int fileIndex) throws Exception{
-        Segment[] S = parseFile(fileList.get(fileIndex)), randS;
+        Segment[] S = parseFile(fileIndex), randS;
         randS = S.clone();
         Collections.shuffle(Arrays.asList(randS));
 
@@ -504,7 +599,7 @@ public class TestMain {
      *      If any exception is raised opening files.
      */
     private static double [] compareCPUTimeAtBuild(int heuristicIndex, int fileIndex) throws Exception{
-        Segment[] S = parseFile(fileList.get(fileIndex)), randS;
+        Segment[] S = parseFile(fileIndex), randS;
         randS = S.clone();
         Collections.shuffle(Arrays.asList(randS));
 
@@ -575,7 +670,7 @@ public class TestMain {
      *      If any exception is raised opening files.
      */
     private static double [] compareCPUTimeForPainting(int heuristicIndex, int fileIndex) throws Exception{
-        Segment[] S = parseFile(fileList.get(fileIndex)), randS;
+        Segment[] S = parseFile(fileIndex), randS;
         randS = S.clone();
         Collections.shuffle(Arrays.asList(randS));
         Scanner input = new Scanner(System.in);
