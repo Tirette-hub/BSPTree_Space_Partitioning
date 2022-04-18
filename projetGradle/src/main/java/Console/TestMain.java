@@ -636,7 +636,7 @@ public class TestMain {
             }
         }while(true);
 
-        double[] results = {p1.size(), p2.size()};
+        double[] results = {t1.getDelta(), t2.getDelta()};
         return results;
     }
 }
