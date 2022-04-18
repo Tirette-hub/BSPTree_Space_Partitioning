@@ -48,7 +48,6 @@
         <Menu mnemonicParsing="false" text="File">
           <items>
             <MenuItem mnemonicParsing="false" onAction="#onOpen" text="Open…" />
-            <Menu mnemonicParsing="false" text="Open Recent" />
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" onAction="#onQuit" text="Quit" />
           </items>
