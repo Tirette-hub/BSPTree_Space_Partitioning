@@ -49,15 +49,15 @@ public class TestMain {
                 }
 
                 // get the key and value
-                argValue = args[++i];
-                if (argKey.charAt(0) != '-')
+                argValue = args[++i].substring(1);
+                if (argValue.charAt(0) != '-')
                     parameters.put(argKey.substring(1), argValue);
 
             }else if (argKey.charAt(0) == '-' && argKey.charAt(1) == '-'){
                 // --
                 // get the key and value
                 argValue = args[++i];
-                if (argKey.charAt(0) != '-')
+                if (argValue.charAt(0) != '-')
                     parameters.put(argKey.substring(2), argValue);
 
             }else{
@@ -79,7 +79,8 @@ public class TestMain {
             if (parameters.containsKey("s")){
                 File file = new File(parameters.get("s"));
                 if (file.exists()) {
-                    fileList.add(file.getName());
+                    fileList = new ArrayList<>();
+                    fileList.add(file.getAbsolutePath());
                 }else {
                     System.out.println("Invalid File");
                     System.exit(0);
