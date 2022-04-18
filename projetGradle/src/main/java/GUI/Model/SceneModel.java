@@ -32,7 +32,7 @@ public class SceneModel {
         FOVVisible = false;
 
         FOVSpinnerFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.0, 359.9, 90.0, 1.0);
-        AngleSpinnerFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(1.0, 359.9, 1.0, 1.0);
+        AngleSpinnerFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.0, 359.9, 0.0, 1.0);
     }
 
     //setters

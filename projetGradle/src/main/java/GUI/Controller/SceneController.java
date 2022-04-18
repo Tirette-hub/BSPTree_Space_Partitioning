@@ -172,9 +172,13 @@ public class SceneController {
      *      Point Of View (eye) position.
      */
     public double[] getPOVPosition(){
-        double width = model.getPOVPosition()[0];
-        double height = model.getB() - model.getPOVPosition()[1];
-        return new double[] {width, height};
+        double[] pos = model.getPOVPosition();
+        if (pos != null) {
+            double width = model.getPOVPosition()[0];
+            double height = model.getB() - model.getPOVPosition()[1];
+            return new double[]{width, height};
+        }else
+            return null;
     }
 
     /**
@@ -186,10 +190,20 @@ public class SceneController {
         return model.getData();
     }
 
+    /**
+     * Get the Field of View of the eye.
+     * @return
+     *      Field of view in degree.
+     */
     public double getFOV(){
         return model.getFOV();
     }
 
+    /**
+     * Get the POV (Eye) direction angle.
+     * @return
+     *      POV (Eye) direction angle in degree.
+     */
     public double getFOVDirection(){
         return model.getFOVDirection();
     }
@@ -362,6 +376,11 @@ public class SceneController {
                 fxAngleSpinner.getValueFactory().setValue(newValue.doubleValue());
             }
         });
+
+        fxFOVSpinner.increment();
+        fxFOVSpinner.decrement();
+        fxAngleSpinner.increment();
+        fxAngleSpinner.decrement();
 
         //link controller to view - configurations
 

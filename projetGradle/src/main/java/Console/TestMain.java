@@ -118,7 +118,7 @@ public class TestMain {
             //check the comparison method id otherwise ask the user for the method to use.
             if (parameters.containsKey("compare")){
                 compare = Integer.parseInt(parameters.get("compare"));
-                if (compare < 0 || compare > 6){
+                if (compare < 0 || compare > 4){
                     System.out.println("Invalid id for the comparison");
                     System.exit(0);
                 }

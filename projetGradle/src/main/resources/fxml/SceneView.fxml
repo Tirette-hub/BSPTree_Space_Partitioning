@@ -36,7 +36,7 @@
             <VBox alignment="TOP_CENTER">
                <children>
                   <Label text="Direction" />
-                  <Slider fx:id="fxFOVAngle" blockIncrement="1.0" max="359.9" snapToTicks="true" value="1.0" />
+                  <Slider fx:id="fxFOVAngle" blockIncrement="1.0" max="359.9" snapToTicks="true" value="0.0" />
                   <Spinner fx:id="fxAngleSpinner" editable="true" minWidth="60.0" prefWidth="60.0" />
                </children>
             </VBox>
