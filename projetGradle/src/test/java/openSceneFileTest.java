@@ -1,14 +1,14 @@
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import DataStructure.EColor;
 import DataStructure.Segment;
+import DataStructure.FileParser;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.util.Scanner;
+import java.util.ArrayList;
 
 public class openSceneFileTest {
     @BeforeAll
@@ -17,61 +17,40 @@ public class openSceneFileTest {
     }
 
     @Test
-    void testGetData() throws Exception{
-        Segment[] supposedData = new Segment[14];
+    void testFile() throws Exception{
+        ArrayList<Segment> supposedData = new ArrayList<Segment>();
         int supposedA = 300, supposedB = 550;
-        supposedData[0] = new Segment(-300.000000, 100.000000, 0.000000, 100.000000, EColor.getEColorByName("Rouge"));
-        supposedData[1] = new Segment(0.000000, 100.000000, 300.000000, 100.000000, EColor.getEColorByName("Bleu"));
-        supposedData[2] = new Segment(300.000000, -100.000000, 300.000000, 100.000000, EColor.getEColorByName("Rose"));
-        supposedData[3] = new Segment(-300.000000, -100.000000, 0.000000, -100.000000, EColor.getEColorByName("Noir"));
-        supposedData[4] = new Segment(0.000000, -100.000000, 300.000000, -100.000000, EColor.getEColorByName("Vert"));
-        supposedData[5] = new Segment(-300.000000, -100.000000, -300.000000, 100.000000, EColor.getEColorByName("Jaune"));
-        supposedData[6] = new Segment(200.000000, -350.000000, 141.421356, -208.578644, EColor.getEColorByName("Vert"));
-        supposedData[7] = new Segment(141.421356, -208.578644, 0.000000, -150.000000, EColor.getEColorByName("Jaune"));
-        supposedData[8] = new Segment(0.000000, -150.000000, -141.421356, -208.578644, EColor.getEColorByName("Gris"));
-        supposedData[9] = new Segment(-141.421356, -208.578644, -200.000000, -350.000000, EColor.getEColorByName("Noir"));
-        supposedData[10] = new Segment(-200.000000, -350.000000, -141.421356, -491.421356, EColor.getEColorByName("Orange"));
-        supposedData[11] = new Segment(-141.421356, -491.421356, -0.000000, -550.000000, EColor.getEColorByName("Violet"));
-        supposedData[12] = new Segment(-0.000000, -550.000000, 141.421356, -491.421356, EColor.getEColorByName("Rouge"));
-        supposedData[13] = new Segment(141.421356, -491.421356, 200.000000, -350.000000, EColor.getEColorByName("Bleu"));
+        supposedData.add(new Segment(0.0, 325.0, 150.0, 325.0, EColor.getEColorByName("Rouge")));
+        supposedData.add(new Segment(150.0, 325.0, 300.0, 325.0, EColor.getEColorByName("Bleu")));
+        supposedData.add(new Segment(300.0, 225.0, 300.0, 325.0, EColor.getEColorByName("Rose")));
+        supposedData.add(new Segment(0.0, 225.0, 150.0, 225.0, EColor.getEColorByName("Noir")));
+        supposedData.add(new Segment(150.0, 225.0, 300.0, 225.0, EColor.getEColorByName("Vert")));
+        supposedData.add(new Segment(0.0, 225.0, 0.0, 325.0, EColor.getEColorByName("Jaune")));
+        supposedData.add(new Segment(250.0, 100.0, (141.421356+300)/2, (-208.578644+550)/2, EColor.getEColorByName("Vert")));
+        supposedData.add(new Segment((141.421356+300)/2, (-208.578644+550)/2, 150.0, 200.0, EColor.getEColorByName("Jaune")));
+        supposedData.add(new Segment(150.0, 200.0, (-141.421356+300)/2, (-208.578644+550)/2, EColor.getEColorByName("Gris")));
+        supposedData.add(new Segment((-141.421356+300)/2, (-208.578644+550)/2, 50.0, 100.0, EColor.getEColorByName("Noir")));
+        supposedData.add(new Segment(50.0, 100.0, (-141.421356+300)/2, (-491.421356+550)/2, EColor.getEColorByName("Orange")));
+        supposedData.add(new Segment((-141.421356+300)/2, (-491.421356+550)/2, 150.0, 0.0, EColor.getEColorByName("Violet")));
+        supposedData.add(new Segment(150.0, 0.0, (141.421356+300)/2, (-491.421356+550)/2, EColor.getEColorByName("Rouge")));
+        supposedData.add(new Segment((141.421356+300)/2, (-491.421356+550)/2, 250.0, 100.0, EColor.getEColorByName("Bleu")));
 
         //open test file
         File file = new File(getClass().getResource("/octangle.txt").toURI());
 
-        //init the scanner to parse the file
-        Scanner scanner = new Scanner(file);
-        //read first line
-        String[] fl = scanner.nextLine().split(" ");
-        //get principal data from the file
-        int a = Integer.parseInt(fl[1]); //max abs
-        int b = Integer.parseInt(fl[2]); //max ord
-        int n = Integer.parseInt(fl[3]); //#segment in the scene
+        FileParser parser = new FileParser(file);
 
-        Segment[] data = new Segment[n];
-        int i = 0;
+        int abn[] = parser.getParameters();
+        int a = abn[0], b = abn[1], n = abn[2];
 
-        while(scanner.hasNextLine()){
-            //get data from the file
-            fl = scanner.nextLine().split(" ");
-            double x1, x2, y1, y2;
-            EColor color;
-            //convert data
-            x1 = Double.parseDouble(fl[0]); y1 = Double.parseDouble(fl[1]);
-            x2 = Double.parseDouble(fl[2]); y2 = Double.parseDouble(fl[3]);
-            color = EColor.getEColorByName(fl[4]);
-
-            //create the segment from a line of data and add it to the scene
-            Segment segment = new Segment(x1,y1, x2, y2, color);
-            data[i] = segment;
-            i++;
-        }
+        ArrayList<Segment> data = parser.getData();
 
         assertEquals(supposedA, a);
         assertEquals(supposedB, b);
         assertEquals(n, 14);
 
 
-        assertArrayEquals(supposedData, data);
+        assertEquals(supposedData, data);
     }
 
     @AfterAll
