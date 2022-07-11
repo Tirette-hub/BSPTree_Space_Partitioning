@@ -2,6 +2,7 @@ package Console;
 
 import DataStructure.BSPTree;
 import DataStructure.EColor;
+import DataStructure.FileParser;
 import DataStructure.Segment;
 import GUI.TestGUIMain;
 
@@ -418,84 +419,13 @@ public class TestMain {
      *      If the file has not been found.
      */
     private static Segment[] parseFile(int fileIndex) throws Exception{
-        String fl[];
         Segment[] scene;
-        int a, b, n, i;
-        double x1, x2, y1, y2;
-        EColor color;
-        Segment segment;
 
         String filePath = fileList.get(fileIndex);
 
-        if (filePath.startsWith("./")){
-            //file from jar resource path
-            //parse data from file
-            JarFile jar = new JarFile(TestMain.class.getProtectionDomain().getCodeSource().getLocation().getFile());
-            InputStream in = jar.getInputStream(jar.getJarEntry(filePath.substring(2)));//TestMain.class.getResourceAsStream(filePath.substring(1));
-            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-            //read first line
-            fl = reader.readLine().split(" ");
-            //get principal data from the file
-            a = Integer.parseInt(fl[1]); //max abs
-            b = Integer.parseInt(fl[2]); //max ord
-            n = Integer.parseInt(fl[3]); //#segment in the scene
+        FileParser parser = new FileParser(filePath);
 
-            scene = new Segment[n];
-            i = 0;
-
-            String line;
-            while(( line = reader.readLine() ) != null){
-                fl = line.split(" ");
-                //convert data
-                x1 = Double.parseDouble(fl[0]);
-                y1 = Double.parseDouble(fl[1]);
-                x2 = Double.parseDouble(fl[2]);
-                y2 = Double.parseDouble(fl[3]);
-                color = EColor.getEColorByName(fl[4]);
-
-                //create the segment from a line of data and add it to the scene
-                segment = new Segment((x1 + a) / 2, (y1 + b) / 2, (x2 + a) / 2, (y2 + b) / 2, color);
-                scene[i] = segment;
-                i++;
-            }
-
-
-        }else {
-            File file = new File(fileList.get(fileIndex));
-            if (file != null) {
-
-                //parse data from file
-                Scanner scanner = new Scanner(file);
-                //read first line
-                fl = scanner.nextLine().split(" ");
-                //get principal data from the file
-                a = Integer.parseInt(fl[1]); //max abs
-                b = Integer.parseInt(fl[2]); //max ord
-                n = Integer.parseInt(fl[3]); //#segment in the scene
-
-                scene = new Segment[n];
-                i = 0;
-
-                while (scanner.hasNextLine()) {
-                    //get data from the file
-                    fl = scanner.nextLine().split(" ");
-                    //convert data
-                    x1 = Double.parseDouble(fl[0]);
-                    y1 = Double.parseDouble(fl[1]);
-                    x2 = Double.parseDouble(fl[2]);
-                    y2 = Double.parseDouble(fl[3]);
-                    color = EColor.getEColorByName(fl[4]);
-
-                    //create the segment from a line of data and add it to the scene
-                    segment = new Segment((x1 + a) / 2, (y1 + b) / 2, (x2 + a) / 2, (y2 + b) / 2, color);
-                    scene[i] = segment;
-                    i++;
-                }
-            }else
-                scene = null;
-        }
-
-        return scene;
+        return parser.getData().toArray(new Segment[0]);
     }
 
     /**

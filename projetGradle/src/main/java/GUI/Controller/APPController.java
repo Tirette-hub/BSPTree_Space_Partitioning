@@ -1,6 +1,6 @@
 package GUI.Controller;
 
-import DataStructure.EColor;
+import DataStructure.FileParser;
 import DataStructure.Segment;
 import GUI.Model.AppModel;
 import javafx.event.ActionEvent;
@@ -11,7 +11,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.util.Scanner;
 
 
 /**
@@ -58,33 +57,12 @@ public class APPController{
         if (file != null){
             model.setFile(file);
 
-            //parse data from file
-            Scanner scanner = new Scanner(file);
-            //read first line
-            String[] fl = scanner.nextLine().split(" ");
-            //get principal data from the file
-            int a = Integer.parseInt(fl[1]); //max abs
-            int b = Integer.parseInt(fl[2]); //max ord
-            int n = Integer.parseInt(fl[3]); //#segment in the scene
+            FileParser parser = new FileParser(file.getPath());
 
-            Segment[] scene = new Segment[n];
-            int i = 0;
+            int a, b, abn[] = parser.getParameters();
+            a = abn[0]; b = abn[1];
 
-            while(scanner.hasNextLine()){
-                //get data from the file
-                fl = scanner.nextLine().split(" ");
-                double x1, x2, y1, y2;
-                EColor color;
-                //convert data
-                x1 = Double.parseDouble(fl[0]); y1 = Double.parseDouble(fl[1]);
-                x2 = Double.parseDouble(fl[2]); y2 = Double.parseDouble(fl[3]);
-                color = EColor.getEColorByName(fl[4]);
-
-                //create the segment from a line of data and add it to the scene
-                Segment segment = new Segment((x1+a)/2,(y1+b)/2, (x2+a)/2, (y2+b)/2, color);
-                scene[i] = segment;
-                i++;
-            }
+            Segment[] scene = parser.getData().toArray(new Segment[0]);
 
             //load scene into SceneController
             fxSceneController.setSceneSize(a,b);
@@ -100,16 +78,6 @@ public class APPController{
     public void onQuit(){
         parent.close();
     }
-
-    /*
-     *
-     *
-     *
-     * TBC
-     *
-     *
-     *
-     * */
 
     /**
      * Callback called by the fxml view in order to show the information of the application.
