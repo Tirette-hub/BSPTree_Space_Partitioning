@@ -246,14 +246,14 @@ public class TestMain {
      *      List of all files contained in the given directory.
      */
     private static ArrayList<File> getFileRecursive(File f){
-        System.out.println("\nhere: "+f.getPath());
+        //System.out.println("\nhere: "+f.getPath());
         ArrayList<File> returnList = new ArrayList<>();
         if (f.isFile()) {
-            System.out.println("file!\n");
+            //System.out.println("file!\n");
             returnList.add(f);
         }
         else if (f.isDirectory()) {
-            System.out.println("directory!\n");
+            //System.out.println("directory!\n");
             for (File file : f.listFiles())
                 returnList.addAll(getFileRecursive(file));
         }
@@ -293,9 +293,11 @@ public class TestMain {
             //run from gradle root path
             //list all files
             ArrayList<File> listing = getFileRecursive(resourcesSceneFiles);
+            fileList = new ArrayList<>();
 
             for (File f : listing) {
                 System.out.println(id + ". " + f.getName());
+                fileList.add(f.getPath());
                 id++;
             }
         }
@@ -379,6 +381,8 @@ public class TestMain {
         do{
             System.out.print("Enter the index corresponding to your choice:");
             choice = getChoice();
+            /*for (int i = 0; i < fileList.size();i++)
+                System.out.println(fileList.get(i));*/
         }while(choice < 1 || choice > fileList.size() + 1);
 
         if (choice == fileList.size()+1){
