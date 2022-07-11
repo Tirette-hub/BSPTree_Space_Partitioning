@@ -38,7 +38,7 @@ public class openSceneFileTest {
         //open test file
         File file = new File(getClass().getResource("/octangle.txt").toURI());
 
-        FileParser parser = new FileParser(file);
+        FileParser parser = new FileParser(file.getPath());
 
         int abn[] = parser.getParameters();
         int a = abn[0], b = abn[1], n = abn[2];

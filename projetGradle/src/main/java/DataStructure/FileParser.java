@@ -1,28 +1,37 @@
 package DataStructure;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.jar.JarFile;
 
 public class FileParser {
     private int a, b, n;
     private ArrayList<Segment> data;
     private File file;
 
-    private Scanner scanner;
+    private BufferedReader reader;
 
-    public FileParser(File f) throws IOException{
-        file = f;
-        if (file == null)
-            throw new IOException("Impossible to open this file.");
-        scanner = new Scanner(file);
+    public FileParser(String filePath) throws IOException {
+        if (filePath.startsWith("./")){
+            JarFile jar = new JarFile(FileParser.class.getProtectionDomain().getCodeSource().getLocation().getFile());
+            if (jar == null)
+                throw new IOException("Impossible to open this file.");
+            InputStream in = jar.getInputStream(jar.getJarEntry(filePath.substring(2)));//TestMain.class.getResourceAsStream(filePath.substring(1));
+            reader = new BufferedReader(new InputStreamReader(in));
+        }else{
+            file = new File(filePath);
+            if (file == null)
+                throw new IOException("Impossible to open this file.");
+            InputStream in = new FileInputStream(file);
+            reader = new BufferedReader(new InputStreamReader(in));
+        }
+
         if (!checkScene())
             throw new IOException("The given file is not a correct Scene file.");
     }
 
-    private boolean checkScene(){
-        String fl [] = scanner.nextLine().split(" ");
+    private boolean checkScene() throws IOException{
+        String fl [] = reader.readLine().split(" ");
         if (fl.length != 4) //4elements: >, a, b, n
             return false;
 
@@ -38,8 +47,10 @@ public class FileParser {
         EColor color;
         data = new ArrayList<>();
         Segment seg;
-        while (scanner.hasNextLine()){
-            fl = scanner.nextLine().split(" ");
+
+        String line;
+        while ((line = reader.readLine()) != null){
+            fl = line.split(" ");
             if (fl.length != 5)
                 return false;
             x1 = Double.parseDouble(fl[0]);
