@@ -13,7 +13,7 @@
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="115.0" minWidth="440.0" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller.SceneController">
    <children>
-      <Pane fx:id="fxPane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #393737;">
+      <Pane fx:id="fxPane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #b0b0fd;">
          <children>
             <Canvas fx:id="fxCanvas" height="200.0" onMouseClicked="#onClick" onMouseMoved="#onMove" width="200.0" />
          </children>
