@@ -2,6 +2,7 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import DataStructure.BSPTree;
+import DataStructure.Point2D;
 import DataStructure.Segment;
 import org.junit.jupiter.api.*;
 
@@ -59,7 +60,7 @@ public class PaintersAlgorithmTest {
         Segment line1 = new Segment(0,0,2,3),
                 line2 = new Segment(1,11.0/3,2, 3);
 
-        double[] intersectionPoint = Segment.getIntersection(Segment.getCutlineParameters(line1.get()), Segment.getCutlineParameters(line2.get()));
+        double[] intersectionPoint = Segment.getIntersection(Segment.getCutlineParameters(line1.getFrom(), line1.getTo()), Segment.getCutlineParameters(line2.getFrom(), line2.getTo()));
 
         assertArrayEquals(expectedIntersectionPoint, intersectionPoint);
     }
@@ -68,7 +69,7 @@ public class PaintersAlgorithmTest {
     void testAngle(){
         System.out.println("angle between a direction line and a point:");
         Segment direction = new Segment(0,0,2,3);
-        double[] pt = {1, 11.0/3};
+        Point2D pt = new Point2D(1, 11.0/3);
 
         double expectedAngle = Math.toDegrees(Math.atan(1.0/3));
 
@@ -80,9 +81,9 @@ public class PaintersAlgorithmTest {
     @Test
     void testProjection(){
         System.out.println("Projection of a point on the solution canvas (get the correct coordinates):");
-        double [] pt = {0, 1};
+        Point2D pt = new Point2D(0, 1);
         Segment direction = new Segment(0, 0, 2, 3.464);
-        double[] abc = Segment.getCutlineParameters(direction.get());
+        double[] abc = Segment.getCutlineParameters(direction.getFrom(), direction.getTo());
         double angle = 30, FOV = 90, screenWidth = 600;
 
         double expectedX = 100;

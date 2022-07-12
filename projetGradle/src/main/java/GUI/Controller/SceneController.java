@@ -1,5 +1,6 @@
 package GUI.Controller;
 
+import DataStructure.Point2D;
 import DataStructure.Segment;
 import GUI.Model.SceneModel;
 import javafx.beans.value.ChangeListener;
@@ -223,13 +224,17 @@ public class SceneController {
             gc.clearRect(0,0, fxCanvas.getWidth(), fxCanvas.getHeight());
 
         //draw
+        double x1, x2, y1, y2;
+        int padding = 5; //used to make a padding in canvas so that segments are not on the edge of it
         for (Segment s : scene){
-            double [] coords = s.get(); //x1,y1,x2,y2
+            Point2D from = s.getFrom(), to = s.getTo();
+            x1 = from.getX(); y1 = from.getY();
+            x2 = to.getX(); y2 = to.getY();
             Color color = s.getEColor().getColor();
 
             //draw the segment on the canvas with its color as set up in the scene file
             gc.setStroke(color);
-            gc.strokeLine(coords[0] + 5, -(coords[1] - model.getB() - 5), coords[2] + 5, -(coords[3] - model.getB() - 5));
+            gc.strokeLine(x1 + padding, -(y1 - model.getB() - padding), x2 + padding, -(y2 - model.getB() - padding));
         }
 
         model.setIsDrawn(true);
@@ -262,7 +267,7 @@ public class SceneController {
             double[] firstPoint;
             double R = fxCanvas.getWidth()/10;
             double dx, dy, x, y; //a,
-            double[] xy1, xy2;
+            Point2D xy1, xy2;
 
             //create direction line with polar equation
             firstPoint = model.getPOVPosition();
@@ -299,15 +304,15 @@ public class SceneController {
 
             xy1 = directionLine.getFrom();
             xy2 = directionLine.getTo();
-            gc.strokeLine(xy1[0], xy1[1], xy2[0], xy2[1]);
+            gc.strokeLine(xy1.getX(), xy1.getY(), xy2.getX(), xy2.getY());
 
             xy1 = FOVLeftLine.getFrom();
             xy2 = FOVLeftLine.getTo();
-            gc.strokeLine(xy1[0], xy1[1], xy2[0], xy2[1]);
+            gc.strokeLine(xy1.getX(), xy1.getY(), xy2.getX(), xy2.getY());
 
             xy1 = FOVRightLine.getFrom();
             xy2 = FOVRightLine.getTo();
-            gc.strokeLine(xy1[0], xy1[1], xy2[0], xy2[1]);
+            gc.strokeLine(xy1.getX(), xy1.getY(), xy2.getX(), xy2.getY());
         }
     }
 

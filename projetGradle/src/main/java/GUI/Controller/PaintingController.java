@@ -105,7 +105,7 @@ public class PaintingController {
 
             //get parameters
             double x1, x2, y = fxCanvas.getHeight() / 2.0;
-            double[] abc = Segment.getCutlineParameters(directionLine.get());
+            double[] abc = Segment.getCutlineParameters(directionLine.getFrom(), directionLine.getTo());
             double a = abc[0], b = abc[1], c = abc[2];
             double angle1, angle2;
 
@@ -117,12 +117,12 @@ public class PaintingController {
             //System.out.println("paint segs");
             for (Segment s : segsInOrder) {
                 //scan convert segments
-                double[] pt1 = s.getFrom();
-                double[] pt2 = s.getTo();
+                Point2D pt1 = s.getFrom();
+                Point2D pt2 = s.getTo();
 
                 Segment v1, v2;
-                v1 = new Segment(POVPosition[0], POVPosition[1], pt1[0], pt1[1]);
-                v2 = new Segment(POVPosition[0], POVPosition[1], pt2[0], pt2[1]);
+                v1 = new Segment(POVPosition[0], POVPosition[1], pt1.getX(), pt1.getY());
+                v2 = new Segment(POVPosition[0], POVPosition[1], pt2.getX(), pt2.getY());
 
                 angle1 = Segment.getAngle(directionLine, pt1);
                 angle2 = Segment.getAngle(directionLine, pt2);
@@ -132,7 +132,7 @@ public class PaintingController {
 
                 //recalculate the angle because previous method does not take care of front or back
                 //System.out.println("a: " + a + ", b: " + b + ", c: " + c);
-                abc = Segment.getCutlineParameters(directionLine.getPerp().get());
+                abc = Segment.getCutlineParameters(directionLine.getPerp().getFrom(), directionLine.getPerp().getTo());
                 //System.out.println("ap: " + abc[0] + ", bp: " + abc[1] + ", cp: " + abc[2]);
                 //System.out.println("pt2: (" + pt2[0] + ", " + pt2[1] + ")");
 
@@ -143,11 +143,11 @@ public class PaintingController {
                         angle1 = 180;
                 } else {
                     if (directionLine.getY() < 0 || (Math.abs(directionLine.getY()) < 1e-4 && directionLine.getX() < 0)) {
-                        if (abc[0] * pt1[0] + abc[1] * pt1[1] + abc[2] > 0)
+                        if (abc[0] * pt1.getX() + abc[1] * pt1.getY() + abc[2] > 0)
                             //back is part of h+ and pt1 is in it
                             angle1 = 180 - angle1;
                     } else {
-                        if (abc[0] * pt1[0] + abc[1] * pt1[1] + abc[2] < 0)
+                        if (abc[0] * pt1.getX() + abc[1] * pt1.getY() + abc[2] < 0)
                             //back is then part of h- and pt1 is in it
                             angle1 = 180 - angle1;
                     }
@@ -165,13 +165,13 @@ public class PaintingController {
                 } else {
                     //System.out.println("direction line dy " + directionLine.getY());
                     if (directionLine.getY() < 0 || (Math.abs(directionLine.getY()) < 1e-4 && directionLine.getX() < 0)) {
-                        if (abc[0] * pt2[0] + abc[1] * pt2[1] + abc[2] > 0) {
+                        if (abc[0] * pt2.getX() + abc[1] * pt2.getY() + abc[2] > 0) {
                             //back is part of h+ and pt1 is in it
                             angle2 = 180 - angle2;
                             //System.out.println("angle2 in h+");
                         }
                     } else {
-                        if (abc[0] * pt2[0] + abc[1] * pt2[1] + abc[2] < 0) {
+                        if (abc[0] * pt2.getX() + abc[1] * pt2.getY() + abc[2] < 0) {
                             //back is then part of h- and pt1 is in it
                             angle2 = 180 - angle2;
                             //System.out.println("angle2 in h-");

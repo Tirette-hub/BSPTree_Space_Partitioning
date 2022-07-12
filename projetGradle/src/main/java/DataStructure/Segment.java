@@ -12,7 +12,7 @@ import java.util.ArrayList;
  * @version 1.0.0
  */
 public class Segment implements IVector {
-    protected double x1, y1, x2, y2;
+    protected Point2D firstPoint, lastPoint;
     private EColor color;
 
     // interface implementation
@@ -25,8 +25,8 @@ public class Segment implements IVector {
     public double getDistance(){
         double dx, dy;
 
-        dx = x2 - x1;
-        dy = y2 - y1;
+        dx = lastPoint.getX() - firstPoint.getX();
+        dy = lastPoint.getY() - firstPoint.getY();
 
         return Math.sqrt(Math.pow(dx, 2)+Math.pow(dy, 2));
     }
@@ -37,7 +37,7 @@ public class Segment implements IVector {
      *      x component.
      */
     public double getX(){
-        return x2 - x1;
+        return lastPoint.getX() - firstPoint.getX();
     }
 
     /**
@@ -46,7 +46,7 @@ public class Segment implements IVector {
      *      y component.
      */
     public double getY(){
-        return y2 - y1;
+        return lastPoint.getY() - firstPoint.getY();
     }
 
     /**
@@ -58,11 +58,9 @@ public class Segment implements IVector {
      */
     public boolean isMultipleOf(Segment o){
         double x = getX(), y = getY();
-        double[] xy1 = o.getFrom();
-        double[] xy2 = o.getTo();
         double deltaX, deltaY;
-        deltaX = xy2[0] - xy1[0];
-        deltaY = xy2[1] - xy1[1];
+        deltaX = o.getX();
+        deltaY = o.getY();
 
         if (Math.abs(deltaX) < 1e-4 && Math.abs(deltaY) < 1e-4)
             return false;
@@ -85,11 +83,9 @@ public class Segment implements IVector {
      */
     public Double getFactor(Segment o){
         double x = getX(), y = getY();
-        double[] xy1 = o.getFrom();
-        double[] xy2 = o.getTo();
         double deltaX, deltaY;
-        deltaX = xy2[0] - xy1[0];
-        deltaY = xy2[1] - xy1[1];
+        deltaX = o.getX();
+        deltaY = o.getY();
 
         if (isMultipleOf(o)){
             if (Math.abs(deltaX) < 1e-4 && Math.abs(deltaY) < 1e-4)
@@ -119,7 +115,7 @@ public class Segment implements IVector {
      *      A new vector representing the perpendicular.
      */
     public Segment getPerp(){
-        return new Segment(x1, y1, x1 + y2 -y1, y1 - x2 + x1);
+        return new Segment(getFrom().getX(), getFrom().getY(), getFrom().getX() + getTo().getY() -getFrom().getY(), getFrom().getY() - getTo().getX() + getFrom().getX());
     }
 
     //constructors
@@ -128,8 +124,8 @@ public class Segment implements IVector {
      * Constructor.
      */
     public Segment(){
-        x1 = 0; y1 = 0;
-        x2 = 0; y2 = 0;
+        firstPoint = new Point2D();
+        lastPoint = new Point2D();
         color = EColor.BLACK;
     }
 
@@ -145,10 +141,8 @@ public class Segment implements IVector {
      *      y coordinate of the end point.
      */
     public Segment(double x1, double y1, double x2, double y2){
-        this.x1 = x1;
-        this.y1 = y1;
-        this.x2 = x2;
-        this.y2 = y2;
+        firstPoint = new Point2D(x1, y1);
+        lastPoint = new Point2D(x2, y2);
         color = EColor.BLACK;
     }
 
@@ -166,10 +160,8 @@ public class Segment implements IVector {
      *      Enum value representing the color of the segment.
      */
     public Segment(double x1, double y1, double x2, double y2, EColor color){
-        this.x1 = x1;
-        this.y1 = y1;
-        this.x2 = x2;
-        this.y2 = y2;
+        firstPoint = new Point2D(x1, y1);
+        lastPoint = new Point2D(x2, y2);
         if (color != null)
             this.color = color;
         else
@@ -195,12 +187,8 @@ public class Segment implements IVector {
 
         Segment seg = (Segment) o;
 
-        double[] thisArray = this.get();
-        double[] oArray = seg.get();
-        for(int i = 0; i < 4; i++){
-            if (Math.abs(thisArray[i]-oArray[i]) > 1e-4)
-                return false;
-        }
+        if (seg.getFrom() != getFrom() || seg.getTo() != getTo())
+            return false;
 
         return (this.getEColor() == seg.getEColor());
     }
@@ -212,10 +200,10 @@ public class Segment implements IVector {
      */
     @Override
     public String toString(){
-        return "Segment: (x1:" + Double.toString(x1)
-                + ", y1:" + Double.toString(y1)
-                + ", x2:" + Double.toString(x2)
-                + ", y2:" + Double.toString(y2)
+        return "Segment: (x1:" + firstPoint.getX()
+                + ", y1:" + firstPoint.getY()
+                + ", x2:" + lastPoint.getX()
+                + ", y2:" + lastPoint.getY()
                 + "), color: " + getEColor().toString();
     }
 
@@ -235,10 +223,8 @@ public class Segment implements IVector {
      *      Enum value representing the color of the segment.
      */
     public void set(double x1, double y1, double x2, double y2, EColor color){
-        this.x1 = x1;
-        this.y1 = y1;
-        this.x2 = x2;
-        this.y2 = y2;
+        firstPoint = new Point2D(x1, y1);
+        lastPoint = new Point2D(x2, y2);
         if (color != null)
             this.color = color;
     }
@@ -256,21 +242,12 @@ public class Segment implements IVector {
     //getters
 
     /**
-     * Get the coordinates of the begin and the end points of the segment.
-     * @return
-     *      List of coordinates.
-     */
-    public double[] get(){
-        return new double[]{x1,y1,x2,y2};
-    }
-
-    /**
      * Get coordinates of the begin point of the segment.
      * @return
      *      List of x and y coordinates.
      */
-    public double[] getFrom() {
-        return new double[]{x1,y1};
+    public Point2D getFrom() {
+        return firstPoint;
     }
 
     /**
@@ -278,8 +255,8 @@ public class Segment implements IVector {
      * @return
      *      List of x and y coordinates.
      */
-    public double[] getTo() {
-        return new double[]{x2,y2};
+    public Point2D getTo() {
+        return lastPoint;
     }
 
     /**
@@ -304,28 +281,26 @@ public class Segment implements IVector {
      */
     static public Segment[] cut(Segment lineToCut, Segment cutLine){
         //get the hyperplan equation (general 2D line equation) of cutline
-        double[] coord = cutLine.get();
-        double x11 = coord[0],
-                y11 = coord[1],
-                x21 = coord[2],
-                y21 = coord[3];
+        double x11 = cutLine.getFrom().getX(),
+                y11 = cutLine.getFrom().getY(),
+                x21 = cutLine.getTo().getX(),
+                y21 = cutLine.getTo().getY();
         double dx1 = x21-x11;
         double dy1 = y21-y11;
 
-        double[] abc = getCutlineParameters(coord);
+        double[] abc = getCutlineParameters(cutLine.getFrom(), cutLine.getTo());
         double a1 = abc[0], b1 = abc[1], c1 = abc[2]; //h: a1*xi1 + b1*yi1 + c1 = 0
 
         //get second line equation
-        coord = lineToCut.get();
-        double x12 = coord[0],
-                y12 = coord[1],
-                x22 = coord[2],
-                y22 = coord[3];
+        double x12 = lineToCut.getFrom().getX(),
+                y12 = lineToCut.getFrom().getY(),
+                x22 = lineToCut.getTo().getX(),
+                y22 = lineToCut.getTo().getY();
         //get intersection coordinates
         double dx2 = x22-x12;
         double dy2 = y22-y12;
 
-        abc = getCutlineParameters(coord);
+        abc = getCutlineParameters(lineToCut.getFrom(), lineToCut.getTo());
         double a2 = abc[0], b2 = abc[1], c2 = abc[2]; //h: a*x + b*y + c = 0
 
         //get intersection coordinates
@@ -366,16 +341,18 @@ public class Segment implements IVector {
 
     /**
      * Get the 2D hyperplan parameters.
-     * @param coord
-     *      2 points coordinates of the line.
+     * @param from
+     *      First point coordinate of the line.
+     * @param to
+     *      Last point coordinate of the line.
      * @return
-     *      Array of 3 doubles representing a, b and c parameters (respectively).respectivement
+     *      Array of 3 doubles representing a, b and c parameters (respectively).
      */
-    static public double[] getCutlineParameters(double[] coord){
-        double x1 = coord[0],
-                y1 = coord[1],
-                x2 = coord[2],
-                y2 = coord[3];
+    static public double[] getCutlineParameters(Point2D from, Point2D to){
+        double x1 = from.getX(),
+                y1 = from.getY(),
+                x2 = to.getX(),
+                y2 = to.getY();
         double dx = x2-x1;
         double dy = y2-y1;
         double a, b, c; //h: a*xi + b*yi + c = 0
@@ -440,7 +417,7 @@ public class Segment implements IVector {
             Segment l = S[0];
 
             //calcul des paramètres d'équation de la droite (équation de l'hyperplan)
-            double[] abc = getCutlineParameters(l.get());
+            double[] abc = getCutlineParameters(l.getFrom(), l.getTo());
             double a = abc[0],
                     b = abc[1],
                     c = abc[2];
@@ -458,10 +435,8 @@ public class Segment implements IVector {
             tree.setParent(parent);
             for (Segment seg : S){
                 if (seg != l){
-                    segCoord = seg.get();
-
-                    r1 = a*segCoord[0] + b*segCoord[1] + c;
-                    r2 = a*segCoord[2] + b*segCoord[3] + c;
+                    r1 = a*seg.getFrom().getX() + b*seg.getFrom().getY() + c;
+                    r2 = a*seg.getTo().getX() + b*seg.getTo().getY() + c;
 
                     if (Math.abs(r1) < 1e-4 && Math.abs(r2) < 1e-4){
                         //segment sur la ligne de découpe
@@ -483,9 +458,8 @@ public class Segment implements IVector {
                         Segment[] cutResult = Segment.cut(seg, l);
 
                         //on vérifie quel coté de la découpe se trouve à gauche et quel coté se trouve à droite, de la ligne de découpe
-                        double[] cutLineCoord = cutResult[0].getFrom();
-                        double x = cutLineCoord[0], y = cutLineCoord[1];
-                        double result = a*x + b*y + c;
+                        Point2D cutLineCoord = cutResult[0].getFrom();
+                        double result = a*cutLineCoord.getX() + b*cutLineCoord.getY() + c;
 
                         if (result < 0){
                             Sminus.add(cutResult[0]);
@@ -549,14 +523,13 @@ public class Segment implements IVector {
                 Segment freeSplitSeg = null;
 
                 for (Segment s : S){
-                    coord = s.get();
-                    x1 = coord[0]; y1 = coord[1]; //pt1
-                    x2 = coord[2]; y2 = coord[3]; //pt2
+                    x1 = s.getFrom().getX(); y1 = s.getFrom().getY(); //pt1
+                    x2 = s.getTo().getX(); y2 = s.getTo().getY(); //pt2
                     pt1 = false; pt2 = false;
 
                     borne = parent;
                     while(borne != null){
-                        abc = getCutlineParameters(borne.getData().get(0).get());
+                        abc = getCutlineParameters(borne.getData().get(0).getFrom(), borne.getData().get(0).getTo());
                         a = abc[0]; b = abc[1]; c = abc[2];
                         if (Math.abs(a*x1+b*y1+c) < 1e-4){
                             pt1 = true;
@@ -569,7 +542,7 @@ public class Segment implements IVector {
                         //check pt2
                         borne = parent;
                         while(borne != null){
-                            abc = getCutlineParameters(borne.getData().get(0).get());
+                            abc = getCutlineParameters(borne.getData().get(0).getFrom(), borne.getData().get(0).getTo());
                             a = abc[0]; b = abc[1]; c = abc[2];
                             if (Math.abs(a*x2+b*y2+c) < 1e-4){
                                 pt2 = true;
@@ -631,7 +604,7 @@ public class Segment implements IVector {
 
         //set all the data that will be needed
         Segment h = tree.getData().get(0);
-        double[] abc = getCutlineParameters(h.get());
+        double[] abc = getCutlineParameters(h.getFrom(), h.getTo());
         double a = abc[0], b = abc[1], c = abc[2];
         double x = POVposition[0], y = POVposition[1];
         double result = a*x+b*y+c;
@@ -753,14 +726,12 @@ public class Segment implements IVector {
      * @return
      *      Angle in degrees.
      */
-    static public Double getAngle(Segment dirLine, double[] pt){
-        double [] abc1 = Segment.getCutlineParameters(dirLine.get()), abc2;
+    static public Double getAngle(Segment dirLine, Point2D pt){
+        double [] abc1 = Segment.getCutlineParameters(dirLine.getFrom(), dirLine.getTo()), abc2;
         double a1 = abc1[0], b1 = abc1[1], c1 = abc1[2];
         double a2, b2, c2;
 
-        double[] x1y1 = dirLine.getFrom();
-
-        double x1 = x1y1[0], x2, dx, y1 = x1y1[1], y2, dy;
+        double x1 = dirLine.getFrom().getX(), x2, dx, y1 = dirLine.getFrom().getY(), y2, dy;
 
         //perpendicular line parameters
         if (Math.abs(a1) < 1e-4){
@@ -780,7 +751,7 @@ public class Segment implements IVector {
             a2 = -1.0/a1;
             b2 = b1;
         }
-        c2 = -a2*pt[0] - b2*pt[1];
+        c2 = -a2*pt.getX() - b2*pt.getY();
 
         //collecting line 2 parameters
         abc2 = new double[]{a2, b2, c2};
@@ -793,7 +764,7 @@ public class Segment implements IVector {
 
         //calculate opposite and Adjascent segments (trigono)
         Segment O, A;
-        O = new Segment(pt[0], pt[1], x2, y2);
+        O = new Segment(pt.getX(), pt.getY(), x2, y2);
         A = new Segment(x1, y1, x2, y2);
 
         //calculate the angle
@@ -821,25 +792,25 @@ public class Segment implements IVector {
      * @return
      *      X position in the screen where the point is projected.
      */
-    static public Double getProjection(double[] pt, double a, double b, double c, double angle, double FOV, double screenWidth){
+    static public Double getProjection(Point2D pt, double a, double b, double c, double angle, double FOV, double screenWidth){
         double result;
 
         double left = screenWidth/2 - angle*screenWidth/FOV,
                 right = screenWidth/2 + angle*screenWidth/FOV;
 
-        boolean onH = Math.abs(a*pt[0]+b*pt[1]+c) < 1e-4;
+        boolean onH = Math.abs(a*pt.getX()+b*pt.getY()+c) < 1e-4;
 
         if (angle <= 180 || Math.abs(angle-360) < 1e-4)     //direction to the top, bottom or right
             if (onH)                                        //pt1 on the guide line
                 result = screenWidth/2;
-            else if (a*pt[0]+b*pt[1]+c > 0)                 // upper part of direction guideline is h+
+            else if (a*pt.getX()+b*pt.getY()+c > 0)                 // upper part of direction guideline is h+
                 result = left;                              // so to the left of the eye
             else                                            // lower part of direction guideline is h-
                 result = right;                             // so to the right of the eye
         else                                                //direction to the left
             if (onH)                                        //pt1 on the guide line
                 result = screenWidth/2;
-            else if (a*pt[0]+b*pt[1]+c > 0)                 // upper part of direction guideline is h+
+            else if (a*pt.getX()+b*pt.getY()+c > 0)                 // upper part of direction guideline is h+
                 result = right;                             // so to the right of the eye
             else                                            // lower part of direction guideline is h-
                 result = left;                              // so to the left of the eye

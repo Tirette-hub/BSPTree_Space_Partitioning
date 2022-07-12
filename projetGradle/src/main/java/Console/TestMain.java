@@ -23,6 +23,8 @@ import java.util.jar.JarFile;
  * @version 1.0.0
  */
 public class TestMain {
+    static final public double epsilon = 1e-4;
+
     static private ArrayList<String> fileList;
     static final private BSPTree<Segment>[] trees = new BSPTree[2];
     static final private Timer t1 = new Timer(), t2 = new Timer();
