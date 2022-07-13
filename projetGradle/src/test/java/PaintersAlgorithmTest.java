@@ -47,7 +47,7 @@ public class PaintersAlgorithmTest {
         expectedS.add(new Segment(4, 5.5,4,6));    //GD
         expectedS.add(new Segment(2,7,4,7));       //EI
 
-        ArrayList<Segment> s = Segment.paintersAlgorithm(tree, POVposition);
+        ArrayList<Segment> s = BSPTree.paintersAlgorithm(tree, POVposition);
 
         assertEquals(s, expectedS);
     }
