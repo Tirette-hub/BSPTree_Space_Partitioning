@@ -507,6 +507,7 @@ public class BSPTree<D>{
                 double a, b, c;
                 Segment freeSplitSeg = null;
 
+                int n = 0;
                 for (Segment s : S){
                     x1 = s.getFrom().getX(); y1 = s.getFrom().getY(); //pt1
                     x2 = s.getTo().getX(); y2 = s.getTo().getY(); //pt2
@@ -541,6 +542,7 @@ public class BSPTree<D>{
                         freeSplitSeg = s;
                         break;
                     }
+                    n += 1;
                 }
 
                 if(!pt1 || !pt2) {
@@ -549,6 +551,7 @@ public class BSPTree<D>{
                 else{
                     //make freesplit
                     //rework S with l as first segment.
+                    /*
                     Segment[] newS = new Segment[S.length];
                     newS[0] = freeSplitSeg;
                     int n = 1;
@@ -558,8 +561,10 @@ public class BSPTree<D>{
                         else
                             n = 0;
                     }
-
-                    tree = makeBasicTree(newS, parent, true);
+                    */
+                    S[n] = S[0];
+                    S[0] = freeSplitSeg;
+                    tree = makeBasicTree(S, parent, true);
 
                 }
             }
