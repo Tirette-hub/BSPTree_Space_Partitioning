@@ -1,5 +1,6 @@
 package GUI.Controller;
 
+import Console.TestMain;
 import DataStructure.*;
 import GUI.Model.PaintingModel;
 import javafx.beans.value.ChangeListener;
@@ -136,13 +137,13 @@ public class PaintingController {
                 //System.out.println("ap: " + abc[0] + ", bp: " + abc[1] + ", cp: " + abc[2]);
                 //System.out.println("pt2: (" + pt2[0] + ", " + pt2[1] + ")");
 
-                if (Math.abs(angle1) < 1e-4) {
+                if (Math.abs(angle1) < TestMain.epsilon) {
                     //v1 on the direction line
                     if (directionLine.getFactor(v1) < 0)
                         //v1 in the back
                         angle1 = 180;
                 } else {
-                    if (directionLine.getY() < 0 || (Math.abs(directionLine.getY()) < 1e-4 && directionLine.getX() < 0)) {
+                    if (directionLine.getY() < 0 || (Math.abs(directionLine.getY()) < TestMain.epsilon && directionLine.getX() < 0)) {
                         if (abc[0] * pt1.getX() + abc[1] * pt1.getY() + abc[2] > 0)
                             //back is part of h+ and pt1 is in it
                             angle1 = 180 - angle1;
@@ -156,7 +157,7 @@ public class PaintingController {
                 }
 
                 //same for angle2
-                if (Math.abs(angle2) < 1e-4) {
+                if (Math.abs(angle2) < TestMain.epsilon) {
                     //v1 on the direction line
                     if (directionLine.getFactor(v2) < 0) {
                         //v1 in the back
@@ -164,7 +165,7 @@ public class PaintingController {
                     }
                 } else {
                     //System.out.println("direction line dy " + directionLine.getY());
-                    if (directionLine.getY() < 0 || (Math.abs(directionLine.getY()) < 1e-4 && directionLine.getX() < 0)) {
+                    if (directionLine.getY() < 0 || (Math.abs(directionLine.getY()) < TestMain.epsilon && directionLine.getX() < 0)) {
                         if (abc[0] * pt2.getX() + abc[1] * pt2.getY() + abc[2] > 0) {
                             //back is part of h+ and pt1 is in it
                             angle2 = 180 - angle2;
@@ -204,7 +205,7 @@ public class PaintingController {
             );*/
 
                 //check if line not visible because on the eye guideline
-                if (Math.abs(x2 - x1) < 1e-4)
+                if (Math.abs(x2 - x1) < TestMain.epsilon)
                     continue;
 
                 //check if line not visible because outside of eye FOV

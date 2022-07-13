@@ -1,5 +1,7 @@
 package DataStructure;
 
+import Console.TestMain;
+
 import java.util.ArrayList;
 
 /**
@@ -62,16 +64,16 @@ public class Segment implements IVector {
         deltaX = o.getX();
         deltaY = o.getY();
 
-        if (Math.abs(deltaX) < 1e-4 && Math.abs(deltaY) < 1e-4)
+        if (Math.abs(deltaX) < TestMain.epsilon && Math.abs(deltaY) < TestMain.epsilon)
             return false;
-        else if (Math.abs(deltaX) < 1e-4)
+        else if (Math.abs(deltaX) < TestMain.epsilon)
             //o is a vertical line
-            return (Math.abs(x) < 1e-4); //this also is a vertical line
-        else if (Math.abs(deltaY) < 1e-4)
+            return (Math.abs(x) < TestMain.epsilon); //this also is a vertical line
+        else if (Math.abs(deltaY) < TestMain.epsilon)
             //o is a horizontal line
-            return (Math.abs(y) < 1e-4); //this also is a horizontal line;
+            return (Math.abs(y) < TestMain.epsilon); //this also is a horizontal line;
         else
-            return (Math.abs(x/deltaX - y/deltaY) < 1e-4);
+            return (Math.abs(x/deltaX - y/deltaY) < TestMain.epsilon);
     }
 
     /**
@@ -88,20 +90,20 @@ public class Segment implements IVector {
         deltaY = o.getY();
 
         if (isMultipleOf(o)){
-            if (Math.abs(deltaX) < 1e-4 && Math.abs(deltaY) < 1e-4)
+            if (Math.abs(deltaX) < TestMain.epsilon && Math.abs(deltaY) < TestMain.epsilon)
                 return 0.0;
-            else if (Math.abs(deltaX) < 1e-4)
+            else if (Math.abs(deltaX) < TestMain.epsilon)
                 //o is a vertical line
-                if (Math.abs(x) < 1e-4)
+                if (Math.abs(x) < TestMain.epsilon)
                     //this also is a vertical line
                     return y/deltaY;
-                else if (Math.abs(deltaY) < 1e-4)
+                else if (Math.abs(deltaY) < TestMain.epsilon)
                     //o is a horizontal line
-                    if (Math.abs(y) < 1e-4)
+                    if (Math.abs(y) < TestMain.epsilon)
                         //this also is a horizontal line;
                         return x/deltaX;
                     else
-                    if (Math.abs(x/deltaX - y/deltaY) < 1e-4)
+                    if (Math.abs(x/deltaX - y/deltaY) < TestMain.epsilon)
                         //the factor is the same for x and y component
                         return x/deltaX;
         }
@@ -305,27 +307,27 @@ public class Segment implements IVector {
 
         //get intersection coordinates
         double x, y;
-        if (Math.abs(dy1) < 1e-4 && Math.abs(dx2) < 1e-4){
+        if (Math.abs(dy1) < TestMain.epsilon && Math.abs(dx2) < TestMain.epsilon){
             x = x12;
             y = y11;
         }
-        else if(Math.abs(dy2) < 1e-4 && Math.abs(dx1) < 1e-4){
+        else if(Math.abs(dy2) < TestMain.epsilon && Math.abs(dx1) < TestMain.epsilon){
             x = x11;
             y = y12;
         }
-        else if (Math.abs(dx1) < 1e-4){
+        else if (Math.abs(dx1) < TestMain.epsilon){
             x = x11;
             y = ((-c2/a2)+(c1/a1))/((-b1/a1)+(b2/a2));
         }
-        else if (Math.abs(dy1) < 1e-4){
+        else if (Math.abs(dy1) < TestMain.epsilon){
             x = ((-c2/b2)+(c1/b1))/((-a1/b1)+(a2/b2));
             y = y11;
         }
-        else if (Math.abs(dx2) < 1e-4){
+        else if (Math.abs(dx2) < TestMain.epsilon){
             x = x12;
             y = ((-c2/a2)+(c1/a1))/((-b1/a1)+(b2/a2));
         }
-        else if (Math.abs(dy2) < 1e-4){
+        else if (Math.abs(dy2) < TestMain.epsilon){
             x = ((-c2/b2)+(c1/b1))/((-a1/b1)+(a2/b2));
             y = y12;
         }
@@ -357,13 +359,13 @@ public class Segment implements IVector {
         double dy = y2-y1;
         double a, b, c; //h: a*xi + b*yi + c = 0
         //case dx = 0 => vertical line
-        if (Math.abs(dx) < 1e-4){
+        if (Math.abs(dx) < TestMain.epsilon){
             a = 1;
             b = 0;
             c = -x1;
         }
         //case dy = 0 => horizontal line
-        else if (Math.abs(dy) < 1e-4){
+        else if (Math.abs(dy) < TestMain.epsilon){
             a = 0;
             b = 1;
             c = -y1;
@@ -438,7 +440,7 @@ public class Segment implements IVector {
                     r1 = a*seg.getFrom().getX() + b*seg.getFrom().getY() + c;
                     r2 = a*seg.getTo().getX() + b*seg.getTo().getY() + c;
 
-                    if (Math.abs(r1) < 1e-4 && Math.abs(r2) < 1e-4){
+                    if (Math.abs(r1) < TestMain.epsilon && Math.abs(r2) < TestMain.epsilon){
                         //segment sur la ligne de découpe
                         //ajouter ce segment à la liste de semgments que contient le noeud
                         tree.addData(seg);
@@ -531,7 +533,7 @@ public class Segment implements IVector {
                     while(borne != null){
                         abc = getCutlineParameters(borne.getData().get(0).getFrom(), borne.getData().get(0).getTo());
                         a = abc[0]; b = abc[1]; c = abc[2];
-                        if (Math.abs(a*x1+b*y1+c) < 1e-4){
+                        if (Math.abs(a*x1+b*y1+c) < TestMain.epsilon){
                             pt1 = true;
                             break;
                         }
@@ -544,7 +546,7 @@ public class Segment implements IVector {
                         while(borne != null){
                             abc = getCutlineParameters(borne.getData().get(0).getFrom(), borne.getData().get(0).getTo());
                             a = abc[0]; b = abc[1]; c = abc[2];
-                            if (Math.abs(a*x2+b*y2+c) < 1e-4){
+                            if (Math.abs(a*x2+b*y2+c) < TestMain.epsilon){
                                 pt2 = true;
                                 break;
                             }
@@ -660,52 +662,52 @@ public class Segment implements IVector {
         double x, y;
 
         //different cases by parameters values
-        if (Math.abs(a1) < 1e-4){
+        if (Math.abs(a1) < TestMain.epsilon){
             // line 1: horizontal
-            if (Math.abs(a2) < 1e-4){
+            if (Math.abs(a2) < TestMain.epsilon){
                 //line 2: horizontal
                 x = 0;
-                if (Math.abs(c2-c1) > 1e-4)   //parallels
+                if (Math.abs(c2-c1) > TestMain.epsilon)   //parallels
                     return null;
             }
-            else if (Math.abs(b2) < 1e-4)//line2: vertival
+            else if (Math.abs(b2) < TestMain.epsilon)//line2: vertival
                 x = -c2/b2;
             else
                 x = (b2*c1/b1 - c2)/a2;
             y = -c1/b1;
         }
-        else if (Math.abs(b1) < 1e-4){
+        else if (Math.abs(b1) < TestMain.epsilon){
             //line 1: vertical
             x = -c1/a1;
-            if (Math.abs(a2) < 1e-4)//line 2: horizontal
+            if (Math.abs(a2) < TestMain.epsilon)//line 2: horizontal
                 y = -c2/b2;
-            else if (Math.abs(b2) < 1e-4){
+            else if (Math.abs(b2) < TestMain.epsilon){
                 //line 2: vertical
                 y = 0;
-                if (Math.abs(c2-c1) > 1e-4)   //parallels
+                if (Math.abs(c2-c1) > TestMain.epsilon)   //parallels
                     return null;
             }
             else
                 y = (a2*c1/b1 - c2)/b2;
         }
         else{
-            if (Math.abs(a2) < 1e-4){
+            if (Math.abs(a2) < TestMain.epsilon){
                 //line 2: horizontal
                 x = (b1*c2/b2 - c1)/a1;
                 y = -c2/b2;
             }
-            else if (Math.abs(b2) < 1e-4){
+            else if (Math.abs(b2) < TestMain.epsilon){
                 System.out.println("here");
                 //line 2: vertical
                 x = -c2/a2;
                 y = (a1*c2/a2 - c1)/b1;
             }
             else{
-                if (Math.abs(b2-b1) < 1e-4) {
+                if (Math.abs(b2-b1) < TestMain.epsilon) {
                     x = -(c1 - c2) / (a1 - a2);
                     y = -c2 + a2 * (c1 - c2) / (a1 - a2);
                 }
-                else if (Math.abs(a2-a1) < 1e-4) // parallels
+                else if (Math.abs(a2-a1) < TestMain.epsilon) // parallels
                     return null;
                 else{
                     x = (-b2 * (c1 - c2) / (b2 - b1) - c2) / (a2 + b2 * (a1 - a2) / (b2 - b1));
@@ -734,13 +736,13 @@ public class Segment implements IVector {
         double x1 = dirLine.getFrom().getX(), x2, dx, y1 = dirLine.getFrom().getY(), y2, dy;
 
         //perpendicular line parameters
-        if (Math.abs(a1) < 1e-4){
+        if (Math.abs(a1) < TestMain.epsilon){
             //line 1: horizontal
             a2 = 1;
             b2 = 0;
             //line 2: vertical
         }
-        else if (Math.abs(b1) < 1e-4){
+        else if (Math.abs(b1) < TestMain.epsilon){
             //line 1: vertical
             a2 = 0;
             b2 = 1;
@@ -798,9 +800,9 @@ public class Segment implements IVector {
         double left = screenWidth/2 - angle*screenWidth/FOV,
                 right = screenWidth/2 + angle*screenWidth/FOV;
 
-        boolean onH = Math.abs(a*pt.getX()+b*pt.getY()+c) < 1e-4;
+        boolean onH = Math.abs(a*pt.getX()+b*pt.getY()+c) < TestMain.epsilon;
 
-        if (angle <= 180 || Math.abs(angle-360) < 1e-4)     //direction to the top, bottom or right
+        if (angle <= 180 || Math.abs(angle-360) < TestMain.epsilon)     //direction to the top, bottom or right
             if (onH)                                        //pt1 on the guide line
                 result = screenWidth/2;
             else if (a*pt.getX()+b*pt.getY()+c > 0)                 // upper part of direction guideline is h+
