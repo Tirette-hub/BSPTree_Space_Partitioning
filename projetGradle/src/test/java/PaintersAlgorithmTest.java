@@ -22,7 +22,7 @@ public class PaintersAlgorithmTest {
     @Test
     void testPaintersAlgorithm(){
         System.out.println("painter's algorithm:");
-        double[] POVposition = {0, 3}; //AB+, GD-, EI- (in the bsp tree)
+        Point2D POVposition = new Point2D(0, 3); //AB+, GD-, EI- (in the bsp tree)
 
         Segment[] segs = {new Segment(1,1,3,4),     //AB 0
                 new Segment(4,2,4,11.0/2.0),        //CG 1

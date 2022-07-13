@@ -86,10 +86,7 @@ public class PaintingController {
             //Paint the solution
             double paintingCanvasWidth = fxCanvas.getWidth(); //100%
 
-            double[] POVPosition = {
-                    POVData[0],
-                    POVData[1]
-            };
+            Point2D POVPosition = new Point2D(POVData[0], POVData[1]);
             // alpha                    FOV Direction
             double FOV = POVData[2], FOVDirection = -(POVData[3] - 90);
 
@@ -102,7 +99,7 @@ public class PaintingController {
             //creating segment for direction line
             double dx = Math.cos(Math.toRadians(FOVDirection));
             double dy = Math.sin(Math.toRadians(FOVDirection));
-            Segment directionLine = new Segment(POVPosition[0], POVPosition[1], POVPosition[0] + dx, POVPosition[1] + dy);
+            Segment directionLine = new Segment(POVPosition.getX(), POVPosition.getY(), POVPosition.getX() + dx, POVPosition.getY() + dy);
 
             //get parameters
             double x1, x2, y = fxCanvas.getHeight() / 2.0;
@@ -122,8 +119,8 @@ public class PaintingController {
                 Point2D pt2 = s.getTo();
 
                 Segment v1, v2;
-                v1 = new Segment(POVPosition[0], POVPosition[1], pt1.getX(), pt1.getY());
-                v2 = new Segment(POVPosition[0], POVPosition[1], pt2.getX(), pt2.getY());
+                v1 = new Segment(POVPosition.getX(), POVPosition.getY(), pt1.getX(), pt1.getY());
+                v2 = new Segment(POVPosition.getX(), POVPosition.getY(), pt2.getX(), pt2.getY());
 
                 angle1 = Segment.getAngle(directionLine, pt1);
                 angle2 = Segment.getAngle(directionLine, pt2);

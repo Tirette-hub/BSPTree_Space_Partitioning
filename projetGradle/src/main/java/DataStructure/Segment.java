@@ -598,7 +598,7 @@ public class Segment implements IVector {
      * @return
      *      List of Segments in order.
      */
-    static public ArrayList<Segment> paintersAlgorithm(BSPTree<Segment> tree, double[] POVposition){
+    static public ArrayList<Segment> paintersAlgorithm(BSPTree<Segment> tree, Point2D POVposition){
         //if leaf: just return data
         if (tree.isLeaf()) {
             return tree.getData();
@@ -608,7 +608,7 @@ public class Segment implements IVector {
         Segment h = tree.getData().get(0);
         double[] abc = getCutlineParameters(h.getFrom(), h.getTo());
         double a = abc[0], b = abc[1], c = abc[2];
-        double x = POVposition[0], y = POVposition[1];
+        double x = POVposition.getX(), y = POVposition.getY();
         double result = a*x+b*y+c;
 
         ArrayList<Segment> segList = new ArrayList<>();

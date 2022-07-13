@@ -1,9 +1,6 @@
 package Console;
 
-import DataStructure.BSPTree;
-import DataStructure.EColor;
-import DataStructure.FileParser;
-import DataStructure.Segment;
+import DataStructure.*;
 import GUI.TestGUIMain;
 
 import java.io.BufferedReader;
@@ -655,11 +652,11 @@ public class TestMain {
                 y = input.nextDouble();
 
                 t1.start();
-                p1 = Segment.paintersAlgorithm(trees[0], new double[]{x, y});
+                p1 = Segment.paintersAlgorithm(trees[0], new Point2D(x, y));
                 t1.stop();
 
                 t2.start();
-                p2 = Segment.paintersAlgorithm(trees[1], new double[]{x, y});
+                p2 = Segment.paintersAlgorithm(trees[1], new Point2D(x, y));
                 t2.stop();
 
                 break;
