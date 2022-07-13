@@ -108,7 +108,7 @@ public class PaintingController {
             double angle1, angle2;
 
             //System.out.println("painter's algorithm");
-            Segment[] segsInOrder = Segment.paintersAlgorithm(t, POVPosition).toArray(new Segment[0]);
+            Segment[] segsInOrder = BSPTree.paintersAlgorithm(t, POVPosition).toArray(new Segment[0]);
 
             GraphicsContext gc = fxCanvas.getGraphicsContext2D();
 
@@ -313,14 +313,14 @@ public class PaintingController {
                 List<Segment> newS = Arrays.asList(shuffledS);
                 Collections.shuffle(newS);
 
-                tree = Segment.makeBasicTree(shuffledS, null, false);
+                tree = BSPTree.makeBasicTree(shuffledS, null, false);
                 break;
             case H2:
-                tree = Segment.makeBasicTree(S, null, false);
+                tree = BSPTree.makeBasicTree(S, null, false);
                 break;
             case H3:
                 //change
-                tree = Segment.makeFreeSplitTree(S, null);
+                tree = BSPTree.makeFreeSplitTree(S, null);
                 break;
             default:
                 tree = null;

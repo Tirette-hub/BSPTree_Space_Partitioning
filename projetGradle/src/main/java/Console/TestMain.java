@@ -445,28 +445,28 @@ public class TestMain {
 
         switch (heuristicIndex){
             case 12:
-                trees[0] = Segment.makeBasicTree(randS, null);
-                trees[1] = Segment.makeBasicTree(S, null);
+                trees[0] = BSPTree.makeBasicTree(randS, null);
+                trees[1] = BSPTree.makeBasicTree(S, null);
                 break;
             case 13:
-                trees[0] = Segment.makeBasicTree(randS, null);
-                trees[1] = Segment.makeFreeSplitTree(S, null);
+                trees[0] = BSPTree.makeBasicTree(randS, null);
+                trees[1] = BSPTree.makeFreeSplitTree(S, null);
                 break;
             case 21:
-                trees[0] = Segment.makeBasicTree(S, null);
-                trees[1] = Segment.makeBasicTree(randS, null);
+                trees[0] = BSPTree.makeBasicTree(S, null);
+                trees[1] = BSPTree.makeBasicTree(randS, null);
                 break;
             case 23:
-                trees[0] = Segment.makeBasicTree(S, null);
-                trees[1] = Segment.makeFreeSplitTree(S, null);
+                trees[0] = BSPTree.makeBasicTree(S, null);
+                trees[1] = BSPTree.makeFreeSplitTree(S, null);
                 break;
             case 31:
-                trees[0] = Segment.makeFreeSplitTree(S, null);
-                trees[1] = Segment.makeBasicTree(randS, null);
+                trees[0] = BSPTree.makeFreeSplitTree(S, null);
+                trees[1] = BSPTree.makeBasicTree(randS, null);
                 break;
             case 32:
-                trees[0] = Segment.makeFreeSplitTree(S, null);
-                trees[1] = Segment.makeBasicTree(S, null);
+                trees[0] = BSPTree.makeFreeSplitTree(S, null);
+                trees[1] = BSPTree.makeBasicTree(S, null);
                 break;
         }
 
@@ -492,28 +492,28 @@ public class TestMain {
 
         switch (heuristicIndex){
             case 12:
-                trees[0] = Segment.makeBasicTree(randS, null);
-                trees[1] = Segment.makeBasicTree(S, null);
+                trees[0] = BSPTree.makeBasicTree(randS, null);
+                trees[1] = BSPTree.makeBasicTree(S, null);
                 break;
             case 13:
-                trees[0] = Segment.makeBasicTree(randS, null);
-                trees[1] = Segment.makeFreeSplitTree(S, null);
+                trees[0] = BSPTree.makeBasicTree(randS, null);
+                trees[1] = BSPTree.makeFreeSplitTree(S, null);
                 break;
             case 21:
-                trees[0] = Segment.makeBasicTree(S, null);
-                trees[1] = Segment.makeBasicTree(randS, null);
+                trees[0] = BSPTree.makeBasicTree(S, null);
+                trees[1] = BSPTree.makeBasicTree(randS, null);
                 break;
             case 23:
-                trees[0] = Segment.makeBasicTree(S, null);
-                trees[1] = Segment.makeFreeSplitTree(S, null);
+                trees[0] = BSPTree.makeBasicTree(S, null);
+                trees[1] = BSPTree.makeFreeSplitTree(S, null);
                 break;
             case 31:
-                trees[0] = Segment.makeFreeSplitTree(S, null);
-                trees[1] = Segment.makeBasicTree(randS, null);
+                trees[0] = BSPTree.makeFreeSplitTree(S, null);
+                trees[1] = BSPTree.makeBasicTree(randS, null);
                 break;
             case 32:
-                trees[0] = Segment.makeFreeSplitTree(S, null);
-                trees[1] = Segment.makeBasicTree(S, null);
+                trees[0] = BSPTree.makeFreeSplitTree(S, null);
+                trees[1] = BSPTree.makeBasicTree(S, null);
                 break;
         }
 
@@ -540,50 +540,50 @@ public class TestMain {
         switch (heuristicIndex){
             case 12:
                 t1.start();
-                trees[0] = Segment.makeBasicTree(randS, null);
+                trees[0] = BSPTree.makeBasicTree(randS, null);
                 t1.stop();
                 t2.start();
-                trees[1] = Segment.makeBasicTree(S, null);
+                trees[1] = BSPTree.makeBasicTree(S, null);
                 t2.stop();
                 break;
             case 13:
                 t1.start();
-                trees[0] = Segment.makeBasicTree(randS, null);
+                trees[0] = BSPTree.makeBasicTree(randS, null);
                 t1.stop();
                 t2.start();
-                trees[1] = Segment.makeFreeSplitTree(S, null);
+                trees[1] = BSPTree.makeFreeSplitTree(S, null);
                 t2.stop();
                 break;
             case 21:
                 t1.start();
-                trees[0] = Segment.makeBasicTree(S, null);
+                trees[0] = BSPTree.makeBasicTree(S, null);
                 t1.stop();
                 t2.start();
-                trees[1] = Segment.makeBasicTree(randS, null);
+                trees[1] = BSPTree.makeBasicTree(randS, null);
                 t2.stop();
                 break;
             case 23:
                 t1.start();
-                trees[0] = Segment.makeBasicTree(S, null);
+                trees[0] = BSPTree.makeBasicTree(S, null);
                 t1.stop();
                 t2.start();
-                trees[1] = Segment.makeFreeSplitTree(S, null);
+                trees[1] = BSPTree.makeFreeSplitTree(S, null);
                 t2.stop();
                 break;
             case 31:
                 t1.start();
-                trees[0] = Segment.makeFreeSplitTree(S, null);
+                trees[0] = BSPTree.makeFreeSplitTree(S, null);
                 t1.stop();
                 t2.start();
-                trees[1] = Segment.makeBasicTree(randS, null);
+                trees[1] = BSPTree.makeBasicTree(randS, null);
                 t2.stop();
                 break;
             case 32:
                 t1.start();
-                trees[0] = Segment.makeFreeSplitTree(S, null);
+                trees[0] = BSPTree.makeFreeSplitTree(S, null);
                 t1.stop();
                 t2.start();
-                trees[1] = Segment.makeBasicTree(S, null);
+                trees[1] = BSPTree.makeBasicTree(S, null);
                 t2.stop();
                 break;
         }
@@ -618,28 +618,28 @@ public class TestMain {
 
         switch (heuristicIndex){
             case 12:
-                trees[0] = Segment.makeBasicTree(randS, null);
-                trees[1] = Segment.makeBasicTree(S, null);
+                trees[0] = BSPTree.makeBasicTree(randS, null);
+                trees[1] = BSPTree.makeBasicTree(S, null);
                 break;
             case 13:
-                trees[0] = Segment.makeBasicTree(randS, null);
-                trees[1] = Segment.makeFreeSplitTree(S, null);
+                trees[0] = BSPTree.makeBasicTree(randS, null);
+                trees[1] = BSPTree.makeFreeSplitTree(S, null);
                 break;
             case 21:
-                trees[0] = Segment.makeBasicTree(S, null);
-                trees[1] = Segment.makeBasicTree(randS, null);
+                trees[0] = BSPTree.makeBasicTree(S, null);
+                trees[1] = BSPTree.makeBasicTree(randS, null);
                 break;
             case 23:
-                trees[0] = Segment.makeBasicTree(S, null);
-                trees[1] = Segment.makeFreeSplitTree(S, null);
+                trees[0] = BSPTree.makeBasicTree(S, null);
+                trees[1] = BSPTree.makeFreeSplitTree(S, null);
                 break;
             case 31:
-                trees[0] = Segment.makeFreeSplitTree(S, null);
-                trees[1] = Segment.makeBasicTree(randS, null);
+                trees[0] = BSPTree.makeFreeSplitTree(S, null);
+                trees[1] = BSPTree.makeBasicTree(randS, null);
                 break;
             case 32:
-                trees[0] = Segment.makeFreeSplitTree(S, null);
-                trees[1] = Segment.makeBasicTree(S, null);
+                trees[0] = BSPTree.makeFreeSplitTree(S, null);
+                trees[1] = BSPTree.makeBasicTree(S, null);
                 break;
         }
 
@@ -652,11 +652,11 @@ public class TestMain {
                 y = input.nextDouble();
 
                 t1.start();
-                p1 = Segment.paintersAlgorithm(trees[0], new Point2D(x, y));
+                p1 = BSPTree.paintersAlgorithm(trees[0], new Point2D(x, y));
                 t1.stop();
 
                 t2.start();
-                p2 = Segment.paintersAlgorithm(trees[1], new Point2D(x, y));
+                p2 = BSPTree.paintersAlgorithm(trees[1], new Point2D(x, y));
                 t2.stop();
 
                 break;

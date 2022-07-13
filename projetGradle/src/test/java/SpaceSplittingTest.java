@@ -47,7 +47,7 @@ public class SpaceSplittingTest {
                 new Segment(4,2,4,6),           //CD
                 new Segment(2,7,8,7)};          //EF
 
-        BSPTree<Segment> tree = Segment.makeBasicTree(S,null, false);
+        BSPTree<Segment> tree = BSPTree.makeBasicTree(S,null, false);
 
         Segment[] segs = {new Segment(1,1,3,4),     //AB 0
                 new Segment(4,2,4,11.0/2.0),        //CG 1
@@ -83,7 +83,7 @@ public class SpaceSplittingTest {
                 new Segment(-0.5,4.5,7,1.5)     //IJ
         };
 
-        BSPTree<Segment> tree = Segment.makeFreeSplitTree(S, null);
+        BSPTree<Segment> tree = BSPTree.makeFreeSplitTree(S, null);
 
         Segment[] segs = {
                 new Segment(3.5,0.5,2.5,2.5),   //AB 0
