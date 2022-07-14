@@ -80,7 +80,7 @@ public class PaintingController {
         //make the BSP Tree
         //System.out.println("create tree");
         if (segs != null) {
-            BSPTree<Segment> t = createTree(segs, h);
+            SegmentBSPTree t = createTree(segs, h);
             model.setBSPTree(t);
 
             //Paint the solution
@@ -108,7 +108,7 @@ public class PaintingController {
             double angle1, angle2;
 
             //System.out.println("painter's algorithm");
-            Segment[] segsInOrder = BSPTree.paintersAlgorithm(t, POVPosition).toArray(new Segment[0]);
+            Segment[] segsInOrder = SegmentBSPTree.paintersAlgorithm(t, POVPosition).toArray(new Segment[0]);
 
             GraphicsContext gc = fxCanvas.getGraphicsContext2D();
 
@@ -304,8 +304,8 @@ public class PaintingController {
      * @return
      *      The BSP tree created.
      */
-    public BSPTree<Segment> createTree(Segment[] S, EHeuristic h){
-        BSPTree<Segment> tree;
+    public SegmentBSPTree createTree(Segment[] S, EHeuristic h){
+        SegmentBSPTree tree;
         switch(h){
             case H1:
                 //shuffle S
@@ -313,14 +313,14 @@ public class PaintingController {
                 List<Segment> newS = Arrays.asList(shuffledS);
                 Collections.shuffle(newS);
 
-                tree = BSPTree.makeBasicTree(shuffledS, null, false);
+                tree = SegmentBSPTree.makeBasicTree(shuffledS, null, false);
                 break;
             case H2:
-                tree = BSPTree.makeBasicTree(S, null, false);
+                tree = SegmentBSPTree.makeBasicTree(S, null, false);
                 break;
             case H3:
                 //change
-                tree = BSPTree.makeFreeSplitTree(S, null);
+                tree = SegmentBSPTree.makeFreeSplitTree(S, null);
                 break;
             default:
                 tree = null;

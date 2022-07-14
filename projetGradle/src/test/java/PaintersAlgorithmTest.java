@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import DataStructure.BSPTree;
 import DataStructure.Point2D;
 import DataStructure.Segment;
+import DataStructure.SegmentBSPTree;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
@@ -32,12 +33,12 @@ public class PaintersAlgorithmTest {
                 new Segment(4,7,5,7)                //IH 5
         };
 
-        BSPTree<Segment> leafHF = new BSPTree<>(segs[2], null, null);
-        BSPTree<Segment> leafEI = new BSPTree<>(segs[4], null, null);
-        BSPTree<Segment> leafIH = new BSPTree<>(segs[5], null, null);
-        BSPTree<Segment> leftTree = new BSPTree<>(segs[1], null, leafHF);
-        BSPTree<Segment> rightTree = new BSPTree<>(segs[3], leafEI, leafIH);
-        BSPTree<Segment> tree = new BSPTree<>(segs[0], leftTree, rightTree);
+        SegmentBSPTree leafHF = new SegmentBSPTree(segs[2], null, null);
+        SegmentBSPTree leafEI = new SegmentBSPTree(segs[4], null, null);
+        SegmentBSPTree leafIH = new SegmentBSPTree(segs[5], null, null);
+        SegmentBSPTree leftTree = new SegmentBSPTree(segs[1], null, leafHF);
+        SegmentBSPTree rightTree = new SegmentBSPTree(segs[3], leafEI, leafIH);
+        SegmentBSPTree tree = new SegmentBSPTree(segs[0], leftTree, rightTree);
 
         ArrayList<Segment> expectedS = new ArrayList<Segment>();
         expectedS.add(new Segment(5,7,8,7));       //HF
@@ -47,7 +48,7 @@ public class PaintersAlgorithmTest {
         expectedS.add(new Segment(4, 5.5,4,6));    //GD
         expectedS.add(new Segment(2,7,4,7));       //EI
 
-        ArrayList<Segment> s = BSPTree.paintersAlgorithm(tree, POVposition);
+        ArrayList<Segment> s = SegmentBSPTree.paintersAlgorithm(tree, POVposition);
 
         assertEquals(s, expectedS);
     }

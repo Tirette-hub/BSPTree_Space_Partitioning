@@ -3,6 +3,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import DataStructure.BSPTree;
 import DataStructure.Segment;
+import DataStructure.SegmentBSPTree;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
@@ -47,7 +48,7 @@ public class SpaceSplittingTest {
                 new Segment(4,2,4,6),           //CD
                 new Segment(2,7,8,7)};          //EF
 
-        BSPTree<Segment> tree = BSPTree.makeBasicTree(S,null, false);
+        BSPTree<Segment> tree = SegmentBSPTree.makeBasicTree(S,null, false);
 
         Segment[] segs = {new Segment(1,1,3,4),     //AB 0
                 new Segment(4,2,4,11.0/2.0),        //CG 1
@@ -83,7 +84,7 @@ public class SpaceSplittingTest {
                 new Segment(-0.5,4.5,7,1.5)     //IJ
         };
 
-        BSPTree<Segment> tree = BSPTree.makeFreeSplitTree(S, null);
+        BSPTree<Segment> tree = SegmentBSPTree.makeFreeSplitTree(S, null);
 
         Segment[] segs = {
                 new Segment(3.5,0.5,2.5,2.5),   //AB 0

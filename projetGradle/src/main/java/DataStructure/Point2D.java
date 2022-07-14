@@ -37,4 +37,11 @@ public class Point2D {
 
         return false;
     }
+
+    public boolean on(Segment s){
+        double[] abc = Segment.getCutlineParameters(s.getFrom(), s.getTo());
+        double a = abc[0], b = abc[1], c = abc[2];
+
+        return Math.abs(a * x + b * y + c) < TestMain.epsilon;
+    }
 }
