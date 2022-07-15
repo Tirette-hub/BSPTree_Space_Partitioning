@@ -69,7 +69,10 @@ public class SegmentBSPTree extends BSPTree<Segment>{
 
         if (S.length == 1){
             tree = new SegmentBSPTree(parent, S[0], null, null);
-        }else{
+        }else if (S.length == 0) {
+            return null;
+        }
+        else{
             if (freeSplit){
                 //sort segments by putting freeSplit segment at front of the tab.
                 int i = 0, j = S.length - 1;
