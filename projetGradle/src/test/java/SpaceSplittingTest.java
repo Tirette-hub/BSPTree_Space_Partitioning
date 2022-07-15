@@ -1,9 +1,6 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import DataStructure.BSPTree;
-import DataStructure.Pair;
-import DataStructure.Segment;
-import DataStructure.SegmentBSPTree;
+import DataStructure.*;
 import org.junit.jupiter.api.*;
 
 public class SpaceSplittingTest {

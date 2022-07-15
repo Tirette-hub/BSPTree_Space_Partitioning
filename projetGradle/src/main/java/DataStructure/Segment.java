@@ -211,7 +211,7 @@ public class Segment implements IVector {
 
         Segment seg = (Segment) o;
 
-        if (seg.getFrom() != getFrom() || seg.getTo() != getTo())
+        if (!seg.getFrom().equals(getFrom()) || !seg.getTo().equals(getTo()))
             return false;
 
         return (this.getEColor() == seg.getEColor());

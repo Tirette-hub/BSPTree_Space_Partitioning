@@ -6,7 +6,7 @@ public class Pair<L,R> {
 
     @Override
     public String toString(){
-        return "<" + l + "; " + r + ">";
+        return "[" + l + "; " + r + "]";
     }
 
     @Override
@@ -17,7 +17,12 @@ public class Pair<L,R> {
         if (!(o instanceof Pair))
             return false;
 
-        return (((Pair<?, ?>) o).getL().equals(l) && ((Pair<?, ?>) o).getR().equals(r));
+        Pair<L, R> other = (Pair<L,R>) o;
+
+        if (!other.getL().equals(l))
+            return false;
+
+        return other.getR().equals(r);
     }
 
     public Pair(L l, R r){

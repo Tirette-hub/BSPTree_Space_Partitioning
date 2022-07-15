@@ -26,10 +26,7 @@ public class Point2D extends Pair<Double, Double>{
 
         Point2D other = (Point2D) o;
 
-        if (Math.abs(other.getX() - getX()) < TestMain.epsilon && Math.abs(other.getY() - getY()) < TestMain.epsilon)
-            return true;
-
-        return false;
+        return Math.abs(other.getX() - getX()) < TestMain.epsilon && Math.abs(other.getY() - getY()) < TestMain.epsilon;
     }
 
     public boolean on(Segment s){
