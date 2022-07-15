@@ -3,8 +3,12 @@ package DataStructure;
 import Console.TestMain;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class SegmentBSPTree extends BSPTree<Segment>{
+    protected boolean firstOnEdge = false, secondOnEdge = false;
     public SegmentBSPTree(){
         super();
     }
@@ -21,7 +25,7 @@ public class SegmentBSPTree extends BSPTree<Segment>{
         super(p, d, l, r);
     }
 
-    @Override
+    /*@Override
     public void setParent(BSPTree<Segment> parent){
         this.parent = parent;
 
@@ -45,14 +49,117 @@ public class SegmentBSPTree extends BSPTree<Segment>{
 
             ancestor = ancestor.getParent();
         }
-    }
-
-    public boolean isFreeSplit(){
-        return (firstOnEdge && secondOnEdge);
-    }
+    }*/
 
     //creation of tree and utilisation of painter's algorithm
 
+    /**
+     * Create BSPTree with the given set of segments.
+     * @param S
+     *      The set of segments used to create the tree.
+     * @param parent
+     *      Parent node to which will be added the sub-tree that will be created.
+     *      If null, the root is created.
+     * @param freeSplit
+     *      Flag to tell to use the "free split" optimization.
+     * @return
+     */
+    static public SegmentBSPTree makeTree(Segment[] S, SegmentBSPTree parent, boolean freeSplit){
+        SegmentBSPTree tree = new SegmentBSPTree();
+
+        if (S.length == 1){
+            tree = new SegmentBSPTree(parent, S[0], null, null);
+        }else{
+            if (freeSplit){
+                //sort segments by putting freeSplit segment at front of the tab.
+                int i = 0, j = S.length - 1;
+                Segment temp;
+                while(i < j){
+                    if (S[i].isFreeSplit())
+                        i++;
+                    else{
+                        temp = S[i];
+                        S[i] = S[j];
+                        S[j] = temp;
+                        j--;
+                    }
+                }
+
+                //if there is no freesplit then shuffle
+                if (!S[0].isFreeSplit()){
+                    List<Segment> newS = Arrays.asList(S);
+                    Collections.shuffle(newS);
+                }
+            }
+
+            Segment l = S[0];
+
+            //calcul des paramètres d'équation de la droite (équation de l'hyperplan)
+            double[] abc = Segment.getCutlineParameters(l.getFrom(), l.getTo());
+            double a = abc[0],
+                    b = abc[1],
+                    c = abc[2];
+
+            double r1, r2;
+
+            //on crée les listes des segments se trouvant à gauche et à droite de la ligne de découpe
+            ArrayList<Segment> Sminus = new ArrayList<>();
+            ArrayList<Segment> Splus = new ArrayList<>();
+
+            tree.addData(l);
+            tree.setParent(parent);
+
+            for (Segment seg : S){
+                if (seg != l){
+                    r1 = a*seg.getFrom().getX() + b*seg.getFrom().getY() + c;
+                    r2 = a*seg.getTo().getX() + b*seg.getTo().getY() + c;
+
+                    if (Math.abs(r1) < TestMain.epsilon && Math.abs(r2) < TestMain.epsilon){
+                        //segment sur la ligne de découpe
+                        //ajouter ce segment à la liste de semgments que contient le noeud
+                        tree.addData(seg);
+                    }
+                    else if(r1 <= 0 && r2 <= 0){
+                        //segment à gauche de la ligne de découpe (possibilité qu'un des points se trouve sur la ligne de découpe)
+                        //ajouter le segment à la liste des S-
+                        Sminus.add(seg);
+                    }
+                    else if(r1 >= 0 && r2 >= 0){
+                        //segment à droite de la ligne de découpe (possibilité qu'un des points se trouve sur la ligne de découpe)
+                        //ajouter le segment à la liste des S+
+                        Splus.add(seg);
+                    }
+                    else if((r1 <= 0 && r2 >= 0) || (r1 >= 0 && r2 <= 0)){
+                        //segment seg coupé par la ligne de découpe (appel à cut)
+                        Segment[] cutResult = Segment.cut(seg, l);
+
+                        //on vérifie quel coté de la découpe se trouve à gauche et quel coté se trouve à droite, de la ligne de découpe
+                        Point2D cutLineCoord = cutResult[0].getFrom();
+                        double result = a*cutLineCoord.getX() + b*cutLineCoord.getY() + c;
+
+                        if (result < 0){
+                            Sminus.add(cutResult[0]);
+                            Splus.add(cutResult[1]);
+                        }else{
+                            Sminus.add(cutResult[1]);
+                            Splus.add(cutResult[0]);
+                        }
+                    }
+                }
+            }
+            // creates left and right subtree;
+            BSPTree<Segment> left = makeTree(Sminus.toArray(new Segment[0]), tree, freeSplit);
+            BSPTree<Segment> right = makeTree(Splus.toArray(new Segment[0]), tree, freeSplit);
+
+            //add left and right subtree to the tree
+            tree.setLeft(left);
+            tree.setRight(right);
+        }
+
+        return tree;
+    }
+
+    /*
     /**
      * Create a BSPTree following the order of the given segment list.
      * @param S
@@ -62,7 +169,7 @@ public class SegmentBSPTree extends BSPTree<Segment>{
      *      If null, the root is created.
      * @return
      *      The BSPTree of the scene.
-     */
+     *-/
     static public SegmentBSPTree makeBasicTree(Segment[] S, SegmentBSPTree parent){
         return makeBasicTree(S, parent, false);
     }
@@ -78,7 +185,7 @@ public class SegmentBSPTree extends BSPTree<Segment>{
      *      Flag to know if the algorithm has to switch to "free split" rule or not.
      * @return
      *      The BSPTree of the scene.
-     */
+     *-/
     static public SegmentBSPTree makeBasicTree(Segment[] S, SegmentBSPTree parent, boolean switchToFreeSplit){
 
         SegmentBSPTree tree;
@@ -176,7 +283,7 @@ public class SegmentBSPTree extends BSPTree<Segment>{
      *      If null, the root is created.
      * @return
      *      The BSPTree of the scene.
-     */
+     *-/
     static public SegmentBSPTree makeFreeSplitTree(Segment[] S, SegmentBSPTree parent) {
         SegmentBSPTree tree;
 
@@ -251,7 +358,7 @@ public class SegmentBSPTree extends BSPTree<Segment>{
                         else
                             n = 0;
                     }
-                    */
+                    *-/
                     S[n] = S[0];
                     S[0] = freeSplitSeg;
                     tree = makeBasicTree(S, parent, true);
@@ -266,6 +373,7 @@ public class SegmentBSPTree extends BSPTree<Segment>{
 
         return tree;
     }
+    */
 
     /**
      * Get the list of segments that have to be painted in order

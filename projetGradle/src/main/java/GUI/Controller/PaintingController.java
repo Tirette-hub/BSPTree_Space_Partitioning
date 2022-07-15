@@ -313,14 +313,14 @@ public class PaintingController {
                 List<Segment> newS = Arrays.asList(shuffledS);
                 Collections.shuffle(newS);
 
-                tree = SegmentBSPTree.makeBasicTree(shuffledS, null, false);
+                tree = SegmentBSPTree.makeTree(shuffledS, null, false);
                 break;
             case H2:
-                tree = SegmentBSPTree.makeBasicTree(S, null, false);
+                tree = SegmentBSPTree.makeTree(S, null, false);
                 break;
             case H3:
                 //change
-                tree = SegmentBSPTree.makeFreeSplitTree(S, null);
+                tree = SegmentBSPTree.makeTree(S, null, true);
                 break;
             default:
                 tree = null;

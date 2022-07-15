@@ -10,6 +10,6 @@ package DataStructure;
  */
 public enum EHeuristic {
     H1, //random heuristic
-    H2, //
-    H3;  //
+    H2, //first segment
+    H3; //free split
 }

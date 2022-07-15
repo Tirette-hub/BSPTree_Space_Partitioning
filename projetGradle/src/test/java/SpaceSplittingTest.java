@@ -48,7 +48,7 @@ public class SpaceSplittingTest {
                 new Segment(4,2,4,6),           //CD
                 new Segment(2,7,8,7)};          //EF
 
-        BSPTree<Segment> tree = SegmentBSPTree.makeBasicTree(S,null, false);
+        BSPTree<Segment> tree = SegmentBSPTree.makeTree(S,null, false);
 
         Segment[] segs = {new Segment(1,1,3,4),     //AB 0
                 new Segment(4,2,4,11.0/2.0),        //CG 1
@@ -73,8 +73,9 @@ public class SpaceSplittingTest {
         assertEquals(tree, expectedTree);
     }
 
-    @Test
+    /*@Test
     void testFreeSplit(){
+        //cannot be checked since freesplit use randomization of its set of segments
         System.out.println("free split:");
         Segment[] S = {
                 new Segment(3.5,0.5,2.5,2.5),   //AB
@@ -84,7 +85,7 @@ public class SpaceSplittingTest {
                 new Segment(-0.5,4.5,7,1.5)     //IJ
         };
 
-        BSPTree<Segment> tree = SegmentBSPTree.makeFreeSplitTree(S, null);
+        BSPTree<Segment> tree = SegmentBSPTree.makeTree(S, null, true);
 
         Segment[] segs = {
                 new Segment(3.5,0.5,2.5,2.5),   //AB 0
@@ -110,10 +111,10 @@ public class SpaceSplittingTest {
         tree.print();
 
         System.out.println("\nexpectedTree:");
-        expectedTree.print();*/
+        expectedTree.print();*-/
 
         assertEquals(tree, expectedTree);
-    }
+    }*/
 
     @AfterEach
     void testAfterEach(){

@@ -16,7 +16,6 @@ import java.util.ArrayList;
 public class BSPTree<D>{
     protected ArrayList<D> data;
     protected BSPTree<D> left, right, parent;
-    protected boolean firstOnEdge = false, secondOnEdge = false;
 
     //constructors
 

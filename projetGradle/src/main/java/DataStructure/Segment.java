@@ -15,6 +15,7 @@ import java.util.ArrayList;
  */
 public class Segment implements IVector {
     protected Point2D firstPoint, lastPoint;
+    protected boolean firstOnEdge = false, secondOnEdge = false;
     private EColor color;
 
     // interface implementation
@@ -158,6 +159,29 @@ public class Segment implements IVector {
      *      x coordinate of the end point.
      * @param y2
      *      y coordinate of the end point.
+     * @param firstOnEdge
+     *      flag that tell if the first point is on an edge.
+     * @param secondOnEdge
+     *      flag that tell if the second point is on an edge.
+     */
+    public Segment(double x1, double y1, double x2, double y2, boolean firstOnEdge, boolean secondOnEdge){
+        this(x1, y1, x2, y2);
+        if (firstOnEdge)
+            this.firstOnEdge = true;
+        if (secondOnEdge)
+            this.secondOnEdge = true;
+    }
+
+    /**
+     * Constructor.
+     * @param x1
+     *      x coordinate of the begin point.
+     * @param y1
+     *      y coordinate of the begin point.
+     * @param x2
+     *      x coordinate of the end point.
+     * @param y2
+     *      y coordinate of the end point.
      * @param color
      *      Enum value representing the color of the segment.
      */
@@ -270,6 +294,10 @@ public class Segment implements IVector {
         return color;
     }
 
+    public boolean isFreeSplit(){
+        return (firstOnEdge && secondOnEdge);
+    }
+
     //static methods
 
     /**
@@ -337,7 +365,7 @@ public class Segment implements IVector {
         }
 
 
-        Segment[] S = {new Segment(x12, y12, x, y), new Segment(x, y, x22, y22)};
+        Segment[] S = {new Segment(x12, y12, x, y, false, true), new Segment(x, y, x22, y22, true, false)};
         return S;
     }
 
