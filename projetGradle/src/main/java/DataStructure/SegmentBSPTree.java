@@ -134,18 +134,18 @@ public class SegmentBSPTree extends BSPTree<Segment>{
                     }
                     else if((r1 <= 0 && r2 >= 0) || (r1 >= 0 && r2 <= 0)){
                         //segment seg coupé par la ligne de découpe (appel à cut)
-                        Segment[] cutResult = Segment.cut(seg, l);
+                        Pair<Segment, Segment> cutResult = Segment.cut(seg, l);
 
                         //on vérifie quel coté de la découpe se trouve à gauche et quel coté se trouve à droite, de la ligne de découpe
-                        Point2D cutLineCoord = cutResult[0].getFrom();
+                        Point2D cutLineCoord = cutResult.getL().getFrom();
                         double result = a*cutLineCoord.getX() + b*cutLineCoord.getY() + c;
 
                         if (result < 0){
-                            Sminus.add(cutResult[0]);
-                            Splus.add(cutResult[1]);
+                            Sminus.add(cutResult.getL());
+                            Splus.add(cutResult.getR());
                         }else{
-                            Sminus.add(cutResult[1]);
-                            Splus.add(cutResult[0]);
+                            Sminus.add(cutResult.getR());
+                            Splus.add(cutResult.getL());
                         }
                     }
                 }

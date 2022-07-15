@@ -2,8 +2,6 @@ package DataStructure;
 
 import Console.TestMain;
 
-import java.util.ArrayList;
-
 /**
  * Data structure of a segment.
  * Stores its coordinates and color information
@@ -309,7 +307,7 @@ public class Segment implements IVector {
      * @return
      *      Array of Segments representing the 2 parts of the segment that has been cut.
      */
-    static public Segment[] cut(Segment lineToCut, Segment cutLine){
+    static public Pair<Segment, Segment> cut(Segment lineToCut, Segment cutLine){
         //get the hyperplan equation (general 2D line equation) of cutline
         double x11 = cutLine.getFrom().getX(),
                 y11 = cutLine.getFrom().getY(),
@@ -365,8 +363,7 @@ public class Segment implements IVector {
         }
 
 
-        Segment[] S = {new Segment(x12, y12, x, y, false, true), new Segment(x, y, x22, y22, true, false)};
-        return S;
+        return new Pair<>(new Segment(x12, y12, x, y, false, true), new Segment(x, y, x22, y22, true, false));
     }
 
     /**
@@ -417,7 +414,7 @@ public class Segment implements IVector {
      * @return
      *      Coordinates of the intersection.
      */
-    static public double[] getIntersection(double[] abc1, double[] abc2){
+    static public Point2D getIntersection(double[] abc1, double[] abc2){
         double a1 = abc1[0], b1 = abc1[1], c1 = abc1[2],
                 a2 = abc2[0], b2 = abc2[1], c2 = abc2[2];
 
@@ -478,7 +475,7 @@ public class Segment implements IVector {
             }
         }
 
-        return new double[]{x, y};
+        return new Point2D(x, y);
     }
 
     /**
@@ -521,10 +518,10 @@ public class Segment implements IVector {
         abc2 = new double[]{a2, b2, c2};
 
         //calculate intersection point coordinates
-        double[] x2y2 = Segment.getIntersection(abc1, abc2);
+        Point2D x2y2 = Segment.getIntersection(abc1, abc2);
         if (x2y2 == null)
             return null;
-        x2 = x2y2[0]; y2 = x2y2[1];
+        x2 = x2y2.getX(); y2 = x2y2.getY();
 
         //calculate opposite and Adjascent segments (trigono)
         Segment O, A;

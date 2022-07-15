@@ -1,7 +1,5 @@
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import DataStructure.BSPTree;
 import DataStructure.Point2D;
 import DataStructure.Segment;
 import DataStructure.SegmentBSPTree;
@@ -56,14 +54,14 @@ public class PaintersAlgorithmTest {
     @Test
     void testGetIntersection(){
         System.out.println("intersection point between two lines defined by segments:");
-        double[] expectedIntersectionPoint = {2,3};
+        Point2D expectedIntersectionPoint = new Point2D(2,3);
 
         Segment line1 = new Segment(0,0,2,3),
                 line2 = new Segment(1,11.0/3,2, 3);
 
-        double[] intersectionPoint = Segment.getIntersection(Segment.getCutlineParameters(line1.getFrom(), line1.getTo()), Segment.getCutlineParameters(line2.getFrom(), line2.getTo()));
+        Point2D intersectionPoint = Segment.getIntersection(Segment.getCutlineParameters(line1.getFrom(), line1.getTo()), Segment.getCutlineParameters(line2.getFrom(), line2.getTo()));
 
-        assertArrayEquals(expectedIntersectionPoint, intersectionPoint);
+        assertEquals(expectedIntersectionPoint, intersectionPoint);
     }
 
     @Test
