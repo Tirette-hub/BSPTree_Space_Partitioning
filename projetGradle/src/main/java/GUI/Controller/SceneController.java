@@ -1,5 +1,6 @@
 package GUI.Controller;
 
+import DataStructure.Eye;
 import DataStructure.Point2D;
 import DataStructure.Segment;
 import GUI.Model.SceneModel;
@@ -390,6 +391,6 @@ public class SceneController {
         //link controller to view - configurations
 
         //other controller initialisation
-        eyeButtonImage.setImage(new Image(getClass().getResource("/img/eye.png").toString()));
+        eyeButtonImage.setImage(Eye.image);//new Image(getClass().getResource("/img/eye.png").toString()));
     }
 }
