@@ -2,6 +2,8 @@ package DataStructure;
 
 import javafx.scene.image.Image;
 
+import javax.management.InvalidAttributeValueException;
+
 public class Eye {
     public static final Image image = new Image(Eye.class.getResource("/img/eye.png").toString());
     private Point2D position;
@@ -57,20 +59,16 @@ public class Eye {
         return angle;
     }
 
+    public boolean isInSight(Point2D pt) throws InvalidAttributeValueException {
+        if (angle == 0)
+            return false;
 
-    /*
-     *
-     *
-     *
-     *
-     * TBC
-     *
-     *
-     *
-     *
-     */
-    public boolean isInSight(Segment seg){
-        return false;
+        //en voyant les segments comme des vecteurs, il est plus facile de dire si un point est dans le champ de vision grâce aux angles
+        IVector vector = getDirectionLine();
+        IVector line = new Segment(position, pt);
+        double alpha = Segment.getAngle(vector, line);
+
+        return !(Math.abs(alpha) > angle / 2.0);
     }
 
     public Segment getDirectionLine(){

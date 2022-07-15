@@ -5,6 +5,7 @@ import DataStructure.Segment;
 import DataStructure.SegmentBSPTree;
 import org.junit.jupiter.api.*;
 
+import javax.management.InvalidAttributeValueException;
 import java.util.ArrayList;
 
 public class PaintersAlgorithmTest {
@@ -65,7 +66,7 @@ public class PaintersAlgorithmTest {
     }
 
     @Test
-    void testAngle(){
+    void testAngle() throws InvalidAttributeValueException {
         System.out.println("angle between a direction line and a point:");
         Segment direction = new Segment(0,0,2,3);
         Point2D pt = new Point2D(1, 11.0/3);

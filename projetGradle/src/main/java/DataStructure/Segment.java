@@ -2,6 +2,8 @@ package DataStructure;
 
 import Console.TestMain;
 
+import javax.management.InvalidAttributeValueException;
+
 /**
  * Data structure of a segment.
  * Stores its coordinates and color information
@@ -75,6 +77,10 @@ public class Segment implements IVector {
             return (Math.abs(x/deltaX - y/deltaY) < TestMain.epsilon);
     }
 
+    public boolean isNull(){
+        return Math.abs(getX()) < TestMain.epsilon && Math.abs(getY()) < TestMain.epsilon;
+    }
+
     /**
      * Get the factor between 2 segments if they are multiple of each other.
      * @param o
@@ -128,6 +134,14 @@ public class Segment implements IVector {
         firstPoint = new Point2D();
         lastPoint = new Point2D();
         color = EColor.BLACK;
+    }
+
+    public Segment(Point2D from, Point2D to){
+        this(from.getX(), from.getY(), to.getX(), to.getY());
+    }
+
+    public Segment(Point2D from, Point2D to, EColor color){
+        this(from.getX(), from.getY(), to.getX(), to.getY(), color);
     }
 
     /**
@@ -486,52 +500,35 @@ public class Segment implements IVector {
      *      Point to get the angle.
      * @return
      *      Angle in degrees.
+     * @throws InvalidAttributeValueException
+     *      If dirLine vector is null or if pt is on dirLine.
      */
-    static public Double getAngle(Segment dirLine, Point2D pt){
-        double [] abc1 = Segment.getCutlineParameters(dirLine.getFrom(), dirLine.getTo()), abc2;
-        double a1 = abc1[0], b1 = abc1[1], c1 = abc1[2];
-        double a2, b2, c2;
+    static public Double getAngle(Segment dirLine, Point2D pt) throws InvalidAttributeValueException {
+        Segment newLine = new Segment(dirLine.getFrom(), pt);
+        return getAngle(dirLine, newLine);
+    }
 
-        double x1 = dirLine.getFrom().getX(), x2, dx, y1 = dirLine.getFrom().getY(), y2, dy;
+    /**
+     * Get the angle in degrees between 2 vectors.
+     * @param vectA
+     *      Vector A.
+     * @param vectB
+     *     Vector B.
+     * @return
+     *      Angle in degrees.
+     * @throws InvalidAttributeValueException
+     *      If at least one of the given vectors is null.
+     */
+    public static Double getAngle(IVector vectA, IVector vectB) throws InvalidAttributeValueException {
+        if (vectA.isNull() || vectA.isNull())
+            throw new InvalidAttributeValueException("Vectors should not be null.");
 
-        //perpendicular line parameters
-        if (Math.abs(a1) < TestMain.epsilon){
-            //line 1: horizontal
-            a2 = 1;
-            b2 = 0;
-            //line 2: vertical
-        }
-        else if (Math.abs(b1) < TestMain.epsilon){
-            //line 1: vertical
-            a2 = 0;
-            b2 = 1;
-            //line 2: horizontal
-        }
-        else{
-            //general case
-            a2 = -1.0/a1;
-            b2 = b1;
-        }
-        c2 = -a2*pt.getX() - b2*pt.getY();
+        double dxA = vectA.getX(),
+                dxB = vectB.getX(),
+                dyA = vectA.getY(),
+                dyB = vectA.getY();
 
-        //collecting line 2 parameters
-        abc2 = new double[]{a2, b2, c2};
-
-        //calculate intersection point coordinates
-        Point2D x2y2 = Segment.getIntersection(abc1, abc2);
-        if (x2y2 == null)
-            return null;
-        x2 = x2y2.getX(); y2 = x2y2.getY();
-
-        //calculate opposite and Adjascent segments (trigono)
-        Segment O, A;
-        O = new Segment(pt.getX(), pt.getY(), x2, y2);
-        A = new Segment(x1, y1, x2, y2);
-
-        //calculate the angle
-        //System.out.println("distance O: " + O.getDistance());
-        //System.out.println("distance A: " + A.getDistance());
-        return Math.toDegrees(Math.atan(O.getDistance()/ A.getDistance()));
+        return Math.toDegrees(((dxA*dxB)+(dyA*dyB))/(Math.sqrt(Math.pow(dxA,2) + Math.pow(dyA,2))*Math.sqrt(Math.pow(dxB,2) + Math.pow(dyB,2))));
     }
 
     /**
