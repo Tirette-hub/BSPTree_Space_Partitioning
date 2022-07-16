@@ -2,7 +2,7 @@ package DataStructure;
 
 import Console.TestMain;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  * Implementation of the BSP Tree.
@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * @version 1.0.0
  */
 public class BSPTree<D>{
-    protected ArrayList<D> data;
+    protected LinkedList<D> data;
     protected BSPTree<D> left, right, parent;
 
     //constructors
@@ -23,7 +23,7 @@ public class BSPTree<D>{
      * Constructor.
      */
     public BSPTree(){
-        data = new ArrayList<>();
+        data = new LinkedList<>();
         left = null;
         right = null;
         parent = null;
@@ -32,13 +32,13 @@ public class BSPTree<D>{
     /**
      * Constructor.
      * @param d
-     *      ArrayList of data stocked in the node.
+     *      LinkedList of data stocked in the node.
      * @param l
      *      Left sub-tree.
      * @param r
      *      Right sub-three.
      */
-    public BSPTree(ArrayList<D> d, BSPTree<D> l, BSPTree<D> r){
+    public BSPTree(LinkedList<D> d, BSPTree<D> l, BSPTree<D> r){
         parent = null;
         data = d;
         left = l;
@@ -64,7 +64,7 @@ public class BSPTree<D>{
      */
     public BSPTree(D d, BSPTree<D> l, BSPTree<D> r){
         parent = null;
-        data = new ArrayList<D>();
+        data = new LinkedList<D>();
         data.add(d);
         left = l;
         right = r;
@@ -83,13 +83,13 @@ public class BSPTree<D>{
      * @param p
      *      Parent tree.
      * @param d
-     *      ArrayList of data stocked in the node.
+     *      LinkedList of data stocked in the node.
      * @param l
      *      Left sub-tree.
      * @param r
      *      Right sub-three.
      */
-    public BSPTree(BSPTree<D> p, ArrayList<D> d, BSPTree<D> l, BSPTree<D> r){
+    public BSPTree(BSPTree<D> p, LinkedList<D> d, BSPTree<D> l, BSPTree<D> r){
         parent = p;
         data = d;
         left = l;
@@ -117,7 +117,7 @@ public class BSPTree<D>{
      */
     public BSPTree(BSPTree<D> p, D d, BSPTree<D> l, BSPTree<D> r){
         parent = p;
-        data = new ArrayList<D>();
+        data = new LinkedList<D>();
         data.add(d);
         left = l;
         right = r;
@@ -136,9 +136,9 @@ public class BSPTree<D>{
     /**
      * Get data stored in the root node.
      * @return
-     *      ArrayList of data.
+     *      LinkedList of data.
      */
-    public ArrayList<D> getData(){
+    public LinkedList<D> getData(){
         return data;
     }
 
@@ -270,9 +270,9 @@ public class BSPTree<D>{
     /**
      * Set the list of data to store in the node.
      * @param d
-     *      ArrayList of data.
+     *      LinkedList of data.
      */
-    public void setData(ArrayList<D> d){
+    public void setData(LinkedList<D> d){
         data = d;
     }
 
@@ -325,8 +325,8 @@ public class BSPTree<D>{
         BSPTree<D> oTree = (BSPTree<D>) o;
 
         //On vérifie que les 2 arbres ont les mêmes données
-        ArrayList<D> thisData = this.getData();
-        ArrayList<D> oData = oTree.getData();
+        LinkedList<D> thisData = this.getData();
+        LinkedList<D> oData = oTree.getData();
 
         if (thisData.size() != oData.size())
             return false;

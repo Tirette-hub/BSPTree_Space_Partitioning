@@ -346,6 +346,6 @@ public class SceneController {
         //link controller to view - configurations
 
         //other controller initialisation
-        eyeButtonImage.setImage(Eye.image);//new Image(getClass().getResource("/img/eye.png").toString()));
+        eyeButtonImage.setImage(new Image(getClass().getResource("/img/eye.png").toString()));
     }
 }

@@ -1,25 +1,29 @@
 package DataStructure;
 
-import javafx.scene.image.Image;
-
 import javax.management.InvalidAttributeValueException;
 
 public class Eye {
-    public static final Image image = new Image(Eye.class.getResource("/img/eye.png").toString());
     private Point2D position;
     private double direction, angle;
+    private boolean visible;
 
 
     //Constructors
+
+    public Eye(){
+        this(new Point2D());
+    }
 
     public Eye(Point2D position){
         this.position = position;
         direction = 0;
         angle = 90;
+        visible = false;
     }
 
     public Eye(Point2D position, double direction, double angle){
         this.position = position;
+        visible = false;
         if (0 <= direction && direction < 360)
             this.direction = direction;
         else
@@ -43,6 +47,10 @@ public class Eye {
 
     public void setAngle(double angle){
         this.angle = angle;
+    }
+
+    public void setVisible(boolean flag) {
+        visible = flag;
     }
 
     //Getters
@@ -96,5 +104,9 @@ public class Eye {
         Segment r = new Segment(position.getX(), position.getY(), position.getX() + dx, position.getY() + dy);
 
         return new Pair<>(l, r);
+    }
+
+    public boolean isVisible(){
+        return visible;
     }
 }

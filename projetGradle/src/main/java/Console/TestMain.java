@@ -607,9 +607,9 @@ public class TestMain {
         Scanner input = new Scanner(System.in);
         double x, y;
 
-        ArrayList<Segment>
-                p1 = new ArrayList<>(),
-                p2 = new ArrayList<>();
+        LinkedList<Segment>
+                p1 = new LinkedList<>(),
+                p2 = new LinkedList<>();
 
         System.out.print("building trees...");
 
@@ -648,12 +648,14 @@ public class TestMain {
                 System.out.print("y: ");
                 y = input.nextDouble();
 
+                Eye eye = new Eye(new Point2D(x, y));
+
                 t1.start();
-                p1 = SegmentBSPTree.paintersAlgorithm(trees[0], new Point2D(x, y));
+                p1 = SegmentBSPTree.paintersAlgorithm(trees[0], eye);
                 t1.stop();
 
                 t2.start();
-                p2 = SegmentBSPTree.paintersAlgorithm(trees[1], new Point2D(x, y));
+                p2 = SegmentBSPTree.paintersAlgorithm(trees[1], eye);
                 t2.stop();
 
                 break;

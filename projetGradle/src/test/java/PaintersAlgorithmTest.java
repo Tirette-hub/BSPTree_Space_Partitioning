@@ -1,12 +1,14 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import Console.TestMain;
+import DataStructure.Eye;
 import DataStructure.Point2D;
 import DataStructure.Segment;
 import DataStructure.SegmentBSPTree;
 import org.junit.jupiter.api.*;
 
 import javax.management.InvalidAttributeValueException;
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class PaintersAlgorithmTest {
     @BeforeAll
@@ -23,6 +25,7 @@ public class PaintersAlgorithmTest {
     void testPaintersAlgorithm(){
         System.out.println("painter's algorithm:");
         Point2D POVposition = new Point2D(0, 3); //AB+, GD-, EI- (in the bsp tree)
+        Eye eye = new Eye(POVposition, 60, 359);
 
         Segment[] segs = {new Segment(1,1,3,4),     //AB 0
                 new Segment(4,2,4,11.0/2.0),        //CG 1
@@ -39,7 +42,7 @@ public class PaintersAlgorithmTest {
         SegmentBSPTree rightTree = new SegmentBSPTree(segs[3], leafEI, leafIH);
         SegmentBSPTree tree = new SegmentBSPTree(segs[0], leftTree, rightTree);
 
-        ArrayList<Segment> expectedS = new ArrayList<Segment>();
+        LinkedList<Segment> expectedS = new LinkedList<Segment>();
         expectedS.add(new Segment(5,7,8,7));       //HF
         expectedS.add(new Segment(4,2,4,5.5));     //CG
         expectedS.add(new Segment(1,1,3,4));       //AB
@@ -47,9 +50,9 @@ public class PaintersAlgorithmTest {
         expectedS.add(new Segment(4, 5.5,4,6));    //GD
         expectedS.add(new Segment(2,7,4,7));       //EI
 
-        ArrayList<Segment> s = SegmentBSPTree.paintersAlgorithm(tree, POVposition);
+        LinkedList<Segment> s = SegmentBSPTree.paintersAlgorithm(tree, eye);
 
-        assertEquals(s, expectedS);
+        assertEquals(expectedS, s);
     }
 
     @Test
@@ -68,14 +71,14 @@ public class PaintersAlgorithmTest {
     @Test
     void testAngle() throws InvalidAttributeValueException {
         System.out.println("angle between a direction line and a point:");
-        Segment direction = new Segment(0,0,2,3);
-        Point2D pt = new Point2D(1, 11.0/3);
+        Segment direction = new Segment(0,0,Math.sqrt(3),1);
+        Point2D pt = new Point2D(1, Math.sqrt(3));
 
-        double expectedAngle = Math.toDegrees(Math.atan(1.0/3));
+        double expectedAngle = 30;
 
         double alpha = Segment.getAngle(direction, pt);
 
-        assertEquals(expectedAngle, alpha);
+        assertEquals(expectedAngle, alpha, TestMain.epsilon);
     }
 
     @Test
@@ -90,7 +93,7 @@ public class PaintersAlgorithmTest {
 
         double x = Segment.getProjection(pt, abc[0], abc[1], abc[2], angle, FOV, screenWidth);
 
-        assertEquals(x, expectedX);
+        assertEquals(x, expectedX, TestMain.epsilon);
     }
 
     @AfterEach

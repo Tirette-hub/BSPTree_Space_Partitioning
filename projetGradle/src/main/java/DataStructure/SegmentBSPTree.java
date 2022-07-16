@@ -2,23 +2,21 @@ package DataStructure;
 
 import Console.TestMain;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import javax.management.InvalidAttributeValueException;
+import java.util.*;
 
 public class SegmentBSPTree extends BSPTree<Segment>{
     protected boolean firstOnEdge = false, secondOnEdge = false;
     public SegmentBSPTree(){
         super();
     }
-    public SegmentBSPTree(ArrayList<Segment> d, SegmentBSPTree l, SegmentBSPTree r){
+    public SegmentBSPTree(LinkedList<Segment> d, SegmentBSPTree l, SegmentBSPTree r){
         super(d, l, r);
     }
     public SegmentBSPTree(Segment d, SegmentBSPTree l, SegmentBSPTree r){
         super(d, l, r);
     }
-    public SegmentBSPTree(SegmentBSPTree p, ArrayList<Segment> d, SegmentBSPTree l, SegmentBSPTree r){
+    public SegmentBSPTree(SegmentBSPTree p, LinkedList<Segment> d, SegmentBSPTree l, SegmentBSPTree r){
         super(p, d, l, r);
     }
     public SegmentBSPTree(SegmentBSPTree p, Segment d, SegmentBSPTree l, SegmentBSPTree r){
@@ -106,8 +104,8 @@ public class SegmentBSPTree extends BSPTree<Segment>{
             double r1, r2;
 
             //on crée les listes des segments se trouvant à gauche et à droite de la ligne de découpe
-            ArrayList<Segment> Sminus = new ArrayList<>();
-            ArrayList<Segment> Splus = new ArrayList<>();
+            LinkedList<Segment> Sminus = new LinkedList<>();
+            LinkedList<Segment> Splus = new LinkedList<>();
 
             tree.addData(l);
             tree.setParent(parent);
@@ -208,8 +206,8 @@ public class SegmentBSPTree extends BSPTree<Segment>{
                     c = abc[2];
 
             //on crée les listes des segments se trouvant à gauche et à droite de la ligne de découpe
-            ArrayList<Segment> Sminus = new ArrayList<>();
-            ArrayList<Segment> Splus = new ArrayList<>();
+            LinkedList<Segment> Sminus = new LinkedList<>();
+            LinkedList<Segment> Splus = new LinkedList<>();
 
             double[] segCoord;
             double r1, r2;
@@ -382,54 +380,129 @@ public class SegmentBSPTree extends BSPTree<Segment>{
      * Get the list of segments that have to be painted in order
      * @param tree
      *      BSPTree representing the scene.
-     * @param POVposition
-     *      Position of the Point Of View (Eye).
+     * @param eye
+     *      Eye that sees the scene.
      * @return
      *      List of Segments in order.
      */
-    static public ArrayList<Segment> paintersAlgorithm(SegmentBSPTree tree, Point2D POVposition){
+    static public LinkedList<Segment> paintersAlgorithm(SegmentBSPTree tree, Eye eye){
         //if leaf: just return data
         if (tree.isLeaf()) {
             return tree.getData();
         }
 
         //set all the data that will be needed
-        Segment h = tree.getData().get(0);
-        double[] abc = Segment.getCutlineParameters(h.getFrom(), h.getTo());
+        Segment h = tree.getData().get(0), dirLine = eye.getDirectionLine();
+        Pair<Segment, Segment> FOVLines = eye.getFOVLine();
+        double[] abc = Segment.getCutlineParameters(h.getFrom(), h.getTo()),
+                //abc1 = Segment.getCutlineParameters(dirLine.getFrom(), dirLine.getTo()),
+                abc2 = Segment.getCutlineParameters(FOVLines.getL().getFrom(), FOVLines.getL().getTo()),
+                abc3 = Segment.getCutlineParameters(FOVLines.getR().getFrom(), FOVLines.getR().getTo());
         double a = abc[0], b = abc[1], c = abc[2];
+        Point2D POVposition = eye.getPosition();
+        Point2D intersection1, intersection2;
+        Segment testVect;
         double x = POVposition.getX(), y = POVposition.getY();
         double result = a*x+b*y+c;
+        boolean check = false;
 
-        ArrayList<Segment> segList = new ArrayList<>();
+        LinkedList<Segment> segList = new LinkedList<>();
         //recursion on left and right trees of the algorithm
-        ArrayList<Segment> Tm = null , Tp = null; //T-, T+
+        LinkedList<Segment> Tm = null , Tp = null; //T-, T+
 
-        if (tree.getLeft() != null) //pre-compute painter's algorithm on left sub-tree if exists
-            Tm = paintersAlgorithm((SegmentBSPTree) tree.getLeft(), POVposition);
-        if (tree.getRight() != null) //pre-compute painter's algorithm on right sub-tree if exists
-            Tp = paintersAlgorithm((SegmentBSPTree) tree.getRight(), POVposition);
+        /*
+         * Si l'angle de la fov est > 180, alors on doit parcourir les 2 sous-arbres obligatoirement
+         * Sinon, si la FOV ne voit jamais ce qu'il y a dans l'espace d'un autre sous-arbre, on peut ne pas appliquer l'algorithme
+         * du peintre sur cette partie de l'arbre.
+         * Pour ce faire, on regarde si, pour au moins 1 des 2 lignes de la FOV (qui représentent les extrémités de la FOV),
+         * il y a un point d'intersection.
+         * Si oui, alors une partie du sous-espace peut être vu et doit donc être calculé
+         * Sinon, l'oeil n'est pas orienté vers l'autre sous-arbre.
+         */
+
+        if (eye.getAngle() > 180) {
+            if (tree.getLeft() != null) //pre-compute painter's algorithm on left sub-tree if exists
+                Tm = paintersAlgorithm((SegmentBSPTree) tree.getLeft(), eye);
+            if (tree.getRight() != null) //pre-compute painter's algorithm on right sub-tree if exists
+                Tp = paintersAlgorithm((SegmentBSPTree) tree.getRight(), eye);
+        }else{
+            intersection1 = Segment.getIntersection(abc, abc2);
+            intersection2 = Segment.getIntersection(abc, abc3);
+
+            if (intersection1 != null){
+                testVect = new Segment(eye.getPosition(), intersection1);
+                if (FOVLines.getL().hasSameSens(testVect))
+                    check = true;
+            }
+
+            if (intersection2 != null && !check){
+                testVect = new Segment(eye.getPosition(), intersection2);
+                if (FOVLines.getR().hasSameSens(testVect))
+                    check = true;
+            }
+        }
 
         if (result > 0){ //pov € h+
-            if (Tm != null)
-                segList.addAll(Tm); //adding left data first because will be painted first
-            segList.addAll(tree.getData()); //then segments in this node
-            if (Tp != null)
+            if (Tm == null) {
+                if (check && tree.getLeft() != null) {
+                    Tm = paintersAlgorithm((SegmentBSPTree) tree.getLeft(), eye);
+                    segList.addAll(Tm); //adding left data first because will be painted first
+                }
+            }else
+                segList.addAll(Tm);
+
+            for (Segment seg : tree.getData()){//then segments in this node if visible by the eye
+                try {
+                    if (eye.isInSight(seg.getFrom()))
+                        segList.add(seg);
+                    else if (eye.isInSight(seg.getTo()))
+                        segList.add(seg);
+                }catch(InvalidAttributeValueException e){}
+            }
+
+            if (Tp == null) {
+                if (tree.getRight() != null) {
+                    Tp = paintersAlgorithm((SegmentBSPTree) tree.getRight(), eye);
+                    segList.addAll(Tp);
+                }
+            }else
                 segList.addAll(Tp); //finally adding the right tree data because will be painted last
         }
         else if (result < 0){ //pov € h-
             //same as above but inverted because the eye is in the other side of the cutline (so inverted)
-            if (Tp != null)
+            if (Tp == null){
+                if (check && tree.getRight() != null) {
+                    Tp = paintersAlgorithm((SegmentBSPTree) tree.getRight(), eye);
+                    segList.addAll(Tp);
+                }
+            }else
                 segList.addAll(Tp);
-            segList.addAll(tree.getData());
-            if (Tm != null)
+
+            for (Segment seg : tree.getData()){
+                try {
+                    if (eye.isInSight(seg.getFrom()))
+                        segList.add(seg);
+                    else if (eye.isInSight(seg.getTo()))
+                        segList.add(seg);
+                }catch(InvalidAttributeValueException e){}
+            }
+
+            if (Tm == null) {
+                if (tree.getLeft() != null) {
+                    Tm = paintersAlgorithm((SegmentBSPTree) tree.getLeft(), eye);
+                    segList.addAll(Tm);
+                }
+            }else
                 segList.addAll(Tm);
         }
         else{ //pov € h
             //eye on the cutline so does not see segments contained in this node.
-            if (Tm != null)
-                segList.addAll(Tm);
-            if (Tp != null)
-                segList.addAll(Tp);
+            if (Tm == null)
+                Tm = paintersAlgorithm((SegmentBSPTree) tree.getLeft(), eye);
+            segList.addAll(Tm);
+            if (Tp == null)
+                Tp = paintersAlgorithm((SegmentBSPTree) tree.getRight(), eye);
+            segList.addAll(Tp);
         }
 
         return segList;
