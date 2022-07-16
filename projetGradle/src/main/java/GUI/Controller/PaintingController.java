@@ -32,7 +32,7 @@ public class PaintingController {
     //variable used to build the BSP Tree
     private EHeuristic h;
     private Segment[] segs;
-    private double[] POVData;
+    private Eye POVData;
 
     //view data
     @FXML
@@ -87,9 +87,9 @@ public class PaintingController {
             //Paint the solution
             double paintingCanvasWidth = fxCanvas.getWidth(); //100%
 
-            Point2D POVPosition = new Point2D(POVData[0], POVData[1]);
+            Point2D POVPosition = POVData.getPosition();
             // alpha                    FOV Direction
-            double FOV = POVData[2], FOVDirection = -(POVData[3] - 90);
+            double FOV = POVData.getAngle(), FOVDirection = -(POVData.getDirection() - 90);
 
             /*System.out.println("parameters:\n" +
                     "screen width: " + paintingCanvasWidth +
@@ -109,7 +109,7 @@ public class PaintingController {
             double angle1, angle2;
 
             //System.out.println("painter's algorithm");
-            Segment[] segsInOrder = SegmentBSPTree.paintersAlgorithm(t, POVPosition).toArray(new Segment[0]);
+            Segment[] segsInOrder = SegmentBSPTree.paintersAlgorithm(t, POVData).toArray(new Segment[0]);
 
             GraphicsContext gc = fxCanvas.getGraphicsContext2D();
 
@@ -290,7 +290,7 @@ public class PaintingController {
      * @param POVData
      *      Coordinates of the Point Of View, its direction angle and FOV
      */
-    public void setData(EHeuristic h, Segment[] segs, double[] POVData){
+    public void setData(EHeuristic h, Segment[] segs, Eye POVData){
         this.h = h;
         this.segs = segs;
         this.POVData = POVData;

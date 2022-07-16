@@ -1,6 +1,7 @@
 package GUI.Controller;
 
 import DataStructure.Eye;
+import DataStructure.Pair;
 import DataStructure.Point2D;
 import DataStructure.Segment;
 import GUI.Model.SceneModel;
@@ -60,7 +61,7 @@ public class SceneController {
 
         //clear model
         model.setIsDrawn(false);
-        model.setPOVPosition(null, null);
+        model.getEye().setPosition(null);
         model.setData(null);
     }
 
@@ -69,8 +70,8 @@ public class SceneController {
      */
     @FXML
     public void onPOV(){
-        if (model.getPOVPosition() != null)
-            model.setPOVPosition(null, null);
+        if (model.getEye().getPosition() != null)
+            model.getEye().setPosition(null);
 
         //allow the possibility to draw an eye or not if clicked again
         POVEnabled = !POVEnabled;
@@ -88,9 +89,7 @@ public class SceneController {
     public void onClick(MouseEvent event){
         if (POVEnabled){
             //set POVposition
-            model.setPOVPosition(event.getSceneX()-4, event.getSceneY()-30);
-            //System.out.println(model.getPOVPosition()[0]);
-            //System.out.println(model.getPOVPosition()[1]);
+            model.getEye().setPosition(new Point2D(event.getSceneX()-4, event.getSceneY()-30));
 
             //update view
             update();
@@ -110,7 +109,7 @@ public class SceneController {
     public void onMove(MouseEvent event){
         if (POVEnabled){
             //set POVposition
-            model.setPOVPosition(event.getSceneX()-4, event.getSceneY()-30);
+            model.getEye().setPosition(new Point2D(event.getSceneX()-4, event.getSceneY()-30));
             //update view
             update();
         }
@@ -122,7 +121,7 @@ public class SceneController {
      */
     @FXML
     public void onCheck(){
-        model.setFOVVisible(fxChecker.isSelected());
+        model.getEye().setVisible(fxChecker.isSelected());
 
         update();
     }
@@ -169,21 +168,6 @@ public class SceneController {
     }
 
     /**
-     * Get the Point of View (eye) position in the scene.
-     * @return
-     *      Point Of View (eye) position.
-     */
-    public double[] getPOVPosition(){
-        double[] pos = model.getPOVPosition();
-        if (pos != null) {
-            double width = model.getPOVPosition()[0];
-            double height = model.getB() - model.getPOVPosition()[1];
-            return new double[]{width, height};
-        }else
-            return null;
-    }
-
-    /**
      * Get the scene data.
      * @return
      *      Array of Segment objects representing the scene.
@@ -192,22 +176,16 @@ public class SceneController {
         return model.getData();
     }
 
-    /**
-     * Get the Field of View of the eye.
-     * @return
-     *      Field of view in degree.
-     */
-    public double getFOV(){
-        return model.getFOV();
-    }
+    public Eye getEye(){
+        Eye eye = model.getEye();
 
-    /**
-     * Get the POV (Eye) direction angle.
-     * @return
-     *      POV (Eye) direction angle in degree.
-     */
-    public double getFOVDirection(){
-        return model.getFOVDirection();
+        if (eye == null)
+            return null;
+
+        if (eye.getPosition() == null)
+            return null;
+
+        return eye;
     }
 
     //view methods
@@ -245,56 +223,33 @@ public class SceneController {
      * Draw an eye on the canvas.
      * @param eye
      *      Eye image resource URL.
-     * @param x
-     *      X coordinate.
-     * @param y
-     *      Y coordinate.
+     * @param pos
+     *      Coordinates of the position.
      */
-    public void drawEye(Image eye, double x, double y){
-        model.setPOVPosition(x,y);
+    public void drawEye(Image eye, Point2D pos){
+        model.getEye().setPosition(pos);
 
         //get the drawable object from the canvas
         GraphicsContext gc = fxCanvas.getGraphicsContext2D();
 
         //draw
-        gc.drawImage(eye, x, y, 10, 10);
+        gc.drawImage(eye, pos.getX(), pos.getY(), 10, 10);
     }
 
     /**
      * Draw the eye direction and FOV guide lines on the canvas.
      */
     private void drawEyeParameters(){
-        if (model.isFOVVisible()){
-            double[] firstPoint;
+        if (model.getEye().isVisible()){
             double R = fxCanvas.getWidth()/10;
             double dx, dy, x, y; //a,
-            Point2D xy1, xy2;
+            Point2D from, to;
 
             //create direction line with polar equation
-            firstPoint = model.getPOVPosition();
-            double directionAngle = model.getFOVDirection()-90;
-            dx = R*Math.cos(Math.toRadians(directionAngle));
-            dy = R*Math.sin(Math.toRadians(directionAngle));
-            x = firstPoint[0] + dx;
-            y = firstPoint[1] + dy;
-            Segment directionLine = new Segment(firstPoint[0], firstPoint[1], x, y);
+            Segment directionLine = model.getEye().getDirectionLine();
 
             //create 2 FOV lines with polar equation
-            firstPoint = model.getPOVPosition();
-            double FOVAngle = model.getFOV()/2.0;
-            //first line
-            dx = R*Math.cos(Math.toRadians(directionAngle-FOVAngle));
-            dy = R*Math.sin(Math.toRadians(directionAngle-FOVAngle));
-            x = firstPoint[0] + dx;
-            y = firstPoint[1] + dy;
-            Segment FOVLeftLine = new Segment(firstPoint[0], firstPoint[1], x, y);
-            //second line
-            dx = R*Math.cos(Math.toRadians(directionAngle+FOVAngle));
-            dy = R*Math.sin(Math.toRadians(directionAngle+FOVAngle));
-            x = firstPoint[0] + dx;
-            y = firstPoint[1] + dy;
-            Segment FOVRightLine = new Segment(firstPoint[0], firstPoint[1], x, y);
-
+            Pair<Segment, Segment> FOVLines = model.getEye().getFOVLine();
 
             //get the drawable object from the canvas
             GraphicsContext gc = fxCanvas.getGraphicsContext2D();
@@ -303,17 +258,17 @@ public class SceneController {
             //create the 3lines with the color
             gc.setStroke(colorDirectionLine);
 
-            xy1 = directionLine.getFrom();
-            xy2 = directionLine.getTo();
-            gc.strokeLine(xy1.getX(), xy1.getY(), xy2.getX(), xy2.getY());
+            from = directionLine.getFrom();
+            to = directionLine.getTo();
+            gc.strokeLine(from.getX(), from.getY(), to.getX(), to.getY());
 
-            xy1 = FOVLeftLine.getFrom();
-            xy2 = FOVLeftLine.getTo();
-            gc.strokeLine(xy1.getX(), xy1.getY(), xy2.getX(), xy2.getY());
+            from = FOVLines.getL().getFrom();
+            to = FOVLines.getL().getTo();
+            gc.strokeLine(from.getX(), from.getY(), to.getX(), to.getY());
 
-            xy1 = FOVRightLine.getFrom();
-            xy2 = FOVRightLine.getTo();
-            gc.strokeLine(xy1.getX(), xy1.getY(), xy2.getX(), xy2.getY());
+            from = FOVLines.getR().getFrom();
+            to = FOVLines.getR().getTo();
+            gc.strokeLine(from.getX(), from.getY(), to.getX(), to.getY());
         }
     }
 
@@ -327,10 +282,10 @@ public class SceneController {
             gc.clearRect(0, 0, fxCanvas.getWidth(), fxCanvas.getHeight());
 
             drawScene(model.getData());
-            double[] xy = model.getPOVPosition();
+            Point2D pos = model.getEye().getPosition();
             //if the POV has been set
-            if (xy != null) {
-                drawEye(eyeButtonImage.getImage(), xy[0], xy[1]);
+            if (pos != null) {
+                drawEye(eyeButtonImage.getImage(), pos);
                 drawEyeParameters();
             }
         }
@@ -354,7 +309,7 @@ public class SceneController {
         fxFOVSpinner.valueProperty().addListener(new ChangeListener<Double>() {
             @Override
             public void changed(ObservableValue<? extends Double> observable, Double oldValue, Double newValue) {
-                model.setFOV(newValue);
+                model.getEye().setAngle(newValue);
                 fxFOVSlider.setValue(newValue);
                 update();
             }
@@ -370,7 +325,7 @@ public class SceneController {
         fxAngleSpinner.valueProperty().addListener(new ChangeListener<Double>() {
             @Override
             public void changed(ObservableValue<? extends Double> observable, Double oldValue, Double newValue) {
-                model.setFOVDirection(newValue);
+                model.getEye().setDirection(newValue);
                 fxFOVAngle.setValue(newValue);
                 update();
             }

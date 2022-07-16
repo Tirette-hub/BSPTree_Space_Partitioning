@@ -1,5 +1,7 @@
 package GUI.Model;
 
+import DataStructure.Eye;
+import DataStructure.Point2D;
 import DataStructure.Segment;
 import javafx.scene.control.SpinnerValueFactory;
 
@@ -15,10 +17,7 @@ import javafx.scene.control.SpinnerValueFactory;
 public class SceneModel {
     private boolean isDrawn;
     private Segment[] data;
-    private double[] POVPosition;
-    private double FOV;
-    private double FOVDirection;
-    private boolean FOVVisible;
+    private Eye eye;
     private SpinnerValueFactory<Double> FOVSpinnerFactory, AngleSpinnerFactory;
     private double a, b;
 
@@ -29,13 +28,18 @@ public class SceneModel {
      */
     public SceneModel(){
         isDrawn = false;
-        FOVVisible = false;
+
+        eye = new Eye();
 
         FOVSpinnerFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.0, 359.9, 90.0, 1.0);
         AngleSpinnerFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.0, 359.9, 0.0, 1.0);
     }
 
     //setters
+
+    public void setEye(Eye newEye){
+        eye = newEye;
+    }
 
     /**
      * Set scene width value.
@@ -65,20 +69,6 @@ public class SceneModel {
     }
 
     /**
-     * Set the Point Of View (eye) coordinates.
-     * @param x
-     *      x coordinates.
-     * @param y
-     *      y coordinates.
-     */
-    public void setPOVPosition(Double x, Double y){
-        if (x != null && y != null)
-            POVPosition = new double[]{x, y};
-        else
-            POVPosition = null;
-    }
-
-    /**
      * Set scene data.
      * @param data
      *      Scene data (segments).
@@ -87,34 +77,11 @@ public class SceneModel {
         this.data = data;
     }
 
-    /**
-     * Set the FOV angle.
-     * @param angle
-     *      FOV angle.
-     */
-    public void setFOV(double angle){
-        FOV = angle;
-    }
-
-    /**
-     * Set the POV (eye) direction.
-     * @param angle
-     *      Direction of the POV (eye).
-     */
-    public void setFOVDirection(double angle){
-        FOVDirection = angle;
-    }
-
-    /**
-     * Set the possibility to see the FOV.
-     * @param flag
-     *      Flag that says if the FOV is visible or not.
-     */
-    public void setFOVVisible(boolean flag){
-        FOVVisible = flag;
-    }
-
     //getters
+
+    public Eye getEye(){
+        return eye;
+    }
 
     /**
      * Get scene width value.
@@ -144,48 +111,12 @@ public class SceneModel {
     }
 
     /**
-     * Get the Point Of View (eye) coordinates.
-     * @return
-     *      List of coordinates.
-     */
-    public double[] getPOVPosition(){
-        return POVPosition;
-    }
-
-    /**
      * Get Scene data.
      * @return
      *      Scene data (segments).
      */
     public Segment[] getData(){
         return data;
-    }
-
-    /**
-     * Get the FOV angle.
-     * @return
-     *      FOV angle value.
-     */
-    public double getFOV(){
-        return FOV;
-    }
-
-    /**
-     * Get the POV (eye) direction angle.
-     * @return
-     *      POV (eye) direction angle value.
-     */
-    public double getFOVDirection(){
-        return FOVDirection;
-    }
-
-    /**
-     * Get the Flag that says if the FOV has to be shown.
-     * @return
-     *      If the FOV guide lines are visible.
-     */
-    public boolean isFOVVisible(){
-        return FOVVisible;
     }
 
     /**
