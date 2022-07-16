@@ -6,8 +6,9 @@ public interface IVector {
     double getDistance();
     double getX();
     double getY();
-    boolean isMultipleOf(Segment o);
+    boolean isMultipleOf(IVector o);
     boolean isNull();
-    Double getFactor(Segment o);
+    boolean hasSameSens(IVector o);
+    Double getFactor(IVector o);
     IVector getPerp();
 }

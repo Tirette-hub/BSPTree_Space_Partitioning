@@ -1,6 +1,7 @@
 package DataStructure;
 
 import Console.TestMain;
+import org.junit.Test;
 
 import javax.management.InvalidAttributeValueException;
 
@@ -59,7 +60,7 @@ public class Segment implements IVector {
      * @return
      *      If the 2 segments are multiples of each other.
      */
-    public boolean isMultipleOf(Segment o){
+    public boolean isMultipleOf(IVector o){
         double x = getX(), y = getY();
         double deltaX, deltaY;
         deltaX = o.getX();
@@ -81,6 +82,23 @@ public class Segment implements IVector {
         return Math.abs(getX()) < TestMain.epsilon && Math.abs(getY()) < TestMain.epsilon;
     }
 
+    @Override
+    public boolean hasSameSens(IVector o) {
+        double dx = o.getX(), dy = o.getY();
+
+        if (dx < 0 && getX() < 0) {
+            return (dy < 0 && getY() < 0) || (dy > 0 && getY() > 0) || (Math.abs(dy) < TestMain.epsilon && Math.abs(getY()) < TestMain.epsilon);
+        }
+        else if (dx > 0 && getX() > 0){
+            return (dy < 0 && getY() < 0) || (dy > 0 && getY() > 0) || (Math.abs(dy) < TestMain.epsilon && Math.abs(getY()) < TestMain.epsilon);
+        }
+        else if (Math.abs(dx) < TestMain.epsilon && Math.abs(getX()) < TestMain.epsilon){
+            return (dy < 0 && getY() < 0) || (dy > 0 && getY() > 0) || (Math.abs(dy) < TestMain.epsilon && Math.abs(getY()) < TestMain.epsilon);
+        }
+
+        return false;
+    }
+
     /**
      * Get the factor between 2 segments if they are multiple of each other.
      * @param o
@@ -88,7 +106,7 @@ public class Segment implements IVector {
      * @return
      *      The factor between the 2 vectors.
      */
-    public Double getFactor(Segment o){
+    public Double getFactor(IVector o){
         double x = getX(), y = getY();
         double deltaX, deltaY;
         deltaX = o.getX();
@@ -308,6 +326,36 @@ public class Segment implements IVector {
 
     public boolean isFreeSplit(){
         return (firstOnEdge && secondOnEdge);
+    }
+
+    public Segment getPerp(Point2D pt){
+        double[] abc = Segment.getCutlineParameters(firstPoint, lastPoint);
+        double a = abc[0], b = abc[1], c = abc[2];
+
+        Segment result;
+
+        if (Math.abs(b) < TestMain.epsilon){
+            //this is a vertical segment
+            //result should be a horizontal segment passing by pt
+            result = new Segment(pt, new Point2D(pt.getX() + 1, pt.getY()));
+        }else if (Math.abs(a) < TestMain.epsilon){
+            //this is a horizontal segment
+            //result should be a vertical segment passing by pt
+            result = new Segment(pt, new Point2D(pt.getX(), pt.getY() + 1));
+        }else{
+            double m = b/a, p;
+            p = -m*pt.getX()+pt.getY();
+
+            double x = pt.getX(), y1 = m* x +p, y2 = m*(x+1)+p;
+            result = new Segment(new Point2D(x, y1), new Point2D(x+1, y2));
+        }
+
+        return result;
+    }
+
+    public Segment getParallele(Point2D pt){
+        Segment temp = getPerp(pt);
+        return temp.getPerp(pt);
     }
 
     //static methods
