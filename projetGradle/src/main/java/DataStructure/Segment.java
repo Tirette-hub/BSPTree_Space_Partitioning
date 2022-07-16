@@ -574,9 +574,9 @@ public class Segment implements IVector {
         double dxA = vectA.getX(),
                 dxB = vectB.getX(),
                 dyA = vectA.getY(),
-                dyB = vectA.getY();
+                dyB = vectB.getY();
 
-        return Math.toDegrees(((dxA*dxB)+(dyA*dyB))/(Math.sqrt(Math.pow(dxA,2) + Math.pow(dyA,2))*Math.sqrt(Math.pow(dxB,2) + Math.pow(dyB,2))));
+        return Math.toDegrees(Math.acos(((dxA*dxB)+(dyA*dyB))/(Math.sqrt(Math.pow(dxA,2) + Math.pow(dyA,2))*Math.sqrt(Math.pow(dxB,2) + Math.pow(dyB,2))))); // on a le cosinus de l'angle associé?
     }
 
     /**
