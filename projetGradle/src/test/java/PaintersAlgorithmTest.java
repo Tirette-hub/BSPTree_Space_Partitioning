@@ -1,4 +1,5 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import Console.TestMain;
 import DataStructure.Eye;
@@ -25,7 +26,7 @@ public class PaintersAlgorithmTest {
     void testPaintersAlgorithm(){
         System.out.println("painter's algorithm:");
         Point2D POVposition = new Point2D(0, 3); //AB+, GD-, EI- (in the bsp tree)
-        Eye eye = new Eye(POVposition, 60, 359);
+        Eye eye = new Eye(POVposition, 30, 60);
 
         Segment[] segs = {new Segment(1,1,3,4),     //AB 0
                 new Segment(4,2,4,11.0/2.0),        //CG 1
@@ -45,7 +46,7 @@ public class PaintersAlgorithmTest {
         LinkedList<Segment> expectedS = new LinkedList<Segment>();
         expectedS.add(new Segment(5,7,8,7));       //HF
         expectedS.add(new Segment(4,2,4,5.5));     //CG
-        expectedS.add(new Segment(1,1,3,4));       //AB
+        //expectedS.add(new Segment(1,1,3,4));       //AB
         expectedS.add(new Segment(4,7,5,7));       //IH
         expectedS.add(new Segment(4, 5.5,4,6));    //GD
         expectedS.add(new Segment(2,7,4,7));       //EI

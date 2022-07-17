@@ -25,7 +25,7 @@ public class Eye {
         this.position = position;
         visible = false;
         if (0 <= direction && direction < 360)
-            this.direction = direction;
+            this.direction = -(direction - 90);
         else
             throw new IllegalArgumentException("Direction must be a double value between 0 (included) and 360 (excluded).");
 
@@ -42,7 +42,7 @@ public class Eye {
     }
 
     public void setDirection(double direction){
-        this.direction = direction;
+        this.direction = -(direction - 90);
     }
 
     public void setAngle(double angle){
@@ -60,7 +60,7 @@ public class Eye {
     }
 
     public double getDirection(){
-        return direction;
+        return -direction + 90;
     }
 
     public double getAngle() {
@@ -70,6 +70,8 @@ public class Eye {
     public boolean isInSight(Point2D pt) throws InvalidAttributeValueException {
         if (angle == 0)
             return false;
+
+        System.out.println("angle: " + direction + "; fov: " + angle);
 
         //en voyant les segments comme des vecteurs, il est plus facile de dire si un point est dans le champ de vision grâce aux angles
         IVector vector = getDirectionLine();

@@ -388,14 +388,23 @@ public class SegmentBSPTree extends BSPTree<Segment>{
     static public LinkedList<Segment> paintersAlgorithm(SegmentBSPTree tree, Eye eye){
         //if leaf: just return data
         if (tree.isLeaf()) {
-            return tree.getData();
+            LinkedList<Segment> data = new LinkedList<>();
+
+            for (Segment s: tree.getData()){
+                try{
+                    if (eye.isInSight(s.getFrom()) || eye.isInSight(s.getTo()))
+                        data.add(s);
+                }catch (InvalidAttributeValueException ignored){
+                }
+            }
+
+            return data;
         }
 
         //set all the data that will be needed
-        Segment h = tree.getData().get(0), dirLine = eye.getDirectionLine();
+        Segment h = tree.getData().get(0);
         Pair<Segment, Segment> FOVLines = eye.getFOVLine();
         double[] abc = Segment.getCutlineParameters(h.getFrom(), h.getTo()),
-                //abc1 = Segment.getCutlineParameters(dirLine.getFrom(), dirLine.getTo()),
                 abc2 = Segment.getCutlineParameters(FOVLines.getL().getFrom(), FOVLines.getL().getTo()),
                 abc3 = Segment.getCutlineParameters(FOVLines.getR().getFrom(), FOVLines.getR().getTo());
         double a = abc[0], b = abc[1], c = abc[2];
@@ -457,7 +466,7 @@ public class SegmentBSPTree extends BSPTree<Segment>{
                         segList.add(seg);
                     else if (eye.isInSight(seg.getTo()))
                         segList.add(seg);
-                }catch(InvalidAttributeValueException e){}
+                }catch(InvalidAttributeValueException ignored){}
             }
 
             if (Tp == null) {
@@ -484,7 +493,7 @@ public class SegmentBSPTree extends BSPTree<Segment>{
                         segList.add(seg);
                     else if (eye.isInSight(seg.getTo()))
                         segList.add(seg);
-                }catch(InvalidAttributeValueException e){}
+                }catch(InvalidAttributeValueException ignored){}
             }
 
             if (Tm == null) {

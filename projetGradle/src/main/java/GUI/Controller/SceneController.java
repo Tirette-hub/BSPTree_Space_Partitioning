@@ -109,7 +109,8 @@ public class SceneController {
     public void onMove(MouseEvent event){
         if (POVEnabled){
             //set POVposition
-            model.getEye().setPosition(new Point2D(event.getSceneX()-4, event.getSceneY()-30));
+            model.getEye().setPosition(new Point2D(event.getSceneX()-4, model.getB() - (event.getSceneY() - 30)));
+            //System.out.println(model.getEye().getPosition().getX() + "; " + model.getEye().getPosition().getY());
             //update view
             update();
         }
@@ -233,7 +234,7 @@ public class SceneController {
         GraphicsContext gc = fxCanvas.getGraphicsContext2D();
 
         //draw
-        gc.drawImage(eye, pos.getX(), pos.getY(), 10, 10);
+        gc.drawImage(eye, pos.getX(), model.getB() - pos.getY(), 10, 10);
     }
 
     /**
@@ -241,15 +242,13 @@ public class SceneController {
      */
     private void drawEyeParameters(){
         if (model.getEye().isVisible()){
-            double R = fxCanvas.getWidth()/10;
-            double dx, dy, x, y; //a,
             Point2D from, to;
 
             //create direction line with polar equation
-            Segment directionLine = model.getEye().getDirectionLine();
+            Segment directionLine = model.getEye().getDirectionLine(20);
 
             //create 2 FOV lines with polar equation
-            Pair<Segment, Segment> FOVLines = model.getEye().getFOVLine();
+            Pair<Segment, Segment> FOVLines = model.getEye().getFOVLine(20);
 
             //get the drawable object from the canvas
             GraphicsContext gc = fxCanvas.getGraphicsContext2D();
@@ -260,15 +259,15 @@ public class SceneController {
 
             from = directionLine.getFrom();
             to = directionLine.getTo();
-            gc.strokeLine(from.getX(), from.getY(), to.getX(), to.getY());
+            gc.strokeLine(from.getX(), model.getB() - from.getY(), to.getX(), model.getB() - to.getY());
 
             from = FOVLines.getL().getFrom();
             to = FOVLines.getL().getTo();
-            gc.strokeLine(from.getX(), from.getY(), to.getX(), to.getY());
+            gc.strokeLine(from.getX(), model.getB() - from.getY(), to.getX(), model.getB() - to.getY());
 
             from = FOVLines.getR().getFrom();
             to = FOVLines.getR().getTo();
-            gc.strokeLine(from.getX(), from.getY(), to.getX(), to.getY());
+            gc.strokeLine(from.getX(), model.getB() - from.getY(), to.getX(), model.getB() - to.getY());
         }
     }
 
