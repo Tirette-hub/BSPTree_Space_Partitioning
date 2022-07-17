@@ -71,8 +71,6 @@ public class Eye {
         if (angle == 0)
             return false;
 
-        System.out.println("angle: " + direction + "; fov: " + angle);
-
         //en voyant les segments comme des vecteurs, il est plus facile de dire si un point est dans le champ de vision grâce aux angles
         IVector vector = getDirectionLine();
         IVector line = new Segment(position, pt);
