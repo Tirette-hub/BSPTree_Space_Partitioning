@@ -33,6 +33,7 @@ public class PaintingController {
     private EHeuristic h;
     private Segment[] segs;
     private Eye POVData;
+    private boolean hasChanged;
 
     //view data
     @FXML
@@ -93,13 +94,6 @@ public class PaintingController {
 
                     x2 = Segment.getProjection(seg.getTo(), a, b, c, angle2, POVData.getAngle(), paintingCanvasWidth);
 
-            /*System.out.println(
-                    "painting line: (" +
-                            x1 + "," + y + "," +
-                            x2 + "," + y + "), Color = " +
-                            s.getEColor().toString()
-            );*/
-
                     //check if line not visible because on the eye guideline
                     if (Math.abs(x2 - x1) < 1e-4)
                         continue;
@@ -114,7 +108,10 @@ public class PaintingController {
                     gc.setLineWidth(10);
 
                     //paint the segment
-                    gc.strokeLine(x1, fxCanvas.getHeight() / 2.0, x2, fxCanvas.getHeight() / 2.0);
+                    if (POVData.getDirection() > 180)
+                        gc.strokeLine(x2, fxCanvas.getHeight() / 2.0, x1, fxCanvas.getHeight() / 2.0);
+                    else
+                        gc.strokeLine(x1, fxCanvas.getHeight() / 2.0, x2, fxCanvas.getHeight() / 2.0);
                 }catch (InvalidAttributeValueException ignore){
 
                 }

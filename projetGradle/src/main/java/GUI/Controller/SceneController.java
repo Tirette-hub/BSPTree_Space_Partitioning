@@ -89,7 +89,7 @@ public class SceneController {
     public void onClick(MouseEvent event){
         if (POVEnabled){
             //set POVposition
-            model.getEye().setPosition(new Point2D(event.getSceneX()-4, event.getSceneY()-30));
+            model.getEye().setPosition(new Point2D(event.getSceneX()-4, model.getB() - (event.getSceneY() - 30)));
 
             //update view
             update();
