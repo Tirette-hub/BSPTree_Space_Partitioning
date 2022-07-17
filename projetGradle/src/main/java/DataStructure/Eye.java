@@ -1,5 +1,7 @@
 package DataStructure;
 
+import Console.TestMain;
+
 import javax.management.InvalidAttributeValueException;
 
 public class Eye {
@@ -108,5 +110,21 @@ public class Eye {
 
     public boolean isVisible(){
         return visible;
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if (o == this)
+            return true;
+
+        if (!(o instanceof Eye))
+            return false;
+
+        Eye other = (Eye) o;
+
+        if (other.getPosition().equals(position) && Math.abs(other.getAngle() - angle) < TestMain.epsilon && Math.abs(other.getDirection() - direction) < TestMain.epsilon)
+            return true;
+
+        return false;
     }
 }
