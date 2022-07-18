@@ -31,9 +31,11 @@ public class PaintingController {
 
     //variable used to build the BSP Tree
     private EHeuristic h;
+    private boolean hChanged = true;
     private Segment[] segs;
+    private boolean segsChanged = true;
     private Eye POVData;
-    private boolean hasChanged;
+    private boolean eyeChanged = true;
 
     //view data
     @FXML
@@ -63,7 +65,7 @@ public class PaintingController {
     public void onPaint(ActionEvent event) {
         //System.out.println("painting size: (" + fxCanvas.getWidth() + ";" + fxCanvas.getHeight() + ")");
         //clear view if already painted
-        if (model.isPainted())
+        if (model.isPainted() && (hChanged || segsChanged || eyeChanged))
             onClear();
 
         //get segments and eye position and heuristic
@@ -74,11 +76,13 @@ public class PaintingController {
         GraphicsContext gc = fxCanvas.getGraphicsContext2D();
 
         //make the BSP Tree
-        if (segs != null) {
-            SegmentBSPTree t = createTree(segs, h);
-            model.setBSPTree(t);
+        if (segs != null && (hChanged || segsChanged || eyeChanged)) {
+            if (hChanged || segsChanged) {
+                SegmentBSPTree t = createTree(segs, h);
+                model.setBSPTree(t);
+            }
 
-            Segment[] segmentsToPaint = SegmentBSPTree.paintersAlgorithm(t, POVData).toArray(new Segment[0]);
+            Segment[] segmentsToPaint = SegmentBSPTree.paintersAlgorithm((SegmentBSPTree) model.getBSPTree(), POVData).toArray(new Segment[0]);
 
             double angle1, angle2, x1, x2;
             double paintingCanvasWidth = fxCanvas.getWidth(); //100%
@@ -90,9 +94,9 @@ public class PaintingController {
                     angle1 = Segment.getAngle(POVData.getDirectionLine(), seg.getFrom());
                     angle2 = Segment.getAngle(POVData.getDirectionLine(), seg.getTo());
 
-                    x1 = Segment.getProjection(seg.getFrom(), a, b, c, angle1, POVData.getAngle(), paintingCanvasWidth);
+                    x1 = Segment.getProjection(seg.getFrom(), a, b, c, angle1, POVData, paintingCanvasWidth);
 
-                    x2 = Segment.getProjection(seg.getTo(), a, b, c, angle2, POVData.getAngle(), paintingCanvasWidth);
+                    x2 = Segment.getProjection(seg.getTo(), a, b, c, angle2, POVData, paintingCanvasWidth);
 
                     //check if line not visible because on the eye guideline
                     if (Math.abs(x2 - x1) < 1e-4)
@@ -106,6 +110,12 @@ public class PaintingController {
                     //correct left and right padding
                     gc.setStroke(seg.getEColor().getColor());
                     gc.setLineWidth(10);
+
+                    if (POVData.getDirection() == 0){
+                        double temp = x1;
+                        x1 = x2;
+                        x2 = temp;
+                    }
 
                     //paint the segment
                     if (POVData.getDirection() > 180)
@@ -179,9 +189,18 @@ public class PaintingController {
      *      Coordinates of the Point Of View, its direction angle and FOV
      */
     public void setData(EHeuristic h, Segment[] segs, Eye POVData){
-        this.h = h;
-        this.segs = segs;
-        this.POVData = POVData;
+        if (this.h != h)
+            this.h = h;
+        else if (h != EHeuristic.H2)
+            hChanged = false;
+        if (this.segs != segs)
+            this.segs = segs;
+        else
+            segsChanged = false;
+        if (this.POVData != POVData)
+            this.POVData = POVData;
+        else
+            eyeChanged = false;
     }
 
     //getters

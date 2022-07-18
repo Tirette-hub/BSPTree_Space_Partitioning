@@ -88,11 +88,12 @@ public class PaintersAlgorithmTest {
         Point2D pt = new Point2D(0, 1);
         Segment direction = new Segment(0, 0, 2, 3.464);
         double[] abc = Segment.getCutlineParameters(direction.getFrom(), direction.getTo());
-        double angle = 30, FOV = 90, screenWidth = 600;
+        double angle = 30, screenWidth = 600;
+        Eye eye = new Eye(new Point2D(0, 0), Math.toDegrees(Math.atan(3.464/2.0)), 90);
 
         double expectedX = 100;
 
-        double x = Segment.getProjection(pt, abc[0], abc[1], abc[2], angle, FOV, screenWidth);
+        double x = Segment.getProjection(pt, abc[0], abc[1], abc[2], angle, eye, screenWidth);
 
         assertEquals(x, expectedX, TestMain.epsilon);
     }

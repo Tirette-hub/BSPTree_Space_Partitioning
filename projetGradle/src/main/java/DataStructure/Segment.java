@@ -591,16 +591,17 @@ public class Segment implements IVector {
      *      c parameter of the hyperplane equation of the eye direction line.
      * @param angle
      *      Angle between the eye direction line and the point to project.
-     * @param FOV
-     *      FOV of the eye.
+     * @param eye
+     *      Eye of the scene.
      * @param screenWidth
      *      Width of the screen where the point will be projected.
      * @return
      *      X position in the screen where the point is projected.
      */
-    static public Double getProjection(Point2D pt, double a, double b, double c, double angle, double FOV, double screenWidth){
+    static public Double getProjection(Point2D pt, double a, double b, double c, double angle, Eye eye, double screenWidth){
         double result;
 
+        double FOV = eye.getAngle();
         double left = screenWidth/2 - angle*screenWidth/FOV,
                 right = screenWidth/2 + angle*screenWidth/FOV;
 
@@ -610,16 +611,28 @@ public class Segment implements IVector {
             if (onH)                                        //pt1 on the guide line
                 result = screenWidth/2;
             else if (a*pt.getX()+b*pt.getY()+c > 0)                 // upper part of direction guideline is h+
-                result = left;                              // so to the left of the eye
+                if(eye.getDirection() > 180 || eye.getDirection() == 0)
+                    result = right;
+                else
+                    result = left;                              // so to the left of the eye
             else                                            // lower part of direction guideline is h-
-                result = right;                             // so to the right of the eye
+                if(eye.getDirection() > 180 || eye.getDirection() == 0)
+                    result = left;
+                else
+                    result = right;                             // so to the right of the eye
         else                                                //direction to the left
             if (onH)                                        //pt1 on the guide line
                 result = screenWidth/2;
             else if (a*pt.getX()+b*pt.getY()+c > 0)                 // upper part of direction guideline is h+
-                result = right;                             // so to the right of the eye
+                if(eye.getDirection() > 180 || eye.getDirection() == 0)
+                    result = left;
+                else
+                    result = right;                             // so to the right of the eye
             else                                            // lower part of direction guideline is h-
-                result = left;                              // so to the left of the eye
+                if(eye.getDirection() > 180 || eye.getDirection() == 0)
+                    result = right;
+                else
+                    result = left;
 
         return result;
     }
