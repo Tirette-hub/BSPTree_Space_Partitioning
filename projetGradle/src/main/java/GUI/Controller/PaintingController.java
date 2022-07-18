@@ -111,17 +111,8 @@ public class PaintingController {
                     gc.setStroke(seg.getEColor().getColor());
                     gc.setLineWidth(10);
 
-                    if (POVData.getDirection() == 0){
-                        double temp = x1;
-                        x1 = x2;
-                        x2 = temp;
-                    }
-
                     //paint the segment
-                    if (POVData.getDirection() > 180)
-                        gc.strokeLine(x2, fxCanvas.getHeight() / 2.0, x1, fxCanvas.getHeight() / 2.0);
-                    else
-                        gc.strokeLine(x1, fxCanvas.getHeight() / 2.0, x2, fxCanvas.getHeight() / 2.0);
+                    gc.strokeLine(x1, fxCanvas.getHeight() / 2.0, x2, fxCanvas.getHeight() / 2.0);
                 }catch (InvalidAttributeValueException ignore){
 
                 }
