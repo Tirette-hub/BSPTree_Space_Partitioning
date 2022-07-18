@@ -387,6 +387,8 @@ public class SegmentBSPTree extends BSPTree<Segment>{
      */
     static public LinkedList<Segment> paintersAlgorithm(SegmentBSPTree tree, Eye eye){
         //if leaf: just return data
+        if (tree == null)
+            return new LinkedList<>();
         if (tree.isLeaf()) {
             LinkedList<Segment> data = new LinkedList<>();
 

@@ -24,11 +24,11 @@ public class TestMain {
     static final private Timer t1 = new Timer(), t2 = new Timer();
     static final private File jarFile = new File(TestMain.class.getProtectionDomain().getCodeSource().getLocation().getPath());
 
+    static private boolean quit = false;
+
     public static void main(String[] args) throws Exception{
         // initializing useful variables
-        boolean quit = false;
         int choice = -1, fileIndex, heuristicIndex;
-        double[] result = null;
 
         Map<String, String> parameters = new HashMap<>();
         String option = null;
@@ -125,34 +125,16 @@ public class TestMain {
                     System.out.println("Choose the operation to compare the 2 scenes partitions:");
                     showMenu();
                     compare = getChoice();
-                }while(compare < 1 || compare > 6);
+                }while(compare < 1 || compare > 7);
             }
+
+            choice = compare;
 
             heuristicIndex = Integer.parseInt(h1.toString()+h2.toString());
 
             //compute the solution
-            switch(compare){
-                case 1:
-                    TestGUIMain.main(args);
-                    break;
-                case 2:
-                    result = compareHeight(heuristicIndex, fileIndex);
-                    break;
-                case 3:
-                    result = compareLength(heuristicIndex, fileIndex);
-                    break;
-                case 4:
-                    result = compareCPUTimeAtBuild(heuristicIndex, fileIndex);
-                    break;
-                case 5:
-                    result = compareCPUTimeForPainting(heuristicIndex, fileIndex);
-                    break;
-            }
+            computeResult(choice, heuristicIndex, fileIndex);
             quit = true;
-
-            if (result != null)
-                System.out.println("Results:\n\tFirst: " + result[0] + "\n\tSecond: " + result[1] +
-                        ".\nAll the results given for a timing comparison are given in nanoseconds.\n\n");
         }
 
         //if no option or arguments
@@ -163,45 +145,21 @@ public class TestMain {
             do {
                 System.out.print("Enter the index corresponding to your choice: ");
                 choice = getChoice();
-                if (choice > 6)
+                if (choice > 7)
                     System.out.println("Please use a valid entry.");
-            } while (choice < 1 || choice > 6);
+            } while (choice < 1 || choice > 7);
 
-            //process the result
-            switch (choice) {
-                case 1:
-                    quit = true;
-                    TestGUIMain.main(args);
-                    break;
-                case 2:
-                    heuristicIndex = chooseHeuristic();
-                    fileIndex = chooseFile() - 1;
-                    result = compareHeight(heuristicIndex, fileIndex);
-                    break;
-                case 3:
-                    heuristicIndex = chooseHeuristic();
-                    fileIndex = chooseFile() - 1;
-                    result = compareLength(heuristicIndex, fileIndex);
-                    break;
-                case 4:
-                    heuristicIndex = chooseHeuristic();
-                    fileIndex = chooseFile() - 1;
-                    result = compareCPUTimeAtBuild(heuristicIndex, fileIndex);
-                    break;
-                case 5:
-                    heuristicIndex = chooseHeuristic();
-                    fileIndex = chooseFile() - 1;
-                    result = compareCPUTimeForPainting(heuristicIndex, fileIndex);
-                    break;
-                case 6:
-                    quit = true;
-                    break;
+            if (choice == 1){
+                quit = true;
+                TestGUIMain.main(args);
+                break;
             }
 
-            //show the result
-            if (result != null)
-                System.out.println("Results:\n\tFirst: " + result[0] + "\n\tSecond: " + result[1] +
-                        ".\nAll the results given for a timing comparison are given in nanoseconds.");
+            heuristicIndex = chooseHeuristic();
+            fileIndex = chooseFile() - 1;
+
+            //process the result
+            computeResult(choice, heuristicIndex, fileIndex);
         }
 
         System.exit(0);
@@ -232,7 +190,8 @@ public class TestMain {
         System.out.println("3. Compare length between trees.");
         System.out.println("4. Compare CPU time used to build trees.");
         System.out.println("5. compare CPU time used by the painter's algorithm.");
-        System.out.println("6. Quit.");
+        System.out.println("6. compare everything.");
+        System.out.println("7. Quit.");
     }
 
     /**
@@ -424,6 +383,122 @@ public class TestMain {
         return parser.getData().toArray(new Segment[0]);
     }
 
+    private static void computeResult(int choice, int heuristicIndex, int fileIndex) throws Exception {
+        Pair result = null;
+
+        switch (choice) {
+            case 2:
+                result = compareHeight(heuristicIndex, fileIndex);
+                break;
+            case 3:
+                result = compareLength(heuristicIndex, fileIndex);
+                break;
+            case 4:
+                result = compareCPUTimeAtBuild(heuristicIndex, fileIndex);
+                break;
+            case 5:
+                result = compareCPUTimeForPainting(heuristicIndex, fileIndex);
+                break;
+            case 6:
+                result = compareEverything(heuristicIndex, fileIndex);
+                break;
+            case 7:
+                quit = true;
+                break;
+        }
+
+        //show the result
+        if (result != null)
+            System.out.println("Results:\n\tFirst: " + result.getL() + "\n\tSecond: " + result.getR() +
+                    ".\nAll the results given for a timing comparison are given in nanoseconds.");
+    }
+
+    private static void createTrees(int heuristicIndex, int fileIndex) throws Exception {
+        Segment[] S = parseFile(fileIndex), randS;
+        randS = S.clone();
+        Collections.shuffle(Arrays.asList(randS));
+
+        switch (heuristicIndex){
+            case 12:
+                t1.start();
+                trees[0] = SegmentBSPTree.makeTree(randS, null, false);
+                t1.stop();
+                t2.start();
+                trees[1] = SegmentBSPTree.makeTree(S, null, false);
+                t2.stop();
+                break;
+            case 13:
+                t1.start();
+                trees[0] = SegmentBSPTree.makeTree(randS, null, false);
+                t1.stop();
+                t2.start();
+                trees[1] = SegmentBSPTree.makeTree(S, null, true);
+                t2.stop();
+                break;
+            case 21:
+                t1.start();
+                trees[0] = SegmentBSPTree.makeTree(S, null, false);
+                t1.stop();
+                t2.start();
+                trees[1] = SegmentBSPTree.makeTree(randS, null, false);
+                t2.stop();
+                break;
+            case 23:
+                t1.start();
+                trees[0] = SegmentBSPTree.makeTree(S, null, false);
+                t1.stop();
+                t2.start();
+                trees[1] = SegmentBSPTree.makeTree(S, null, true);
+                t2.stop();
+                break;
+            case 31:
+                t1.start();
+                trees[0] = SegmentBSPTree.makeTree(S, null, true);
+                t1.stop();
+                t2.start();
+                trees[1] = SegmentBSPTree.makeTree(randS, null, false);
+                t2.stop();
+                break;
+            case 32:
+                t1.start();
+                trees[0] = SegmentBSPTree.makeTree(S, null, true);
+                t1.stop();
+                t2.start();
+                trees[1] = SegmentBSPTree.makeTree(S, null, false);
+                t2.stop();
+                break;
+        }
+    }
+
+    private static void doPaintersAlgorithm(){
+        double x, y;
+        Scanner input = new Scanner(System.in);
+
+        do {
+            System.out.println("\nChoose the x and y positions of the eye in the scene.");
+            try {
+                System.out.print("x: ");
+                x = Double.parseDouble(input.nextLine());
+                System.out.print("y: ");
+                y = Double.parseDouble(input.nextLine());
+
+                break;
+            } catch (Exception e) {
+                System.out.println("Please enter only double values.");
+            }
+        }while(true);
+
+        Eye eye = new Eye(new Point2D(x, y), 0, 359.99);
+
+        t1.start();
+        SegmentBSPTree.paintersAlgorithm(trees[0], eye);
+        t1.stop();
+
+        t2.start();
+        SegmentBSPTree.paintersAlgorithm(trees[1], eye);
+        t2.stop();
+    }
+
     /**
      * Build the 2 trees with different heuristics and compare their height.
      * @param heuristicIndex
@@ -435,40 +510,12 @@ public class TestMain {
      * @throws Exception
      *      If any exception is raised opening files.
      */
-    private static double[] compareHeight(int heuristicIndex, int fileIndex) throws Exception{
-        Segment[] S = parseFile(fileIndex), randS;
-        randS = S.clone();
-        Collections.shuffle(Arrays.asList(randS));
+    private static Pair<Double, Double> compareHeight(int heuristicIndex, int fileIndex) throws Exception{
+        System.out.print("building trees...");
 
-        switch (heuristicIndex){
-            case 12:
-                trees[0] = SegmentBSPTree.makeTree(randS, null, false);
-                trees[1] = SegmentBSPTree.makeTree(S, null, false);
-                break;
-            case 13:
-                trees[0] = SegmentBSPTree.makeTree(randS, null, false);
-                trees[1] = SegmentBSPTree.makeTree(S, null, true);
-                break;
-            case 21:
-                trees[0] = SegmentBSPTree.makeTree(S, null, false);
-                trees[1] = SegmentBSPTree.makeTree(randS, null, false);
-                break;
-            case 23:
-                trees[0] = SegmentBSPTree.makeTree(S, null, false);
-                trees[1] = SegmentBSPTree.makeTree(S, null, true);
-                break;
-            case 31:
-                trees[0] = SegmentBSPTree.makeTree(S, null, true);
-                trees[1] = SegmentBSPTree.makeTree(randS, null, false);
-                break;
-            case 32:
-                trees[0] = SegmentBSPTree.makeTree(S, null, true);
-                trees[1] = SegmentBSPTree.makeTree(S, null, false);
-                break;
-        }
+        createTrees(heuristicIndex, fileIndex);
 
-        double[] results = {trees[0].height(), trees[1].height()};
-        return results;
+        return new Pair<>((double) trees[0].height(), (double) trees[1].height());
     }
 
     /**
@@ -482,40 +529,12 @@ public class TestMain {
      * @throws Exception
      *      If any exception is raised opening files.
      */
-    private static double[] compareLength(int heuristicIndex, int fileIndex) throws Exception{
-        Segment[] S = parseFile(fileIndex), randS;
-        randS = S.clone();
-        Collections.shuffle(Arrays.asList(randS));
+    private static Pair<Double, Double> compareLength(int heuristicIndex, int fileIndex) throws Exception{
+        System.out.print("building trees...");
 
-        switch (heuristicIndex){
-            case 12:
-                trees[0] = SegmentBSPTree.makeTree(randS, null, false);
-                trees[1] = SegmentBSPTree.makeTree(S, null, false);
-                break;
-            case 13:
-                trees[0] = SegmentBSPTree.makeTree(randS, null, false);
-                trees[1] = SegmentBSPTree.makeTree(S, null, true);
-                break;
-            case 21:
-                trees[0] = SegmentBSPTree.makeTree(S, null, false);
-                trees[1] = SegmentBSPTree.makeTree(randS, null, false);
-                break;
-            case 23:
-                trees[0] = SegmentBSPTree.makeTree(S, null, false);
-                trees[1] = SegmentBSPTree.makeTree(S, null, true);
-                break;
-            case 31:
-                trees[0] = SegmentBSPTree.makeTree(S, null, true);
-                trees[1] = SegmentBSPTree.makeTree(randS, null, false);
-                break;
-            case 32:
-                trees[0] = SegmentBSPTree.makeTree(S, null, true);
-                trees[1] = SegmentBSPTree.makeTree(S, null, false);
-                break;
-        }
+        createTrees(heuristicIndex, fileIndex);
 
-        double[] results = {trees[0].length(), trees[1].length()};
-        return results;
+        return new Pair<>((double) trees[0].length(), (double) trees[1].length());
     }
 
     /**
@@ -529,64 +548,12 @@ public class TestMain {
      * @throws Exception
      *      If any exception is raised opening files.
      */
-    private static double [] compareCPUTimeAtBuild(int heuristicIndex, int fileIndex) throws Exception{
-        Segment[] S = parseFile(fileIndex), randS;
-        randS = S.clone();
-        Collections.shuffle(Arrays.asList(randS));
+    private static Pair<Double, Double> compareCPUTimeAtBuild(int heuristicIndex, int fileIndex) throws Exception{
+        System.out.print("building trees...");
 
-        switch (heuristicIndex){
-            case 12:
-                t1.start();
-                trees[0] = SegmentBSPTree.makeTree(randS, null, false);
-                t1.stop();
-                t2.start();
-                trees[1] = SegmentBSPTree.makeTree(S, null, false);
-                t2.stop();
-                break;
-            case 13:
-                t1.start();
-                trees[0] = SegmentBSPTree.makeTree(randS, null, false);
-                t1.stop();
-                t2.start();
-                trees[1] = SegmentBSPTree.makeTree(S, null, true);
-                t2.stop();
-                break;
-            case 21:
-                t1.start();
-                trees[0] = SegmentBSPTree.makeTree(S, null, false);
-                t1.stop();
-                t2.start();
-                trees[1] = SegmentBSPTree.makeTree(randS, null, false);
-                t2.stop();
-                break;
-            case 23:
-                t1.start();
-                trees[0] = SegmentBSPTree.makeTree(S, null, false);
-                t1.stop();
-                t2.start();
-                trees[1] = SegmentBSPTree.makeTree(S, null, true);
-                t2.stop();
-                break;
-            case 31:
-                t1.start();
-                trees[0] = SegmentBSPTree.makeTree(S, null, true);
-                t1.stop();
-                t2.start();
-                trees[1] = SegmentBSPTree.makeTree(randS, null, false);
-                t2.stop();
-                break;
-            case 32:
-                t1.start();
-                trees[0] = SegmentBSPTree.makeTree(S, null, true);
-                t1.stop();
-                t2.start();
-                trees[1] = SegmentBSPTree.makeTree(S, null, false);
-                t2.stop();
-                break;
-        }
+        createTrees(heuristicIndex, fileIndex);
 
-        double[] results = {t1.getDelta(), t2.getDelta()};
-        return results;
+        return new Pair<>(t1.getDelta(), t2.getDelta());
     }
 
     /**
@@ -600,71 +567,36 @@ public class TestMain {
      * @throws Exception
      *      If any exception is raised opening files.
      */
-    private static double [] compareCPUTimeForPainting(int heuristicIndex, int fileIndex) throws Exception{
-        Segment[] S = parseFile(fileIndex), randS;
-        randS = S.clone();
-        Collections.shuffle(Arrays.asList(randS));
-        Scanner input = new Scanner(System.in);
-        double x, y;
+    private static Pair<Double, Double> compareCPUTimeForPainting(int heuristicIndex, int fileIndex) throws Exception{
+        System.out.print("building trees...");
 
-        LinkedList<Segment>
-                p1 = new LinkedList<>(),
-                p2 = new LinkedList<>();
+        createTrees(heuristicIndex, fileIndex);
+
+        doPaintersAlgorithm();
+
+        return new Pair<>(t1.getDelta(), t2.getDelta());
+    }
+
+    private static Pair<String, String> compareEverything(int heuristicIndex, int fileIndex) throws Exception {
+        double delta11, delta12, delta21, delta22;
 
         System.out.print("building trees...");
 
-        switch (heuristicIndex){
-            case 12:
-                trees[0] = SegmentBSPTree.makeTree(randS, null, false);
-                trees[1] = SegmentBSPTree.makeTree(S, null, false);
-                break;
-            case 13:
-                trees[0] = SegmentBSPTree.makeTree(randS, null, false);
-                trees[1] = SegmentBSPTree.makeTree(S, null, true);
-                break;
-            case 21:
-                trees[0] = SegmentBSPTree.makeTree(S, null, false);
-                trees[1] = SegmentBSPTree.makeTree(randS, null, false);
-                break;
-            case 23:
-                trees[0] = SegmentBSPTree.makeTree(S, null, false);
-                trees[1] = SegmentBSPTree.makeTree(S, null, true);
-                break;
-            case 31:
-                trees[0] = SegmentBSPTree.makeTree(S, null, true);
-                trees[1] = SegmentBSPTree.makeTree(randS, null, false);
-                break;
-            case 32:
-                trees[0] = SegmentBSPTree.makeTree(S, null, true);
-                trees[1] = SegmentBSPTree.makeTree(S, null, false);
-                break;
-        }
+        String left, right;
 
-        do {
-            System.out.println("\nChoose the x and y positions of the eye in the scene.");
-            try {
-                System.out.print("x: ");
-                x = input.nextDouble();
-                System.out.print("y: ");
-                y = input.nextDouble();
+        createTrees(heuristicIndex, fileIndex);
 
-                Eye eye = new Eye(new Point2D(x, y));
+        delta11 = t1.getDelta();
+        delta12 = t2.getDelta();
 
-                t1.start();
-                p1 = SegmentBSPTree.paintersAlgorithm(trees[0], eye);
-                t1.stop();
+        doPaintersAlgorithm();
 
-                t2.start();
-                p2 = SegmentBSPTree.paintersAlgorithm(trees[1], eye);
-                t2.stop();
+        delta21 = t1.getDelta();
+        delta22 = t2.getDelta();
 
-                break;
-            } catch (Exception e) {
-                System.out.println("Please enter only double values.");
-            }
-        }while(true);
+        left = "\n\t\tHeight: " + trees[0].height() + "\n\t\tSize: " + trees[0].length() + "\n\t\tCPU time for building the tree: " + delta11 + "\n\t\tCPU time for the painter's algorithm: " + delta21;
+        right = "\n\t\tHeight: " + trees[1].height() + "\n\t\tSize: " + trees[1].length() + "\n\t\tCPU time for building the tree: " + delta12 + "\n\t\tCPU time for the painter's algorithm: " + delta22;
 
-        double[] results = {t1.getDelta(), t2.getDelta()};
-        return results;
+        return new Pair<>(left, right);
     }
 }
