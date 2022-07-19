@@ -383,6 +383,17 @@ public class TestMain {
         return parser.getData().toArray(new Segment[0]);
     }
 
+    /**
+     * Compute the result with the given choice of what to compare.
+     * @param choice
+     *      The index of the choice as presented in the menu.
+     * @param heuristicIndex
+     *      The indexes of the heuristics.
+     * @param fileIndex
+     *      The index of the file stored in the global list of files.
+     * @throws Exception
+     *      If any exception is raised opening files.
+     */
     private static void computeResult(int choice, int heuristicIndex, int fileIndex) throws Exception {
         Pair result = null;
 
@@ -413,6 +424,15 @@ public class TestMain {
                     ".\nAll the results given for a timing comparison are given in nanoseconds.");
     }
 
+    /**
+     * Build BSP Trees with the given heuristics and scene file.
+     * @param heuristicIndex
+     *      The indexes of the heuristics.
+     * @param fileIndex
+     *      The index of the file stored in the global list of files.
+     * @throws Exception
+     *      If any exception is raised opening files.
+     */
     private static void createTrees(int heuristicIndex, int fileIndex) throws Exception {
         Segment[] S = parseFile(fileIndex), randS;
         randS = S.clone();
@@ -470,6 +490,9 @@ public class TestMain {
         }
     }
 
+    /**
+     * Calculate the painter's algorithm on previously calculated trees.
+     */
     private static void doPaintersAlgorithm(){
         double x, y;
         Scanner input = new Scanner(System.in);
@@ -506,7 +529,7 @@ public class TestMain {
      * @param fileIndex
      *      The index of the file stored in the global list of files.
      * @return
-     *      An Array with the results.
+     *      A Pair with the results.
      * @throws Exception
      *      If any exception is raised opening files.
      */
@@ -525,7 +548,7 @@ public class TestMain {
      * @param fileIndex
      *      The index of the file stored in the global list of files.
      * @return
-     *      An Array with the results.
+     *      A Pair with the results.
      * @throws Exception
      *      If any exception is raised opening files.
      */
@@ -544,7 +567,7 @@ public class TestMain {
      * @param fileIndex
      *      The index of the file stored in the global list of files.
      * @return
-     *      An Array with the results.
+     *      A Pair with the results.
      * @throws Exception
      *      If any exception is raised opening files.
      */
@@ -563,7 +586,7 @@ public class TestMain {
      * @param fileIndex
      *      The index of the file stored in the global list of files.
      * @return
-     *      An Array with the results.
+     *      A Pair with the results.
      * @throws Exception
      *      If any exception is raised opening files.
      */
@@ -577,6 +600,17 @@ public class TestMain {
         return new Pair<>(t1.getDelta(), t2.getDelta());
     }
 
+    /**
+     * Build the 2 trees with different heuristics and compare all the previous comparisons.
+     * @param heuristicIndex
+     *      The indexes of the heuristics.
+     * @param fileIndex
+     *      The index of the file stored in the global list of files.
+     * @return
+     *      A pair with the results formatted as strings to be explicitly shown.
+     * @throws Exception
+     *      If any exception is raised opening files.
+     */
     private static Pair<String, String> compareEverything(int heuristicIndex, int fileIndex) throws Exception {
         double delta11, delta12, delta21, delta22;
 

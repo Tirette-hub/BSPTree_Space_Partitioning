@@ -1,17 +1,17 @@
 package DataStructure;
 
-import Console.TestMain;
-
 import java.util.LinkedList;
 
 /**
  * Implementation of the BSP Tree.
  * Based on Prof. V. Bruyère implementation of Tree in Java on Moodle UMons ("Implémentation" part of "Structure de Données 2" course, 2021-2022)
  *
+ * @param <D>
+ *      Data Type stored.
  * @author
  *      Amorison Nathan
  *      Lemaire Emilien
- * @version 1.0.0
+ * @version 2.0.0
  */
 public class BSPTree<D>{
     protected LinkedList<D> data;

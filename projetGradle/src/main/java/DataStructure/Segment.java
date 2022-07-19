@@ -1,7 +1,6 @@
 package DataStructure;
 
 import Console.TestMain;
-import org.junit.Test;
 
 import javax.management.InvalidAttributeValueException;
 
@@ -154,10 +153,26 @@ public class Segment implements IVector {
         color = EColor.BLACK;
     }
 
+    /**
+     * Constructor.
+     * @param from
+     *      One point of the segment (origin).
+     * @param to
+     *      Another point of the segment (end).
+     */
     public Segment(Point2D from, Point2D to){
         this(from.getX(), from.getY(), to.getX(), to.getY());
     }
 
+    /**
+     * Constructor.
+     * @param from
+     *      One point of the segment (origin).
+     * @param to
+     *      Another point of the segment (end).
+     * @param color
+     *      Enum value representing the color of the segment.
+     */
     public Segment(Point2D from, Point2D to, EColor color){
         this(from.getX(), from.getY(), to.getX(), to.getY(), color);
     }
@@ -193,9 +208,11 @@ public class Segment implements IVector {
      *      flag that tell if the first point is on an edge.
      * @param secondOnEdge
      *      flag that tell if the second point is on an edge.
+     * @param color
+     *      Enum value representing the color of the segment.
      */
-    public Segment(double x1, double y1, double x2, double y2, boolean firstOnEdge, boolean secondOnEdge){
-        this(x1, y1, x2, y2);
+    public Segment(double x1, double y1, double x2, double y2, boolean firstOnEdge, boolean secondOnEdge, EColor color){
+        this(x1, y1, x2, y2, color);
         if (firstOnEdge)
             this.firstOnEdge = true;
         if (secondOnEdge)
@@ -324,38 +341,13 @@ public class Segment implements IVector {
         return color;
     }
 
+    /**
+     * Check if this segment is a free split segment.
+     * @return
+     *      True if this segment is a free split segment.
+     */
     public boolean isFreeSplit(){
         return (firstOnEdge && secondOnEdge);
-    }
-
-    public Segment getPerp(Point2D pt){
-        double[] abc = Segment.getCutlineParameters(firstPoint, lastPoint);
-        double a = abc[0], b = abc[1], c = abc[2];
-
-        Segment result;
-
-        if (Math.abs(b) < TestMain.epsilon){
-            //this is a vertical segment
-            //result should be a horizontal segment passing by pt
-            result = new Segment(pt, new Point2D(pt.getX() + 1, pt.getY()));
-        }else if (Math.abs(a) < TestMain.epsilon){
-            //this is a horizontal segment
-            //result should be a vertical segment passing by pt
-            result = new Segment(pt, new Point2D(pt.getX(), pt.getY() + 1));
-        }else{
-            double m = b/a, p;
-            p = -m*pt.getX()+pt.getY();
-
-            double x = pt.getX(), y1 = m* x +p, y2 = m*(x+1)+p;
-            result = new Segment(new Point2D(x, y1), new Point2D(x+1, y2));
-        }
-
-        return result;
-    }
-
-    public Segment getParallele(Point2D pt){
-        Segment temp = getPerp(pt);
-        return temp.getPerp(pt);
     }
 
     //static methods
@@ -425,7 +417,7 @@ public class Segment implements IVector {
         }
 
 
-        return new Pair<>(new Segment(x12, y12, x, y, false, true), new Segment(x, y, x22, y22, true, false));
+        return new Pair<>(new Segment(x12, y12, x, y, false, true, lineToCut.getEColor()), new Segment(x, y, x22, y22, true, false, lineToCut.getEColor()));
     }
 
     /**

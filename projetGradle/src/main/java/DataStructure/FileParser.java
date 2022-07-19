@@ -4,6 +4,13 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.jar.JarFile;
 
+/**
+ * File Parser for scene files.
+ * @author
+ *      Amorison Nathan
+ *      Lemaire Emilien
+ * @version 1.0.0
+ */
 public class FileParser {
     private int a, b, n;
     private ArrayList<Segment> data;
@@ -11,6 +18,13 @@ public class FileParser {
 
     private BufferedReader reader;
 
+    /**
+     * Constructor.
+     * @param filePath
+     *      Path to the file to open.
+     * @throws IOException
+     *      If the file cannot be opened or if the file is not a scene file.
+     */
     public FileParser(String filePath) throws IOException {
         if (filePath.startsWith("./")){
             JarFile jar = new JarFile(FileParser.class.getProtectionDomain().getCodeSource().getLocation().getFile());
@@ -30,6 +44,13 @@ public class FileParser {
             throw new IOException("The given file is not a correct Scene file.");
     }
 
+    /**
+     * Check if the file is a scene file and get all its data.
+     * @return
+     *      True if the file is a correct scene file.
+     * @throws IOException
+     *      If any error happens while reading the file.
+     */
     private boolean checkScene() throws IOException{
         String fl [] = reader.readLine().split(" ");
         if (fl.length != 4) //4elements: >, a, b, n
@@ -70,10 +91,20 @@ public class FileParser {
         return true;
     }
 
+    /**
+     * Get the scene parameters (width, height, number of segments)
+     * @return
+     *      Array with the parameters.
+     */
     public int[] getParameters(){
         return new int[] {a, b, n};
     }
 
+    /**
+     * Get the list of segments in the scene.
+     * @return
+     *      List of segments in the scene.
+     */
     public ArrayList<Segment> getData(){
         return data;
     }

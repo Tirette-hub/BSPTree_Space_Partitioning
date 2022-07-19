@@ -1,7 +1,5 @@
 package DataStructure;
 
-import javax.management.InvalidAttributeValueException;
-
 public interface IVector {
     double getDistance();
     double getX();

@@ -1,7 +1,6 @@
 package GUI.Model;
 
 import DataStructure.Eye;
-import DataStructure.Point2D;
 import DataStructure.Segment;
 import javafx.scene.control.SpinnerValueFactory;
 
@@ -12,13 +11,13 @@ import javafx.scene.control.SpinnerValueFactory;
  * @author
  *      Amorison Nathan
  *      Lemaire Emilien
- * @version 1.0.0
+ * @version 2.0.0
  */
 public class SceneModel {
     private boolean isDrawn;
     private Segment[] data;
-    private Eye eye;
-    private SpinnerValueFactory<Double> FOVSpinnerFactory, AngleSpinnerFactory;
+    private final Eye eye;
+    private final SpinnerValueFactory<Double> FOVSpinnerFactory,  AngleSpinnerFactory;
     private double a, b;
 
     //constructors
@@ -36,10 +35,6 @@ public class SceneModel {
     }
 
     //setters
-
-    public void setEye(Eye newEye){
-        eye = newEye;
-    }
 
     /**
      * Set scene width value.
@@ -79,6 +74,11 @@ public class SceneModel {
 
     //getters
 
+    /**
+     * Get the eye of the scene.
+     * @return
+     *      Eye of the scene.
+     */
     public Eye getEye(){
         return eye;
     }

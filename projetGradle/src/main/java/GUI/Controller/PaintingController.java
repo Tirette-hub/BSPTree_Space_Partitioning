@@ -23,7 +23,7 @@ import java.util.List;
  * @author
  *      Amorison Nathan
  *      Lemaire Emilien
- * @version 1.0.0
+ * @version 2.0.0
  */
 public class PaintingController {
     private PaintingModel model;
@@ -45,16 +45,6 @@ public class PaintingController {
     private Pane fxPane;
 
     //view callbacks
-
-    /*
-     *
-     *
-     *
-     * TBC
-     *
-     *
-     *
-     * */
 
     /**
      * Callback called by the fxml view in order to paint the solution on the canvas.

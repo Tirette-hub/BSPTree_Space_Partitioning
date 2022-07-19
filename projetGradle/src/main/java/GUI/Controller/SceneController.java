@@ -23,7 +23,7 @@ import javafx.scene.paint.Color;
  * @author
  *      Amorison Nathan
  *      Lemaire Emilien
- * @version 1.0.0
+ * @version 2.0.0
  */
 public class SceneController {
     private SceneModel model;
@@ -177,6 +177,11 @@ public class SceneController {
         return model.getData();
     }
 
+    /**
+     * Get the eye object of the scene.
+     * @return
+     *      Eye object of the scene.
+     */
     public Eye getEye(){
         Eye eye = model.getEye();
 

@@ -19,7 +19,7 @@ import java.io.File;
  * @author
  *      Amorison Nathan
  *      Lemaire Emilien
- * @version 1.0.0
+ * @version 2.0.0
  */
 public class APPController{
     private AppModel model;
