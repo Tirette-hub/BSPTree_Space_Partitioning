@@ -100,14 +100,14 @@ public class SegmentBSPTree extends BSPTree<Segment>{
         else{
             if (freeSplit){
                 //sort segments by putting freeSplit segment at front of the tab.
-                int i = 0, j = S.length - 1;
+                int j = S.length - 1;
                 Segment temp;
-                while(i < j){
-                    if (S[i].isFreeSplit())
-                        i++;
+                while(0 < j){
+                    if (S[0].isFreeSplit())
+                        break;
                     else{
-                        temp = S[i];
-                        S[i] = S[j];
+                        temp = S[0];
+                        S[0] = S[j];
                         S[j] = temp;
                         j--;
                     }
