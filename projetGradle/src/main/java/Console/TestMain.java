@@ -3,6 +3,7 @@ package Console;
 import DataStructure.*;
 import GUI.TestGUIMain;
 
+import javax.sound.midi.Soundbank;
 import java.util.*;
 import java.io.File;
 import java.util.jar.JarEntry;
@@ -40,13 +41,14 @@ public class TestMain {
             if (argKey.charAt(0) == '-' && argKey.charAt(1) != '-'){
                 // -a
                 // check the key
+                //System.out.println("here");
                 if (argKey.length() != 2){
                     System.err.println("Invalid argument: " + argKey);
                     return;
                 }
 
                 // get the key and value
-                argValue = args[++i].substring(1);
+                argValue = args[++i];
                 if (argValue.charAt(0) != '-')
                     parameters.put(argKey.substring(1), argValue);
 
@@ -116,7 +118,7 @@ public class TestMain {
             //check the comparison method id otherwise ask the user for the method to use.
             if (parameters.containsKey("compare")){
                 compare = Integer.parseInt(parameters.get("compare"));
-                if (compare < 0 || compare > 4){
+                if (compare < 2 || compare > 6){
                     System.out.println("Invalid id for the comparison");
                     System.exit(0);
                 }
@@ -379,6 +381,10 @@ public class TestMain {
         String filePath = fileList.get(fileIndex);
 
         FileParser parser = new FileParser(filePath);
+
+        System.out.println("\nScene: " + filePath);
+        int abn [] = parser.getParameters();
+        System.out.println("width: " + abn[0] + "\nheight: " + abn[1] + "\nnumber of segments: " + abn[2]);
 
         return parser.getData().toArray(new Segment[0]);
     }
