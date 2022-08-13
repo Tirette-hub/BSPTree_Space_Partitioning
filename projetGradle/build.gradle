@@ -8,7 +8,7 @@ plugins {
 
 
 run {
-
+    jvmArgs '-Xss3m'
     standardInput = System.in
 
 }
@@ -41,12 +41,19 @@ javafx{
     modules = ['javafx.controls', 'javafx.fxml']
 }
 
-tasks.withType(GroovyCompile) {
-    configure(groovyOptions.forkOptions) {
-        memoryMaximumSize = '3m'
-        jvmArgs = ['-XX:MaxPermSize=3m', '-Xms3m', '-Xmx3m']
+/*compileJava {
+    //raise heap
+    options.fork = true
+    options.forkOptions.with {
+        memoryMaximumSize = "2048m"
     }
-}
+}*/
+
+//gradle.jvmargs = "-Xmx64m"
+
+/*tasks.withType(JavaCompile) {
+    options.compilerArgs += ['-Xmx64m', '-XX:MaxPermSize=64m', '-XX:+HeapDumpOnOutOfMemoryError', '-Dfile.encoding=UTF-8']
+}*/
 
 shadowJar{
     append("src/main/resources/")

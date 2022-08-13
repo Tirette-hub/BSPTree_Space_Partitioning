@@ -156,6 +156,8 @@ public class TestMain {
                 TestGUIMain.main(args);
                 break;
             }
+            if (choice == 7)
+                System.exit(0);
 
             heuristicIndex = chooseHeuristic();
             fileIndex = chooseFile() - 1;
@@ -420,8 +422,7 @@ public class TestMain {
                 result = compareEverything(heuristicIndex, fileIndex);
                 break;
             case 7:
-                quit = true;
-                break;
+                System.exit(0);
         }
 
         //show the result
