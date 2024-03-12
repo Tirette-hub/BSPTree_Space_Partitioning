@@ -17,5 +17,5 @@ Le projet a été construit en utilisant Gradle pour Java. Nous vous conseillons
 [Rapport](Rapport.pdf)
 
 # Auteurs
-Emilien Lemaire
+Emilien Lemaire  
 Nathan Amorison
